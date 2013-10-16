@@ -49,9 +49,9 @@ Variations
 References
 ----------
 
-- D. Ongaro and J. Ousterhout, 2013: *In Search of an Understandable Consensus Algorithm* (draft)
+- Diego Ongaro and John Ousterhout, 2013: *In Search of an Understandable Consensus Algorithm* (draft)
 - Anonymous, 2013: *Safety Proof and Formal Specification for Raft* (draft)
-- C. Storm, 2011: *Specification and Analytical Evaluation of Heterogeneous Dynamic Quorum-based Data Replication Schemes*
+- Christian Storm, 2011: *Specification and Analytical Evaluation of Heterogeneous Dynamic Quorum-based Data Replication Schemes*
 
 Success Criteria
 ----------------
