@@ -44,7 +44,7 @@
   \label{introduction-and-description-of-work}%
 }
 
-Finding a consensus is a key functionality of any strongly consistent distributed system. Raft \cite{raft} is a new consensus algorithm that is designed to be used instead of Paxos \cite{paxos} whilst being easier to understand and implement correctly. It models the distributed system as a replicated state machine using a replicated log. Raft features a strong leader, an explicit membership change mechanism and a (partial) correctness proof.\footnote{“Safety Proof and Formal Specification for Raft”, accessed October 17, 2013. \url{http://raftuserstudy.s3-website-us-west-1.amazonaws.com/proof.pdf}}
+Finding a consensus is a key functionality of any strongly consistent distributed system. Raft \cite{raft} is a new consensus algorithm that is designed to be used instead of Paxos \cite{paxos} whilst being easier to understand and implement correctly. It models the distributed system as a replicated state machine using a replicated log. Raft features a strong leader, an explicit membership change mechanism and a (partial) correctness proof.\footnote{Safety Proof and Formal Specification for Raft, accessed October 17, 2013. \url{http://raftuserstudy.s3-website-us-west-1.amazonaws.com/proof.pdf}}
 
 By default, Raft uses majority voting to find quorums. Both the initial paper and the separate correctness proof suggest that it should be possible to replace majority voting by other voting schemes.
 
