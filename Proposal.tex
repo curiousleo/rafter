@@ -81,30 +81,27 @@ In this project, I will extend an existing implementation of the Raft consensus 
   \label{substance-and-structure-of-the-project}%
 }
 
-The objective of this project is to add structured voting protocols to Rafter, and to benchmark different structured voting protocols against each other and against Raft's default majority consensus algorithm. The project has the following main sections:
-
-\begin{enumerate}
-
-\item Familiarisation with the programming language Erlang, Raft, and the Rafter source code.
-
-\item Detailed design of the data structure to represent voting structures and the algorithms to generate and interpret them. Developing and testing the voting structure code separately.
-
-\item Incorporating the above algorithms and data structures into Rafter so they can be used to find quorums.
-
-\item Developing and testing a benchmark suite for a distributed key-value store on top of Rafter.
-
-\item Setting up the project so that it can be run as a distributed key-value store in the Amazon EC2 infrastructure and running the benchmark test on an Amazon EC2 cluster.
-
-\item Writing the dissertation.
-\end{enumerate}
-
+The objective of this project is to add structured voting protocols to Rafter, and to benchmark different structured voting protocols against each other and against Raft's default majority consensus algorithm.
 
 \section{Success Criteria%
   \label{success-criteria}%
 }
 
-To demonstrate that the project is capable of forming safe quorums using structured voting protocols without much overhead.
+For the project to be deemed a success the following items must be successfully completed:
 
+\begin{enumerate}
+
+\item Design of the data structure to represent voting structures and implementation and testing of the algorithm to interpret it. Implementation and testing of voting structure generators for at least Majority Voting and the Grid Protocol. In order to allow for visual verification of the voting structure generators, I will write a tool that can output a diagrammatic representation of a voting structure.
+
+\item Incorporating the above algorithms and data structures into Rafter so they can be used to find quorums.
+
+\item Design and implementation of a benchmark suite for a distributed key-value store on top of Rafter.
+
+\item The project must be set up so it can be run as a distributed key-value store in the Amazon Elastic Compute Cloud (EC2) infrastructure. Then the benchmarks have to be run and the results collected and evaluated.
+
+\item The dissertation must be planned and written.
+
+\end{enumerate}
 
 \section{Variations%
   \label{variations}%
