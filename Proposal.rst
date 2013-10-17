@@ -88,32 +88,43 @@ Weeks 9 to 11 (Dec 16 to Jan 5)
 
 Christmas break.
 
-Weeks 12 and 13 (Jan 6 to Jan 19)
+Week 12 (Jan 6 to Jan 12)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Finish incorporating voting structures into Rafter and testing.
 
-Weeks 14 and 15 (Jan 20 to Feb 2)
+Weeks 13 and 14 (Jan 13 to Jan 26)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Write progress report and create presentation
+
+Weeks 15 and 16 (Jan 27 to Feb 9)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Design and write benchmarking suite.
 
-Weeks 16 to 18 (Feb 3 to Feb 16)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Weeks 17 and 18 (Feb 10 to Feb 23)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Setup and configuration for Amazon EC2.
+Setup and configuration for Amazon EC2. Benchmarking.
 
-Weeks 18 to 22 (Feb 17 to Mar 23)
+Weeks 19 and 20 (Feb 24 to Mar 9)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Time for extensions / buffer.
+
+Weeks 21 to 25 (Mar 10 to Apr 13)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Write Dissertation.
 
-Weeks 23 to 25 (Mar 24 to Apr 6)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Weeks 24 to 26 (Apr 14 to Apr 27)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Clean-up of code and dissertation.
 
 Resources Required
 ------------------
 
-Amazon EC2 compute time on a sufficient number of nodes (at least 100).
+- Amazon EC2 compute time on a sufficient number of nodes (at least 100).
+- My laptop: Daily pushes to GitHub, weekly backups on external hard drive
