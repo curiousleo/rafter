@@ -82,12 +82,8 @@ In this project, I will extend an existing implementation of the Raft consensus 
 }
 
 The aim of this project is to add structured voting protocols to Rafter, and to benchmark different structured voting protocols against each other and against Raft's default majority consensus algorithm. The project has the following main sections:
-\newcounter{listcnt0}
-\begin{list}{\arabic{listcnt0}.}
-{
-\usecounter{listcnt0}
-\setlength{\rightmargin}{\leftmargin}
-}
+
+\begin{enumerate}
 
 \item Familiarisation with the programming language Erlang, Raft, and the Rafter source code.
 
@@ -100,7 +96,14 @@ The aim of this project is to add structured voting protocols to Rafter, and to 
 \item Setting up the project so that it can be run as a distributed key-value store in the Amazon EC2 infrastructure and running the benchmark test on an Amazon EC2 cluster.
 
 \item Writing the dissertation.
-\end{list}
+\end{enumerate}
+
+
+\section{Success Criteria%
+  \label{success-criteria}%
+}
+
+To demonstrate that the project is capable of forming safe quorums using structured voting protocols without much overhead.
 
 
 \section{Variations%
@@ -118,13 +121,6 @@ The aim of this project is to add structured voting protocols to Rafter, and to 
 \item ?
 
 \end{itemize}
-
-
-\section{Success Criteria%
-  \label{success-criteria}%
-}
-
-To demonstrate that the project is capable of forming safe quorums using structured voting protocols without much overhead.
 
 
 \section{Timetable and Milestones%
