@@ -54,7 +54,7 @@ Structured voting protocols have the drawback that they may fail to generate a q
 
 There are at least two scenarios under which this last point becomes relevant: Firstly, under high load, a majority of nodes may be busy processing requests. Using a structured voting scheme, it may still be possible to get a quorum, avoiding an expensive retry of the operation that would be necessary when a majority voting scheme was employed. Secondly, it may be that node failures are not, as is often assumed, independent. In this case, the structured voting scheme could be specifically designed for resilience against certain failure modes like the power outage of entire racks or connection problems between data centres.
 
-The aim of this project is twofold: To add structured voting protocols to an existing implementation of the Raft consensus algorithm, and to compare the perfomance of different structured voting protocols with the performance of Raft's default majority consensus voting.
+The aim of this project is twofold: To add structured voting protocols to an existing implementation of the Raft consensus algorithm, and to compare the performance of different structured voting protocols with the performance of Raft's default majority consensus voting.
 
 
 \section{Starting Point%
@@ -66,11 +66,11 @@ In this project, I will extend an existing implementation of the Raft consensus 
 
 \begin{description}
 
-\item[Raft consensus algorithm.] I have listened to a recorded lecture on Raft by one of its creators. I have skimmed through the relevant sections of the paper and the seperate correctness prooof.
+\item[Raft consensus algorithm.] I have listened to a recorded lecture on Raft by one of its creators. I have skimmed through the relevant sections of the paper and the separate correctness proof.
 
 \item[Implementation of Raft.] \emph{Rafter}\footnote{Andrew J.\,Stone. Rafter: An Erlang library application which implements the Raft consensus protocol (Git repository), accessed October 17, 2013. \url{https://github.com/andrewjstone/rafter}} is an open source implementation of Raft written in Erlang by Andrew J.\,Stone at Basho, Inc. It still being developed, but mostly feature-complete. I will use its code as a basis for this project.
 
-\item[Concurrent and Distributed Systems.] The Part IB lecture courses Concurrent Systems and Distributed Systems have given me an appreciation for the challenges that such systems pose. During my internship this summer, I implemented a minimalistic distributed key-value store that used structured voting protocols to guarantee consistency as a proof of concept in Node.js/Javascript.
+\item[Concurrent and Distributed Systems.] The Part IB lecture courses Concurrent Systems and Distributed Systems have given me an appreciation for the challenges that such systems pose. During my work placement this summer, I implemented a minimalistic distributed key-value store that used structured voting protocols to guarantee consistency as a proof of concept in Node.js/JavaScript.
 
 \item[Erlang programming language.] Most of the code I will be writing for this project will be in Erlang, a language I have no prior experience with. However, I am familiar with functional programming from both the Part IA Standard ML exercises and from small personal projects in Haskell and OCaml.
 
@@ -81,13 +81,13 @@ In this project, I will extend an existing implementation of the Raft consensus 
   \label{substance-and-structure-of-the-project}%
 }
 
-The aim of this project is to add structured voting protocols to Rafter, and to benchmark different structured voting protocols against each other and against Raft's default majority consensus algorithm. The project has the following main sections:
+The objective of this project is to add structured voting protocols to Rafter, and to benchmark different structured voting protocols against each other and against Raft's default majority consensus algorithm. The project has the following main sections:
 
 \begin{enumerate}
 
 \item Familiarisation with the programming language Erlang, Raft, and the Rafter source code.
 
-\item Detailed design of the data structure to represent voting structures and the algorithms to generate and interpret them. Developing and testing the code to generate and interpret voting structures separately.
+\item Detailed design of the data structure to represent voting structures and the algorithms to generate and interpret them. Developing and testing the voting structure code separately.
 
 \item Incorporating the above algorithms and data structures into Rafter so they can be used to find quorums.
 
@@ -190,7 +190,7 @@ Design and write benchmarking suite.
   \label{weeks-17-and-18-feb-10-to-feb-23}%
 }
 
-Setup and configuration for Amazon EC2. Benchmarking.
+Set-up and configuration for Amazon EC2. Benchmarking.
 
 
 \subsection{Weeks 19 and 20 (Feb 24 to Mar 9)%
