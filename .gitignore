@@ -1,6 +1,9 @@
-*.tex
 *.swp
 *.aux
 *.log
 *.pdf
 *.out
+*.bbl
+*.blg
+*.ps
+*.dvi
