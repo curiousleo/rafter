@@ -83,6 +83,8 @@ In this project, I will extend an existing implementation of the Raft consensus 
 
 The objective of this project is to add structured voting protocols to Rafter, and to benchmark different structured voting protocols against each other and against Raft's default majority consensus algorithm.
 
+All the unstructured and structured voting schemes that will be implemented can be specified by voting structures \cite{voting}, which describes the set of quorums. For each voting scheme, a generator will have to be written that maps the number (or list) of nodes and potentially some further options to a voting structure. We will also require an interpreter algorithm that decides whether a certain set of nodes constitutes a quorum within a given voting structure or not.
+
 \section{Success Criteria%
   \label{success-criteria}%
 }
