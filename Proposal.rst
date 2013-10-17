@@ -1,7 +1,7 @@
 Extending Raft with Structured Voting
 =====================================
 
-:Project Supervisor: Malte Schwarzkopf and Ionel Gog
+:Project Supervisors: Malte Schwarzkopf and Ionel Gog
 :Director of Studies: Jonathan Hayman
 :Overseers: Markus Kuhn and Neal Lathia
 
