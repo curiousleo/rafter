@@ -61,17 +61,20 @@ The aim of this project is twofold: To add structured voting protocols to an exi
   \label{starting-point}%
 }
 %
-\begin{itemize}
 
-\item Raft: I have listened to a recorded lecture on Raft by one of its creators. I have skimmed through the relevant sections of the paper and the seperate correctness prooof.
+In this project, I will extend an existing implementation of the Raft consensus algorithm that is written in Erlang. Here is an overview of my prior knowledge and experience with the concepts and tools I will use to complete the project:
 
-\item Rafter: Several implementations of the Raft consensus algorithm exist. One of them is \emph{Rafter}\footnote{Andrew J. Stone. “Rafter: An Erlang library application which implements the Raft consensus protocol”, accessed October 17, 2013. \url{https://github.com/andrewjstone/rafter}}, an open source Erlang library written by Andrew J. Stone at Basho, Inc. It is a work-in-progress, but mostly feature-complete, implementation of Raft. I will use its code as a basis for this project.
+\begin{description}
 
-\item Concurrent \& Distributed Systems: The IB lecture courses \emph{Concurrent Systems} and \emph{Distributed Systems} have given me an appreciation for the challenges that such systems pose. During my internship this summer, I implemented a minimalistic distributed key-value store that used structured voting protocols to guarantee consistency as a proof of concept in Node.js/Javascript.
+\item[Raft consensus algorithm.] I have listened to a recorded lecture on Raft by one of its creators. I have skimmed through the relevant sections of the paper and the seperate correctness prooof.
 
-\item Programming: Most of the code I will be writing for this project will be in Erlang, a language I have no prior experience with. However, I am familiar with functional programming from both the IA Standard ML exercises and from small personal projects in Haskell and OCaml.
+\item[Implementation of Raft.] \emph{Rafter}\footnote{Andrew J.\,Stone. Rafter: An Erlang library application which implements the Raft consensus protocol (Git repository), accessed October 17, 2013. \url{https://github.com/andrewjstone/rafter}} is an open source implementation of Raft written in Erlang by Andrew J.\,Stone at Basho, Inc. It still being developed, but mostly feature-complete. I will use its code as a basis for this project.
 
-\end{itemize}
+\item[Concurrent and Distributed Systems.] The Part IB lecture courses Concurrent Systems and Distributed Systems have given me an appreciation for the challenges that such systems pose. During my internship this summer, I implemented a minimalistic distributed key-value store that used structured voting protocols to guarantee consistency as a proof of concept in Node.js/Javascript.
+
+\item[Erlang programming language.] Most of the code I will be writing for this project will be in Erlang, a language I have no prior experience with. However, I am familiar with functional programming from both the Part IA Standard ML exercises and from small personal projects in Haskell and OCaml.
+
+\end{description}
 
 
 \section{Substance and Structure of the Project%
