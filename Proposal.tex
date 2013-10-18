@@ -22,11 +22,11 @@
 
 %%% Title Data
 \title{Extending Raft with Structured Voting}
-\author{Leonhard Markert (lm510) \\ Emmanuel College}
-\date{}
+\author{Leonhard Markert (\texttt{lm510}) \\ Emmanuel College}
 
 %%% Body
 \begin{document}
+\thispagestyle{empty}
 \maketitle
 
 % Docinfo
@@ -44,7 +44,7 @@
   \label{introduction-and-description-of-work}%
 }
 
-Finding a consensus is a key functionality of any strongly consistent distributed system. Raft \cite{raft} is a new consensus algorithm that is designed to be used instead of Paxos \cite{paxos} whilst being easier to understand and implement correctly. It models the distributed system as a replicated state machine using a replicated log. Raft features a strong leader, an explicit membership change mechanism and a (partial) correctness proof.\footnote{Safety Proof and Formal Specification for Raft, accessed October 17, 2013. \url{http://raftuserstudy.s3-website-us-west-1.amazonaws.com/proof.pdf}}
+Finding quorums is a key functionality of any strongly consistent distributed system. Raft \cite{raft} is a new consensus algorithm that is designed to be used instead of Paxos \cite{paxos} whilst being easier to understand and implement correctly. It models the distributed system as a replicated state machine using a replicated log. Raft features a strong leader, an explicit membership change mechanism and a (partial) correctness proof.\footnote{Safety Proof and Formal Specification for Raft, accessed October 17, 2013. \url{http://raftuserstudy.s3-website-us-west-1.amazonaws.com/proof.pdf}}
 
 By default, Raft uses majority voting to find quorums. Both the initial paper and the separate correctness proof suggest that it should be possible to replace majority voting by other voting schemes.
 
@@ -97,7 +97,7 @@ For the project to be deemed a success the following items must be successfully 
 
 \begin{enumerate}
 
-\item Design of the data structure to represent voting structures and implementation and testing of the algorithm to interpret it. Implementation and testing of voting structure generators for at least Majority Voting and the Grid Protocol. In order to allow for visual verification of the voting structure generators, I will write a tool that can output a diagrammatic representation of a voting structure.
+\item Design of the data structure to represent voting structures and implementation and testing of the algorithm to interpret it. Implementation and testing of voting structure generators for at least Majority Voting and the Grid Protocol.
 
 \item Incorporating the above algorithms and data structures into Rafter so they can be used to find quorums.
 
@@ -115,7 +115,9 @@ For the project to be deemed a success the following items must be successfully 
 %
 \begin{description}
 
-\item[Probability analysis.] TODO
+\item[Probability analysis.] Given the total number of nodes and the number of nodes that are not available, compute the probability of finding a quorum for different voting schemes.
+
+\item[More voting schemes.] Add more voting schemes, for example the Tree Quorum Protocol.
 
 \item[Heterogeneous voting scheme.] Allow for a mapping from the number of nodes to a voting scheme to be defined as part of the configuration before Rafter starts up. Then, Rafter should switch to the appropriate voting scheme whenever a membership change occurs.
 
@@ -189,20 +191,21 @@ Write progress report and create presentation.
 
 Design and write benchmarking suite.
 
+\emph{Milestones:} Running the benchmarking suite locally and collecting and interpreting the results.
 
 \subsection{Weeks 17 and 18 (Feb 10 to Feb 23)%
   \label{weeks-17-and-18-feb-10-to-feb-23}%
 }
 
-Set-up and configuration for Amazon EC2. Benchmarking.
+Set-up and configuration for Amazon EC2. Running the benchmarking suite.
 
+\emph{Milestones:} Collecting and interpreting the benchmarking results.
 
 \subsection{Weeks 19 and 20 (Feb 24 to Mar 9)%
   \label{weeks-19-and-20-feb-24-to-mar-9}%
 }
 
-Time for extensions / buffer.
-
+Buffer time: Can be used for core work if I have fallen behind the schedule at this point; alternatively, this time can be used to work on one of the optional extensions.
 
 \subsection{Weeks 21 to 25 (Mar 10 to Apr 13)%
   \label{weeks-21-to-25-mar-10-to-apr-13}%
@@ -210,13 +213,13 @@ Time for extensions / buffer.
 
 Write Dissertation.
 
+\emph{Milestones:} Discussion of the dissertation draft with my supervisors.
 
 \subsection{Weeks 24 to 26 (Apr 14 to Apr 27)%
   \label{weeks-24-to-26-apr-14-to-apr-27}%
 }
 
 Clean-up of code and dissertation.
-
 
 \section{Resources Required%
   \label{resources-required}%
