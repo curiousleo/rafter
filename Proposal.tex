@@ -113,23 +113,20 @@ For the project to be deemed a success the following items must be successfully 
   \label{optional-extensions}%
 }
 %
-\begin{itemize}
+\begin{description}
 
-\item Heterogeneous voting scheme configuration
+\item[Heterogeneous voting scheme.] Allow for a mapping from the number of nodes to a voting scheme to be defined as part of the configuration before Rafter starts up. Then, Rafter should switch to the appropriate voting scheme whenever a membership change occurs.
 
-\item Advanced key-value store: Queries, transactions
+\item[Advanced key-value store.] Many extensions to the simple key-value store state machine that is already part of Rafter are possible. One idea would be to use a persistent database for data storage.
 
-\item Profiling and performance tuning
+\item[Profiling and performance tuning.] The voting structure interpreter will incorporate some non-trivial tree walking operations. Trying to make these operations, and therefore quorum finding, as fast as possible would be a useful extension.
 
-\item Universal voting structure generator
-
-\end{itemize}
+\end{description}
 
 
 \section{Timetable and Milestones%
   \label{timetable-and-milestones}%
 }
-
 
 \subsection{Before Proposals Submission%
   \label{before-proposals-submission}%
