@@ -1,15 +1,16 @@
 -module(deque).
--include("include/deque.hrl").
+
 -export([from_list/1,to_list/1,
 	 empty/0,null/1,
          cons/2,head/1,tail/1,
          snoc/2,last/1,init/1]).
 
+-include("include/deque.hrl").
+
 -define(C, 2).
 
 -spec from_list(list()) -> #deque{}.
-from_list(List) ->
-    lists:foldr(fun cons/2, empty(), List).
+from_list(List) -> lists:foldr(fun cons/2, empty(), List).
 
 -spec to_list(#deque{}) -> list().
 to_list(#deque{front=F,frontLen=LenF,rear=R,rearLen=LenR}) ->
@@ -18,9 +19,7 @@ to_list(#deque{front=F,frontLen=LenF,rear=R,rearLen=LenR}) ->
     Front ++ Rear.
 
 -spec empty() -> #deque{}.
-empty() ->
-    #deque{front=[],frontLen=0,
-           rear=[],rearLen=0}.
+empty() -> #deque{front=[],frontLen=0,rear=[],rearLen=0}.
 
 -spec null(#deque{}) -> boolean().
 null(#deque{frontLen=0,rearLen=0}) -> true;
@@ -36,8 +35,7 @@ head(#deque{rear=[Head|_Tail]}) -> Head.
 
 -spec tail(#deque{}) -> #deque{}.
 tail(#deque{front=[]}) -> empty();
-tail(#deque{frontLen=LenF}=Q) ->
-    balance(Q#deque{frontLen=LenF - 1}).
+tail(#deque{frontLen=LenF}=Q) -> balance(Q#deque{frontLen=LenF - 1}).
 
 -spec snoc(#deque{}, any()) -> #deque{}.
 snoc(Q,X) -> reverse(cons(X,reverse(Q))).
