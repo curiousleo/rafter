@@ -10,7 +10,7 @@
 -define(C, 2).
 
 -spec from_list(list()) -> #deque{}.
-from_list(List) -> lists:foldr(fun cons/2, empty(), List).
+from_list(List) -> reverse(lists:foldl(fun cons/2, empty(), List)).
 
 -spec to_list(#deque{}) -> list().
 to_list(#deque{front=F,frontLen=LenF,rear=R,rearLen=LenR}) ->
