@@ -5,6 +5,8 @@
          cons/2,head/1,tail/1,
          snoc/2,last/1,init/1]).
 
+-define(C, 2).
+
 from_list(List) ->
     lists:foldr(fun cons/2, empty(), List).
 
@@ -39,13 +41,13 @@ init(Q) -> reverse(tail(reverse(Q))).
 reverse(#deque{front=F,frontLen=LenF,rear=R,rearLen=LenR}) ->
     #deque{front=R,frontLen=LenR,rear=F,rearLen=LenF}.
 
-balance(#deque{frontLen=LenF,rearLen=LenR}=Q) when LenF > 2*LenR + 1 ->
+balance(#deque{frontLen=LenF,rearLen=LenR}=Q) when LenF > ?C*LenR + 1 ->
     NewLenF = (LenF + LenR) div 2,
     NewLenR = LenF + LenR - NewLenF,
     {NewF,FrontTail} = lists:split(NewLenF,Q#deque.front),
     NewR = Q#deque.rear ++ lists:reverse(FrontTail),
     #deque{front=NewF,frontLen=NewLenF,rear=NewR,rearLen=NewLenR};
-balance(#deque{frontLen=LenF,rearLen=LenR}=Q) when LenR > 2*LenF + 1 ->
+balance(#deque{frontLen=LenF,rearLen=LenR}=Q) when LenR > ?C*LenF + 1 ->
     NewLenF = (LenF + LenR) div 2,
     NewLenR = LenF + LenR - NewLenF,
     {NewR,RearTail} = lists:split(NewLenR,Q#deque.rear),
