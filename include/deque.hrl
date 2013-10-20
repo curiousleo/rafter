@@ -1,5 +1,5 @@
 -record(deque, {
-            front :: list(),
-            frontLen :: non_neg_integer(),
-            rear :: list(),
-            rearLen :: non_neg_integer()}).
+            front=[] :: list(),
+            frontLen=0 :: non_neg_integer(),
+            rear=[] :: list(),
+            rearLen=0 :: non_neg_integer()}).
