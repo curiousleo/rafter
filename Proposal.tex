@@ -135,6 +135,10 @@ For the project to be deemed a success the following items must be successfully 
 
 \item[More voting schemes.] Add more voting schemes, for example the Tree Quorum Protocol.
 
+\item[TCP or HTTP interface.] Extend the project with a CRUD (Create, Read, Update, Delete) API that can be accessed via TCP or HTTP.
+
+\item[Exactly-once semantics.] Use unique client IDs to guarantee exactly-once semantics.
+
 \item[Heterogeneous voting scheme.] Allow for a mapping from the number of nodes to a voting scheme to be defined as part of the configuration before Rafter starts up. Then, Rafter should switch to the appropriate voting scheme whenever a membership change occurs.
 
 \item[Advanced key-value store.] Many extensions to the simple key-value store state machine that is already part of Rafter are possible. One idea would be to use a persistent database for data storage.
