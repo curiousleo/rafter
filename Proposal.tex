@@ -103,7 +103,9 @@ All the unstructured and structured voting schemes that will be implemented can 
 
 In order for Rafter to use voting schemes for quorum finding, the data structure which specifies a node's configuration will have to include the current voting structure.
 
-For benchmarking purposes, an application on top of Rafter will be required. A simple in-memory key-value store has already been implemented. Several optional extensions to this key-value store are possible.
+To obtain meaningful benchmarks and demonstrate the usefulness of this project, an application on top of Rafter will be required. A simple in-memory key-value store state machine has already exists, but so far the only way to communicate with the cluster is via Erlang's own message passing protocol.
+
+This means that there are two ways of benchmarking the system once structured voting schemes have been implemented: Either by writing and running an Erlang benchmarking tool that communicates with the Rafter cluster using Erlang's message passing primitives, or by first adding a compatibility layer on top of Rafter that implements a popular key-value store protocol, and then running an existing benchmarking tool that supports this protocol.\footnote{Popular key-value stores with well-defined protocols include Memcached (\url{http://memcached.org}) and Redis (\url{http://redis.io}); benchmarking tools exist for both systems.} The method I will use to benchmark the system will ultimately depend on whether I will have the time to write a compatibility layer. Either way, the latency distribution for both read and write operations (in units of time) and throughput (in operations per time unit) will be measured.
 
 \section{Success Criteria%
   \label{success-criteria}%
@@ -117,9 +119,9 @@ For the project to be deemed a success the following items must be successfully 
 
 \item Incorporating the above algorithms and data structures into Rafter so they can be used to find quorums.
 
-\item Design and implementation of a benchmark suite for a distributed key-value store on top of Rafter. The benchmark metrics must include latency and throughput measured under a range of system loads.
+\item Setting up the project so it can be run as a distributed key-value store in the Amazon Elastic Compute Cloud (\textsc{EC2}) infrastructure.
 
-\item The project must be set up so it can be run as a distributed key-value store in the Amazon Elastic Compute Cloud (EC2) infrastructure. Then the benchmarks have to be run and the results collected and evaluated. The evaluation must include a comparison of the benchmarks collected for the different voting schemes that have been implemented.
+\item Running the benchmarks, and collecting and evaluating the results (the benchmark metrics, latency and throughput, are further specified above). The evaluation must include a comparison and discussion of the benchmarks collected for the different voting schemes.
 
 
 \end{enumerate}
