@@ -31,7 +31,7 @@
 
 \vfil
 
-\centerline{\large Computer Science Part \textsc{II} Project Proposal} \vspace{0.4in}
+\centerline{\large Computer Science Part \textsc{ii} Project Proposal} \vspace{0.4in}
 \centerline{\Large\bf Extending Raft with Structured Voting} \vspace{0.3in}
 \centerline{\large\it October 24, 2013}
 
@@ -77,9 +77,9 @@ In this project, I will extend an existing implementation of the Raft consensus 
 
 \item[Implementation of Raft.] \emph{Rafter}\footnote{Andrew J.\,Stone. Rafter: An Erlang library application which implements the Raft consensus protocol (Git repository), accessed October 17, 2013. \url{https://github.com/andrewjstone/rafter}.} is an open source implementation of Raft written in Erlang by Andrew J.\,Stone at Basho, Inc. It still being developed, but mostly feature-complete. I will use its code as the basis for this project.
 
-\item[Concurrent and Distributed Systems.] The Part \textsc{IB} lecture courses Concurrent Systems and Distributed Systems have given me an appreciation for the challenges that such systems pose. During my work placement this summer, I implemented a minimalistic distributed key-value store that used structured voting protocols to guarantee consistency as a proof of concept in Node.js/JavaScript.
+\item[Concurrent and Distributed Systems.] The Part \textsc{ib} lecture courses Concurrent Systems and Distributed Systems have given me an appreciation for the challenges that such systems pose. During my work placement this summer, I implemented a minimalistic distributed key-value store that used structured voting protocols to guarantee consistency as a proof of concept in Node.js/JavaScript.
 
-\item[Erlang programming language.] Most of the code I will be writing for this project will be in Erlang, a programming language I have no prior experience with. However, I am familiar with functional programming from both the Part \textsc{IA} Standard \textsc{ML} exercises and from small personal projects in Haskell and OCaml.
+\item[Erlang programming language.] Most of the code I will be writing for this project will be in Erlang, a programming language I have no prior experience with. However, I am familiar with functional programming from both the Part \textsc{ia} Standard \textsc{ml} exercises and from small personal projects in Haskell and OCaml.
 
 \end{description}
 
@@ -110,7 +110,7 @@ The following should be completed:
 
 \item Incorporating the above algorithms and data structures into Rafter so they can be used to find quorums.
 
-\item Setting up the project so it can be run as a distributed key-value store in the Amazon Elastic Compute Cloud (\textsc{EC2}) infrastructure.
+\item Setting up the project so it can be run as a distributed key-value store in the Amazon Elastic Compute Cloud (\textsc{ec2}) infrastructure.
 
 \item Running the benchmarks, and collecting and evaluating the results (the benchmark metrics are further specified above). The evaluation must include a comparison and discussion of the benchmarks collected for the different voting schemes.
 
@@ -127,9 +127,9 @@ The following should be completed:
 
 \item[More voting schemes.] Investigate other voting schemes, for example the Tree Quorum Protocol.
 
-\item[\textsc{TCP} or \textsc{HTTP} interface.] Extend the project with a \textsc{CRUD} (Create, Read, Update, Delete) \textsc{API} that can be accessed via \textsc{TCP} or \textsc{HTTP}. This \textsc{API} should model the protocol of some existing key-value store as closely as possible so that the respective benchmarking tools can be used.
+\item[\textsc{tcp} or \textsc{http} interface.] Extend the project with a \textsc{crud} (Create, Read, Update, Delete) \textsc{api} that can be accessed via \textsc{tcp} or \textsc{http}. This \textsc{api} should model the protocol of some existing key-value store as closely as possible so that the respective benchmarking tools can be used.
 
-\item[Exactly-once semantics.] Use unique client IDs to guarantee exactly-once semantics.
+\item[Exactly-once semantics.] Use unique client \textsc{id}s to guarantee exactly-once semantics.
 
 \item[Heterogeneous voting scheme.] Allow for a mapping from the number of nodes to a voting scheme to be defined as part of the configuration before Rafter starts up. Rafter should then switch to the appropriate voting scheme whenever a membership change occurs.
 
@@ -209,7 +209,7 @@ Design and write benchmarking tool.
   \label{weeks-17-and-18-feb-10-to-feb-23}%
 }
 
-Set-up and configuration for Amazon \textsc{EC2}. Running the benchmarks.
+Set-up and configuration for Amazon \textsc{ec2}. Running the benchmarks.
 
 \emph{Milestones:} Collecting and interpreting the benchmarking results.
 
@@ -239,7 +239,7 @@ Clean-up of code and dissertation.
 %
 Development will predominantly be on my laptop running Linux. I accept full responsibility for this machine and I have made contingency plans to protect myself against hardware and/or software failure: I will use Git to keep track of changes in my code and reports, and I will push these changes to my GitHub repository\footnote{\href{http://github.com}{GitHub} is a Git repository hosting service. The most current version of my code and reports will always be available at \url{http://github.com/curiousleo/rafter}.}  every day. In addition, I will take weekly backups to an external hard drive.
 
-In order to benchmark the project under realistic conditions, I will require Amazon \textsc{EC2} compute time on a sufficient number of nodes (at least 100). My supervisors have assured me that the Systems Research Group has credits available that I can use.
+In order to benchmark the project under realistic conditions, I will require Amazon \textsc{ec2} compute time on a sufficient number of nodes (at least 100). My supervisors have assured me that the Systems Research Group has credits available that I can use.
 
 \bibliographystyle{plain}
 \bibliography{Bibliography}
