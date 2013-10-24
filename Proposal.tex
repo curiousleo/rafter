@@ -5,25 +5,21 @@
 \usepackage[oldstylenums,light,largesmallcaps]{kpfonts}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
-\setcounter{secnumdepth}{0}
 \usepackage{tabularx}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue]{hyperref}
 
 %%% Custom LaTeX preamble
 % serif headings:
 \addtokomafont{disposition}{\rmfamily}
 \addtokomafont{descriptionlabel}{\rmfamily}
-% hyperlinks:
-\ifthenelse{\isundefined{\hypersetup}}{
-  \usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue]{hyperref}
-  \urlstyle{same} % normal text font (alternatives: tt, rm, sf)
-}{}
+% no section numbering
+\setcounter{secnumdepth}{0}
+% hyperlinks
+\urlstyle{same} % normal text font (alternatives: tt, rm, sf)
 \hypersetup{
   pdftitle={Extending Raft with Structured Voting},
+  pdfauthor={Leonhard Markert (lm510), Emmanuel College}
 }
-
-%%% Title Data
-\title{Extending Raft with Structured Voting}
-\author{Leonhard Markert (lm510), Emmanuel College}
 
 %%% Body
 \begin{document}
