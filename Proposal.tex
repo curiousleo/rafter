@@ -54,17 +54,17 @@
   \label{introduction-and-description-of-work}%
 }
 
-Finding quorums is a key functionality of any strongly consistent distributed system. Raft \cite{raft} is a new consensus algorithm that is designed to be used instead of Paxos \cite{paxos} whilst being easier to understand and implement correctly. It models the distributed system as a replicated state machine using a replicated log. Raft features a strong leader, an explicit membership change mechanism and a (partial) correctness proof.\footnote{Safety Proof and Formal Specification for Raft, accessed October 17, 2013. \url{http://raftuserstudy.s3-website-us-west-1.amazonaws.com/proof.pdf}}
+Finding quorums is a key functionality of any strongly consistent distributed system. Raft \cite{raft} is a new consensus algorithm that is designed to be used instead of Paxos \cite{paxos} whilst being easier to understand and implement correctly. It models the distributed system as a replicated state machine using a replicated log. Raft features a strong leader, an explicit membership change mechanism and a (partial) correctness proof \cite{proof}.
 
-By default, Raft uses majority voting to find quorums. Both the initial paper and the separate correctness proof suggest that it should be possible to replace majority voting by other voting schemes.
+By default, Raft uses Majority Consensus Voting to find quorums. Both the initial paper and the separate correctness proof suggest that it should be possible to replace Majority Consensus Voting by other voting schemes.
 
-Structured voting schemes \cite{voting} impose a logical structure on the set of processes and use structural properties to specify quorum systems. Each voting scheme defines a way to construct \emph{write quorums}, with the property that any two write quorums overlap. The Grid protocol, for instance, logically arranges all nodes in a rectangular grid. A write quorum in the Grid protocol consists of the union of one entire row of nodes and one entire column of nodes. Clearly, any two such write quorums intersect. Since this intersection property is the only requirement for the correctness proof, replacing majority consensus by a write quorum computed from a structured voting scheme does not affect the correctness of the Raft algorithm.
+Structured voting schemes \cite{voting} impose a logical structure on the set of processes and use structural properties to specify quorum systems. Each voting scheme defines a way to construct \emph{write quorums}, with the property that any two write quorums overlap. The Grid Protocol, for instance, logically arranges all nodes in a rectangular grid. A write quorum in the Grid Protocol consists of the union of one entire row of nodes and one entire column of nodes. Clearly, any two such write quorums intersect. Since this intersection property is the only requirement for the correctness proof, replacing Majority Consensus Voting by a write quorum computed from a structured voting scheme does not affect the correctness of the Raft algorithm.
 
-Structured voting protocols have the drawback that they may fail to generate a quorum even though more than half of the nodes are available (i.\,e.\ neither failed nor busy). They may, on the other hand, find a quorum even when fewer than half of the nodes are available. Majority voting will always succeed in finding a quorum in the former case, and it will necessarily fail to do so in the latter case. Thus structured voting schemes allow for a trade-off, being less reliable than majority voting if most nodes are available, but more reliable if the majority of nodes is not available.
+Structured voting protocols have the drawback that they may fail to generate a quorum even though more than half of the nodes are available (i.\,e.\ neither failed nor busy). They may, on the other hand, find a quorum even when fewer than half of the nodes are available. Majority voting will always succeed in finding a quorum in the former case, and it will necessarily fail to do so in the latter case. Thus structured voting schemes allow for a trade-off, being less reliable than Majority Consensus Voting if most nodes are available, but more reliable if the majority of nodes is not available.
 
-There are at least two scenarios under which this last point becomes relevant: Firstly, under high load, a majority of nodes may be busy processing requests. Using a structured voting scheme, it may still be possible to get a quorum, avoiding an expensive retry of the operation that would be necessary when a majority voting scheme was employed. Secondly, it may be that node failures are not, as is often assumed, independent. In this case, the structured voting scheme could be specifically designed for resilience against certain failure modes like the power outage of entire racks or connection problems between data centres.
+There are at least two scenarios under which this last point becomes relevant: Firstly, under high load, a majority of nodes may be busy processing requests. Using a structured voting scheme, it may still be possible to get a quorum, avoiding an expensive retry of the operation that would be necessary when a Majority Consensus Voting scheme was employed. Secondly, it may be that node failures are not, as is often assumed, independent. In this case, the structured voting scheme could be specifically designed for resilience against certain failure modes like the power outage of entire racks or connection problems between data centres.
 
-The aim of this project is twofold: To add structured voting protocols to an existing implementation of the Raft consensus algorithm, and to compare the performance of different structured voting protocols with the performance of Raft's default majority consensus voting.
+The aim of this project is twofold: To add structured voting protocols to an existing implementation of the Raft consensus algorithm, and to compare the performance of different structured voting protocols with the performance of Raft's default Majority Consensus Voting.
 
 
 \section{Starting Point%
@@ -76,13 +76,13 @@ In this project, I will extend an existing implementation of the Raft consensus 
 
 \begin{description}
 
-\item[Raft consensus algorithm.] I have listened to a recorded lecture on Raft by one of its creators. I have skimmed through the relevant sections of the paper and the separate correctness proof.
+	\item[Raft consensus algorithm.] I have read the Rafter paper \cite{raft}, listened to a recorded lecture on Raft by one of its creators, and studied the separate correctness proof.
 
-\item[Implementation of Raft.] \emph{Rafter}\footnote{Andrew J.\,Stone. Rafter: An Erlang library application which implements the Raft consensus protocol (Git repository), accessed October 17, 2013. \url{https://github.com/andrewjstone/rafter}} is an open source implementation of Raft written in Erlang by Andrew J.\,Stone at Basho, Inc. It still being developed, but mostly feature-complete. I will use its code as the basis for this project.
+\item[Implementation of Raft.] \emph{Rafter}\footnote{Andrew J.\,Stone. Rafter: An Erlang library application which implements the Raft consensus protocol (Git repository), accessed October 17, 2013. \url{https://github.com/andrewjstone/rafter}.} is an open source implementation of Raft written in Erlang by Andrew J.\,Stone at Basho, Inc. It still being developed, but mostly feature-complete. I will use its code as the basis for this project.
 
-\item[Concurrent and Distributed Systems.] The Part IB lecture courses Concurrent Systems and Distributed Systems have given me an appreciation for the challenges that such systems pose. During my work placement this summer, I implemented a minimalistic distributed key-value store that used structured voting protocols to guarantee consistency as a proof of concept in Node.js/JavaScript.
+\item[Concurrent and Distributed Systems.] The Part \textsc{IB} lecture courses Concurrent Systems and Distributed Systems have given me an appreciation for the challenges that such systems pose. During my work placement this summer, I implemented a minimalistic distributed key-value store that used structured voting protocols to guarantee consistency as a proof of concept in Node.js/JavaScript.
 
-\item[Erlang programming language.] Most of the code I will be writing for this project will be in Erlang, a programming language I have no prior experience with. However, I am familiar with functional programming from both the Part IA Standard ML exercises and from small personal projects in Haskell and OCaml.
+\item[Erlang programming language.] Most of the code I will be writing for this project will be in Erlang, a programming language I have no prior experience with. However, I am familiar with functional programming from both the Part \textsc{IA} Standard \textsc{ML} exercises and from small personal projects in Haskell and OCaml.
 
 \end{description}
 
@@ -91,7 +91,7 @@ In this project, I will extend an existing implementation of the Raft consensus 
   \label{substance-and-structure-of-the-project}%
 }
 
-The objective of this project is to add structured voting protocols to Rafter, and to benchmark different structured voting protocols against each other and against Raft's default majority consensus algorithm.
+The objective of this project is to add structured voting protocols to Rafter, and to benchmark different structured voting protocols against each other and against Raft's default Majority Consensus Voting algorithm.
 
 All the unstructured and structured voting schemes that will be implemented can be specified by voting structures \cite{voting}, which describe the set of quorums. For each voting scheme, a generator will have to be written that maps the set of nodes and potentially some further options to a voting structure. I will also require an interpreter algorithm that decides whether a certain set of nodes constitutes a quorum within a given voting structure.
 
@@ -151,9 +151,9 @@ For the project to be deemed a success the following items must be successfully 
   \label{before-proposals-submission}%
 }
 
-Discussion with Overseers and Director of Studies. Allocation of and discussion with Project Supervisor, preliminary reading, writing Project Proposal. Discussion with Supervisor to arrange a schedule of regular meetings for obtaining support during the course of the year.
+Discussion with Overseers and Director of Studies. Allocation of and discussion with Project Supervisors, preliminary reading, writing Project Proposal. Discussion with Supervisors to arrange a schedule of regular meetings for obtaining support during the course of the year.
 
-\emph{Milestones:} Phase 1 Report Form on Monday 14, 2013, then a Project Proposal complete with as realistic a timetable as possible by Wednesday 17, 2013, approval from Overseers and confirmed availability of any special resources needed. Signatures from Supervisor and Director of Studies.
+\emph{Milestones:} Phase 1 Report Form on Monday 14, 2013, then a Project Proposal complete with as realistic a timetable as possible by Wednesday 17, 2013, approval from Overseers and confirmed availability of any special resources needed. Signatures from Supervisors and Director of Studies.
 
 
 \subsection{Weeks 1 and 2 (Oct 21 to Nov 3)%
@@ -162,7 +162,7 @@ Discussion with Overseers and Director of Studies. Allocation of and discussion 
 
 Familiarisation with Erlang: I will read the relevant parts of the introductory Erlang book \emph{Learn You Some Erlang for Great Good} \cite{lysefgg}, get an overview over the Erlang documentation and ecosystem, and write small example programs in Erlang.
 
-\emph{Milestones:} An Erlang implementation of a non-trivial algorithm that uses records, tuples, lists and recursion. There should be unit tests, and \emph{Dialyzer}\footnote{Dialyzer, the DIscrepancy AnalYZer for ERlang programs, can be used to statically type check Erlang programs. \url{http://www.erlang.org/doc/man/dialyzer.html}} should be employed for static code checking.
+\emph{Milestones:} An Erlang implementation of a non-trivial algorithm that uses records, tuples, lists and recursion. There should be unit tests, and \emph{Dialyzer}\footnote{Dialyzer, the Discrepancy Analyzer for Erlang programs, can be used to statically type check Erlang programs. \url{http://www.erlang.org/doc/man/dialyzer.html}.} should be employed for static code checking.
 
 
 \subsection{Weeks 3 to 6 (Nov 3 to Dec 1)%
@@ -204,15 +204,15 @@ Write progress report and create presentation.
   \label{weeks-15-and-16-jan-27-to-feb-9}%
 }
 
-Design and write benchmarking suite.
+Design and write benchmarking tool.
 
-\emph{Milestones:} Running the benchmarking suite locally and collecting and interpreting the results.
+\emph{Milestones:} Running the benchmarkings locally and collecting and interpreting the results.
 
 \subsection{Weeks 17 and 18 (Feb 10 to Feb 23)%
   \label{weeks-17-and-18-feb-10-to-feb-23}%
 }
 
-Set-up and configuration for Amazon \textsc{EC2}. Running the benchmarking suite.
+Set-up and configuration for Amazon \textsc{EC2}. Running the benchmarks.
 
 \emph{Milestones:} Collecting and interpreting the benchmarking results.
 
@@ -240,7 +240,7 @@ Clean-up of code and dissertation.
   \label{resources-required}%
 }
 %
-Development will predominantly be on my laptop running Linux. I accept full responsibility for this machine and I have made contingency plans to protect myself against hardware and/or software failure: I will use Git to keep track of changes in my code and reports, and I will push these changes to my GitHub repository\footnote{\href{http://github.com}{GitHub} is a Git repository hosting service. The most current version of my code and reports will be available at \url{http://github.com/curiousleo/rafter}}  every day. In addition, I will take weekly backups to an external hard drive.
+Development will predominantly be on my laptop running Linux. I accept full responsibility for this machine and I have made contingency plans to protect myself against hardware and/or software failure: I will use Git to keep track of changes in my code and reports, and I will push these changes to my GitHub repository\footnote{\href{http://github.com}{GitHub} is a Git repository hosting service. The most current version of my code and reports will be available at \url{http://github.com/curiousleo/rafter}.}  every day. In addition, I will take weekly backups to an external hard drive.
 
 In order to benchmark the project under realistic conditions, I will require Amazon \textsc{EC2} compute time on a sufficient number of nodes (at least 100). My supervisors have assured me that the Systems Research Group has credits available that I can use.
 
