@@ -51,15 +51,15 @@
   \label{introduction-and-description-of-work}%
 }
 
-Finding quorums is a key functionality of any strongly consistent distributed system. Raft \cite{raft} is a new consensus algorithm that is designed to be used instead of Paxos \cite{paxos} whilst being easier to understand and implement correctly. It models the distributed system as a replicated state machine using a replicated log. Raft features a strong leader, an explicit membership change mechanism and a (partial) correctness proof~\cite{proof}.
+Finding quorums is a key functionality of any strongly consistent distributed system. Raft \cite{raft} is a new consensus algorithm to be used instead of Paxos \cite{paxos}, aiming to be easier to understand and implement correctly. It models the distributed system as a replicated state machine using a replicated log. Raft features a strong leader, an explicit membership change mechanism and a (partial) correctness proof~\cite{proof}.
 
-By default, Raft uses Majority Consensus Voting to find quorums. Both the initial paper and the separate correctness proof suggest that it should be possible to replace Majority Consensus Voting by other voting schemes.
+By default, Raft uses Majority Consensus Voting to find quorums. Both the initial paper and the separate correctness proof suggest that it should be possible to replace Majority Consensus Voting by alternative schemes.
 
-Structured voting schemes \cite{voting} impose a logical structure on the set of processes and use structural properties to specify quorum systems. Each voting scheme defines a way to construct \emph{write quorums}, with the property that any two write quorums overlap. The Grid Protocol, for instance, logically arranges all nodes in a rectangular grid. A write quorum in the Grid Protocol consists of the union of one entire row of nodes and one entire column of nodes. Clearly, any two such write quorums intersect. Since this intersection property is the only requirement for the correctness proof, replacing Majority Consensus Voting by a write quorum computed from a structured voting scheme does not affect the correctness of the Raft algorithm.
+Structured voting schemes \cite{voting} impose a logical structure on the set of processes and use structural properties to specify quorum systems. Each voting scheme defines a way to construct \emph{write quorums}, any two of which overlap. The Grid Protocol, for instance, logically arranges all nodes in a rectangular grid. A write quorum in the Grid Protocol consists of the union of one entire row and one entire column of nodes. Clearly, by construction, any two such write quorums intersect. Since this intersection property is the only requirement for the correctness proof, replacing Majority Consensus Voting by a write quorum computed from a structured voting scheme does not affect the correctness of the Raft algorithm.
 
-Structured voting protocols have the drawback that they may fail to generate a quorum even though more than half of the nodes are available (i.\,e.\ neither failed nor busy). They may, on the other hand, find a quorum even when fewer than half of the nodes are available. Majority voting will always succeed in finding a quorum in the former case, and it will necessarily fail to do so in the latter case. Thus structured voting schemes allow for a trade-off, being less reliable than Majority Consensus Voting if most nodes are available, but more reliable if the majority of nodes is not available.
+Structured voting protocols have the drawback that they may fail to generate a quorum, even though more than half of the nodes are available (i.\,e.\ neither failed nor busy). They may, on the other hand, find a quorum even when fewer than half of the nodes are available. Majority voting will always succeed in finding a quorum in the former case, and will necessarily fail to do so in the latter case. Thus structured voting schemes involve a trade-off, being less reliable than Majority Consensus Voting if most nodes are available, but more reliable if the majority of nodes is not available.
 
-There are at least two scenarios under which this last point becomes relevant: Firstly, under high load, a majority of nodes may be busy processing requests. Using a structured voting scheme, it may still be possible to get a quorum, avoiding an expensive retry of the operation that would be necessary when a Majority Consensus Voting scheme was employed. Secondly, it may be that node failures are not, as is often assumed, independent. In this case, the structured voting scheme could be specifically designed for resilience against certain failure modes like the power outage of entire racks or connection problems between data centres.
+There are at least two scenarios under which this last point becomes relevant: firstly, under high load a majority of nodes may be busy processing requests. Using a structured voting scheme, it may still be possible to assemble a quorum, avoiding an expensive retry of the operation that would be necessary when a Majority Consensus Voting scheme was employed. Secondly, it may be the case that node failures are not independent, as is often assumed. In this case, the structured voting scheme could be specifically designed for resilience against certain failure modes like the power outage of entire racks or connection problems between data centres.
 
 The aim of this project is to add structured voting protocols to an existing implementation of the Raft consensus algorithm, and to compare the performance of different structured voting protocols with the performance of Raft's default Majority Consensus Voting.
 
@@ -75,11 +75,11 @@ In this project, I will extend an existing implementation of the Raft consensus 
 
 \item[Raft consensus algorithm.] I have read the Rafter paper \cite{raft}, listened to a recorded lecture on Raft by one of its creators, and studied the separate correctness proof.
 
-\item[Implementation of Raft.] \emph{Rafter}\footnote{Andrew J.\,Stone. Rafter: An Erlang library application which implements the Raft consensus protocol (Git repository), accessed October 17, 2013. \url{https://github.com/andrewjstone/rafter}.} is an open source implementation of Raft written in Erlang by Andrew J.\,Stone at Basho, Inc. It still being developed, but mostly feature-complete. I will use its code as the basis for this project.
+\item[Implementation of Raft.] \emph{Rafter}\footnote{Andrew J.\,Stone. Rafter: An Erlang library application which implements the Raft consensus protocol (Git repository), accessed October 17, 2013. \url{https://github.com/andrewjstone/rafter}.} is an open source implementation of Raft written in Erlang by Andrew J.\,Stone at Basho, Inc. It still being developed, but is mostly feature-complete. I shall use its code as the basis for this project.
 
 \item[Concurrent and Distributed Systems.] The Part \textsc{ib} lecture courses Concurrent Systems and Distributed Systems have given me an appreciation for the challenges that such systems pose. During my work placement this summer, I implemented a minimalistic distributed key-value store that used structured voting protocols to guarantee consistency as a proof of concept in Node.js/JavaScript.
 
-\item[Erlang programming language.] Most of the code I will be writing for this project will be in Erlang, a programming language I have no prior experience with. However, I am familiar with functional programming from both the Part \textsc{ia} Standard \textsc{ml} exercises and from small personal projects in Haskell and OCaml.
+\item[Erlang programming language.] Most of the code I shall be writing for this project will be in Erlang, a programming language I have no prior experience with. However, I am familiar with functional programming from both the Part \textsc{ia} Standard \textsc{ml} exercises and from small personal projects in Haskell and OCaml.
 
 \end{description}
 
@@ -88,15 +88,15 @@ In this project, I will extend an existing implementation of the Raft consensus 
   \label{substance-and-structure-of-the-project}%
 }
 
-The objective of this project is to add structured voting protocols to Rafter, and to benchmark different structured voting protocols against each other and against Raft's default Majority Consensus Voting algorithm.
+The objective of this project is to add structured voting protocols to Rafter, and to benchmark different structured voting protocols both against each other and Raft's default Majority Consensus Voting algorithm.
 
 All the unstructured and structured voting schemes that will be implemented can be specified by voting structures \cite{voting}, which describe the set of quorums. For each voting scheme, a generator will have to be written that maps the set of nodes and potentially some further options to a voting structure. I will also require an interpreter algorithm that decides whether a certain set of nodes constitutes a quorum within a given voting structure.
 
-In order for Rafter to use voting schemes for quorum finding, the data structure which specifies a node's configuration will have to include the current voting structure.
+In order for Rafter to use voting schemes for quorum finding, the data structure that specifies a node's configuration will have to include the current voting structure.
 
 To obtain meaningful benchmarks and demonstrate the usefulness of this project, an application on top of Rafter will be required. A simple in-memory key-value store state machine already exists, but so far the only way to communicate with the cluster is via Erlang's own message passing protocol.
 
-This means that there are two ways of benchmarking the system once structured voting schemes have been implemented: Either by writing and running an Erlang benchmarking tool that communicates with the Rafter cluster using Erlang's message passing primitives, or, if time allows, by first adding a compatibility layer on top of Rafter that implements a popular key-value store protocol, and then running an existing benchmarking tool that supports this protocol.\footnote{Popular key-value stores with well-defined protocols include Memcached (\url{http://memcached.org}) and Redis (\url{http://redis.io}); benchmarking tools exist for both systems.} In both cases, the latency distribution for both read and write operations (in units of time) and throughput (in operations per time unit) will be measured.
+This means that there are two ways of benchmarking the system once structured voting schemes have been implemented: either by writing and running an Erlang benchmarking tool that communicates with the Rafter cluster using Erlang's message passing primitives, or, if time allows, by first adding a compatibility layer on top of Rafter that implements a popular key-value store protocol, and then running an existing benchmarking tool that supports this protocol.\footnote{Popular key-value stores with well-defined protocols include Memcached (\url{http://memcached.org}) and Redis (\url{http://redis.io}); benchmarking tools exist for both systems.} In both cases, the latency distribution for both read and write operations (in units of time) and throughput (in operations per time unit) will be measured.
 
 \section{Success Criteria%
   \label{success-criteria}%
@@ -106,7 +106,7 @@ The following should be completed:
 
 \begin{enumerate}
 
-\item Design of the data structure to represent voting structures and implementation and testing of the algorithm to interpret it. Implementation and testing of voting structure generators for at least Majority Voting and the Grid Protocol.
+\item Design of the data structure to represent voting structures, and implementation and testing of the algorithm to interpret it. Implementation and testing of voting structure generators for at least Majority Voting and the Grid Protocol.
 
 \item Incorporating the above algorithms and data structures into Rafter so they can be used to find quorums.
 
@@ -123,7 +123,7 @@ The following should be completed:
 %
 \begin{description}
 
-\item[Probability analysis.] Given the total number of nodes and the number of nodes that are not available, compute the probability of finding a quorum for different voting schemes.
+\item[Probability analysis.] Given both the total number of nodes and the number of nodes that are not available, compute the probability of finding a quorum for different voting schemes.
 
 \item[More voting schemes.] Investigate other voting schemes, for example the Tree Quorum Protocol.
 
@@ -133,7 +133,7 @@ The following should be completed:
 
 \item[Heterogeneous voting scheme.] Allow for a mapping from the number of nodes to a voting scheme to be defined as part of the configuration before Rafter starts up. Rafter should then switch to the appropriate voting scheme whenever a membership change occurs.
 
-\item[Advanced key-value store.] Many extensions to the simple key-value store state machine that is already part of Rafter are possible. One idea would be to use a persistent database for data storage.
+\item[Advanced key-value store.] Many extensions to the existing simple key-value store state machine are possible. One idea would be to use a persistent database for data storage.
 
 \item[Profiling and performance tuning.] The voting structure interpreter will incorporate some non-trivial tree walking operations. Trying to make these operations, and therefore quorum finding, as fast as possible would be a useful extension.
 
@@ -148,7 +148,7 @@ The following should be completed:
   \label{before-proposals-submission}%
 }
 
-Discussion with Overseers and Director of Studies. Allocation of and discussion with Project Supervisors, preliminary reading, writing Project Proposal. Discussion with Supervisors to arrange a schedule of regular meetings for obtaining support during the course of the year.
+Discussion with Overseers and Director of Studies. Allocation of and discussion with Project Supervisors, preliminary reading, and writing the Project Proposal. Discussion with Supervisors to arrange a schedule of regular meetings for obtaining support during the course of the year.
 
 \emph{Milestones:} Phase 1 Report Form on October 14, 2013, then a Project Proposal complete with as realistic a timetable as possible by October 17, 2013, approval from Overseers and confirmed availability of any special resources needed. Signatures from Supervisors and Director of Studies.
 
@@ -166,7 +166,7 @@ Familiarisation with Erlang: I will read the relevant parts of the introductory 
   \label{weeks-3-to-6-nov-3-to-dec-1}%
 }
 
-Designing the voting structure data representation and implement generators for Majority Consensus, and the Grid Protocol as well as an algorithm to interpret voting structures. For debugging, I will write a tool that allows a visual representation of the generated voting structures.
+Designing the voting structure data representation and implement generators for Majority Consensus and the Grid Protocol, as well as an algorithm to interpret voting structures. For debugging, I will write a tool that allows a visual representation of the generated voting structures.
 
 \emph{Milestones:} Diagrams of the voting structures generated by the implemented voting schemes.
 
@@ -201,7 +201,7 @@ Write progress report and create presentation.
   \label{weeks-15-and-16-jan-27-to-feb-9}%
 }
 
-Design and write benchmarking tool.
+Design and write the benchmarking tool.
 
 \emph{Milestones:} Running the benchmarkings locally and collecting and interpreting the results.
 
@@ -217,7 +217,7 @@ Set-up and configuration for Amazon \textsc{ec2}. Running the benchmarks.
   \label{weeks-19-and-20-feb-24-to-mar-9}%
 }
 
-Buffer time: Can be used for core work if I have fallen behind the schedule at this point; alternatively, this time can be used to work on one of the optional extensions.
+Buffer time: can be used for core work if I have fallen behind the schedule at this point; alternatively, this time can be used to work on one of the optional extensions.
 
 \subsection{Weeks 21 to 25 (Mar 10 to Apr 13)%
   \label{weeks-21-to-25-mar-10-to-apr-13}%
