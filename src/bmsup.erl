@@ -5,7 +5,7 @@
 -export([init/1]).
 
 start_link([]) ->
-    {ok, Super} = supervisor:start_link({local, ?MODULE}, ?MODULE, Args),
+    {ok, Super} = supervisor:start_link({local, ?MODULE}, ?MODULE, []),
     receive
         {Distr, {init, {Conc, Func, Times}}} ->
             Children = start_children(Super, Conc, [Func, Times, self()], [])
@@ -13,7 +13,7 @@ start_link([]) ->
     end,
     Distr ! ready,
     receive
-        start -> lists:foreach(Children, fun(C) -> C ! latency end)
+        start -> lists:foreach(fun(C) -> C ! latency end, Children)
     end,
     collect_results(Distr, Conc, []).
 

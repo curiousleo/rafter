@@ -3,7 +3,7 @@
 
 -export([repeat_rpc/2]).
 -export([latency/1]).
--export([start_link/2]).
+-export([start_link/3]).
 -export([init/1,
          handle_call/3, handle_cast/2, handle_info/2,
          terminate/2,
