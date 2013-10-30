@@ -4,14 +4,17 @@
 -export([start_link/1]).
 -export([init/1]).
 
-start_link(M, [Func, N]) ->
+start_link([]) ->
     {ok, Super} = supervisor:start_link({local, ?MODULE}, ?MODULE, Args),
-    Children = start_children(Super, M, [Func, N, self()], []),
-    % Children = [ C || _N <- lists:seq(1, M), {ok, C} <- supervisor:start_child(Super, Args) ],
     receive
-        start -> lists:foreach(Children, fun(C) -> C ! latency end),
-                 collect_results(Super, M, [])
-    end.
+        {init, {Super, M, {Func, N}}} ->
+            Children = start_children(Super, M, [Func, N, self()], [])
+            % Children = [ C || _N <- lists:seq(1, M), {ok, C} <- supervisor:start_child(Super, Args) ]
+    end,
+    receive
+        start -> lists:foreach(Children, fun(C) -> C ! latency end)
+    end,
+    collect_results(Super, M, []).
 
 collect_results(Super, 0, Results) -> Super ! {results, Results};
 collect_results(Super, M, Results) ->
