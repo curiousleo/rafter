@@ -7,25 +7,26 @@
 start_link([]) ->
     {ok, Super} = supervisor:start_link({local, ?MODULE}, ?MODULE, Args),
     receive
-        {init, {Super, M, {Func, N}}} ->
-            Children = start_children(Super, M, [Func, N, self()], [])
-            % Children = [ C || _N <- lists:seq(1, M), {ok, C} <- supervisor:start_child(Super, Args) ]
+        {Distr, {init, {Conc, Func, Times}}} ->
+            Children = start_children(Super, Conc, [Func, Times, self()], [])
+            % Children = [ C || _N <- lists:seq(1, Conc), {ok, C} <- supervisor:start_child(Super, Args) ]
     end,
+    Distr ! ready,
     receive
         start -> lists:foreach(Children, fun(C) -> C ! latency end)
     end,
-    collect_results(Super, M, []).
+    collect_results(Distr, Conc, []).
 
-collect_results(Super, 0, Results) -> Super ! {results, Results};
-collect_results(Super, M, Results) ->
+collect_results(Distr, 0, Results) -> Distr ! {results, Results};
+collect_results(Distr, Conc, Results) ->
     receive
-        {latency, Latency} -> collect_results(Super, M-1, [Latency|Results])
+        {latency, Latency} -> collect_results(Distr, Conc-1, [Latency|Results])
     end.
 
 start_children(_Super, 0, _Args, Children) -> Children;
-start_children(Super, M, Args, Children) ->
+start_children(Super, Conc, Args, Children) ->
     {ok, Child} = supervisor:start_child(Super, Args),
-    start_children(Super, M-1, Args, [Child|Children]).
+    start_children(Super, Conc-1, Args, [Child|Children]).
 
 init([]) ->
     {ok, {{simple_one_for_one, 5, 60},

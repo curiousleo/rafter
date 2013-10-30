@@ -19,9 +19,9 @@ repeat_rpc({Node, M, F, A}, N) ->
     rpc:call(Node, M, F, A, ?TIMEOUT),
     repeat_rpc({Node, M, F, A}, N-1).
 
-start_link(Func, N) -> gen_server:start_link(?MODULE, [Func, N], []).
+start_link(Func, N, Pid) -> gen_server:start_link(?MODULE, [Func, N, Pid], []).
 
-init([Func, N]) -> {ok, {Func, N}}.
+init([Func, N, Pid]) -> {ok, {Func, N, Pid}}.
 
 % init([Func={Node, M, F, A}, N]) ->
 %     case rpc:call(Node, M, F, A, ?TIMEOUT) of
@@ -29,11 +29,14 @@ init([Func, N]) -> {ok, {Func, N}}.
 %         _ -> {ok, {Func, N}}
 %     end.
 
-handle_call(latency, _From, {Func, N}) ->
+handle_call(latency, _From, {Func, N, Pid}) ->
     {Latency, ok} = timer:tc(?MODULE, repeat_rpc, [Func, N]),
     {reply, Latency / N, {Func, N}}.
 
-handle_cast(_, _) -> erlang:error("handle_cast").
+handle_cast(latency, {Func, N, Pid}) ->
+    {Latency, ok} = timer:tc(?MODULE, repeat_rpc, [Func, N]),
+    Pid ! {latency, Latency / N},
+    {noreply, {Func, N}}.
 
 handle_info(_, _) -> erlang:error("handle_info").
 
