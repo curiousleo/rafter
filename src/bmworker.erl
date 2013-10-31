@@ -29,9 +29,11 @@ init([Func, N, Pid]) -> {ok, {Func, N, Pid}}.
 %         _ -> {ok, {Func, N}}
 %     end.
 
-handle_call(latency, _From, {Func, N, Pid}) ->
-    {Latency, ok} = timer:tc(?MODULE, repeat_rpc, [Func, N]),
-    {reply, Latency / N, {Func, N}}.
+handle_call(_, _, _) -> erlang:error("handle_call").
+
+% handle_call(latency, _From, {Func, N, Pid}) ->
+%     {Latency, ok} = timer:tc(?MODULE, repeat_rpc, [Func, N]),
+%     {reply, Latency / N, {Func, N}}.
 
 handle_cast(latency, {Func, N, Pid}) ->
     {Latency, ok} = timer:tc(?MODULE, repeat_rpc, [Func, N]),

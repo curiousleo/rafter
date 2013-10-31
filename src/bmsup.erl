@@ -6,6 +6,7 @@
 
 start_link([]) ->
     {ok, Super} = supervisor:start_link({local, ?MODULE}, ?MODULE, []),
+    erlang:register(bmsup_p, self()),
     receive
         {Distr, {init, {Conc, Func, Times}}} ->
             Children = start_children(Super, Conc, [Func, Times, self()], [])

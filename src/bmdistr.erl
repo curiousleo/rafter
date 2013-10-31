@@ -3,7 +3,7 @@
 -export([benchmark/4]).
 
 benchmark(Func, Nodes, Conc, Times) ->
-    lists:foreach(fun(N) -> N ! {self(), {init, {Conc, Func, Times}}} end, Nodes),
+    lists:foreach(fun(N) -> {bmsup_p, N} ! {self(), {init, {Conc, Func, Times}}} end, Nodes),
     await_ready(length(Nodes)),
     lists:foreach(fun(N) -> N ! start end, Nodes),
     collect_results(length(Nodes), []).
