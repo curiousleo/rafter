@@ -1,7 +1,7 @@
 -module(bmdistr).
 -behaviour(gen_fsm).
 
-% -export([benchmark/4]).
+-export([benchmark/4]).
 -export([init/1, terminate/3,
          handle_event/3, handle_sync_event/4,
          handle_info/3, code_change/4,
@@ -9,16 +9,16 @@
 
 -record(state, {
     nodes=[] :: list(),
+    conc=0 :: non_neg_integer(),
     times=0 :: non_neg_integer(),
     latencies=[] :: list(),
     running=0 :: non_neg_integer()
 }).
 
-% benchmark(Func, Nodes, Conc, Times) ->
-    % lists:foreach(fun(N) -> {bmsup_p, N} ! {self(), {init, {Conc, Func, Times}}} end, Nodes),
-    % await_ready(length(Nodes)),
-    % lists:foreach(fun(N) -> N ! start end, Nodes),
-    % collect_results(length(Nodes), []).
+benchmark(Func, Nodes, Conc, Times) ->
+    Distr = gen_fsm:start_link(?MODULE, Nodes, []),
+    gen_fsm:send_event(Distr, {start, {Func, Conc, Times}}),
+    ok.
 
 init(Nodes) ->
     {ok, waiting, #state{nodes=Nodes}}.
@@ -26,9 +26,11 @@ init(Nodes) ->
 waiting({add_node, Node}, State=#state{nodes=Nodes}) ->
     {next_state, waiting, State#state{nodes=[Node|Nodes]}};
 
-waiting({start, {Func, N}}, State=#state{nodes=Nodes}) ->
-    lists:foreach(fun(Node) ->  {Node, bmsup_p} ! {start, {Func, N}} end, Nodes),
-    {next_state, running, State#state{running=length(Nodes)}}.
+waiting({start, {Func, Conc, Times}}, State=#state{nodes=Nodes}) ->
+    Msg = {start, {Func, Conc, Times}},
+    lists:foreach(fun(Node) ->  {Node, bmsup_p} ! Msg end, Nodes),
+    NewState = State#state{conc=Conc, times=Times, running=length(Nodes)},
+    {next_state, running, NewState}.
 
 running({done, Latencies}, State=#state{latencies=AvgLatencies, running=0}) ->
     lists:foreach(fun(L) -> io:format("Latency: ~w~n", L) end, AvgLatencies),
