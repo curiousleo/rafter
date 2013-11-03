@@ -6,10 +6,10 @@
          handle_info/3, code_change/4,
          waiting/2, running/2]).
 
-init(Distr) ->
-    {ok, waiting, Distr}.
+init([]) ->
+    {ok, waiting, []}.
 
-waiting({start, {Func, Conc, Times}}, Distr) ->
+waiting({start, {Func, Conc, Times, Distr}}, []) ->
     Sup = supervisor:start_link(bmworker, {Func, Times, self()}),
     lists:foreach(fun(_N) -> supervisor:start_child(Sup, []) end, lists:seq(1, Conc)),
     {next_state, running, {[], Conc, Sup, Distr}}.
@@ -36,7 +36,7 @@ kill_child(Sup, ChildId) ->
 handle_event(Event, _StateName, _StateData) ->
     {stop, "unknown asynchronous event occurred", Event}.
 
-handle_sync_event(Event, _From, _StateName, StateData) ->
+handle_sync_event(Event, _From, _StateName, _StateData) ->
     {stop, "unknown synchronous event occurred", Event}.
 
 handle_info(Info, _StateName, _StateData) ->

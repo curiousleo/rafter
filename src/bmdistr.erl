@@ -16,9 +16,8 @@
 }).
 
 benchmark(Func, Nodes, Conc, Times) ->
-    Distr = gen_fsm:start_link(?MODULE, Nodes, []),
-    gen_fsm:send_event(Distr, {start, {Func, Conc, Times}}),
-    ok.
+    {ok, Distr} = gen_fsm:start_link(?MODULE, Nodes, []),
+    gen_fsm:send_event(Distr, {start, {Func, Conc, Times}}).
 
 init(Nodes) ->
     {ok, waiting, #state{nodes=Nodes}}.
@@ -27,13 +26,13 @@ waiting({add_node, Node}, State=#state{nodes=Nodes}) ->
     {next_state, waiting, State#state{nodes=[Node|Nodes]}};
 
 waiting({start, {Func, Conc, Times}}, State=#state{nodes=Nodes}) ->
-    Msg = {start, {Func, Conc, Times}},
+    Msg = {start, {Func, Conc, Times, self()}},
     lists:foreach(fun(Node) ->  {Node, bmsup_p} ! Msg end, Nodes),
     NewState = State#state{conc=Conc, times=Times, running=length(Nodes)},
     {next_state, running, NewState}.
 
 running({done, Latencies}, State=#state{latencies=AvgLatencies, running=0}) ->
-    lists:foreach(fun(L) -> io:format("Latency: ~w~n", L) end, AvgLatencies),
+    lists:foreach(fun(L) -> io:format("Latency: ~w~n", L) end, [Latencies|AvgLatencies]),
     {next_state, waiting, State}; % ??
 
 running({done, Latencies}, State=#state{latencies=AvgLatencies, running=R}) ->
@@ -43,14 +42,14 @@ running({done, Latencies}, State=#state{latencies=AvgLatencies, running=R}) ->
 terminate(_Reason, waiting, _StateData) ->
     ok;
 
-terminate(_Reason, running, #state{nodes=Nodes}) ->
+terminate(_Reason, running, #state{nodes=_Nodes}) ->
     % TODO: do something
     ok.
 
 handle_event(Event, _StateName, _StateData) ->
     {stop, "unknown asynchronous event occurred", Event}.
 
-handle_sync_event(Event, _From, _StateName, StateData) ->
+handle_sync_event(Event, _From, _StateName, _StateData) ->
     {stop, "unknown synchronous event occurred", Event}.
 
 handle_info(Info, _StateName, _StateData) ->
