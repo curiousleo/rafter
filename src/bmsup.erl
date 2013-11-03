@@ -10,7 +10,7 @@ init(Distr) ->
     {ok, waiting, Distr}.
 
 waiting({start, {Func, N}}, Distr) ->
-    Sup = supervisor:start_link(bmworker, {Func, N}),
+    Sup = supervisor:start_link(bmworker, {Func, N, self()}),
     lists:foreach(fun(_N) -> supervisor:start_child(Sup, []) end, lists:seq(1, N)),
     {next_state, running, {[], N, Sup, Distr}}.
 
