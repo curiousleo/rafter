@@ -20,3 +20,27 @@ running({done, Latency}, {Latencies, 0, Sup, Distr}) ->
 
 running({done, Latency}, {Latencies, N, Sup, Distr}) ->
     {next_state, running, {[Latency|Latencies], N-1, Sup, Distr}}.
+
+terminate(_Reason, waiting, _StateData) ->
+    ok;
+
+terminate(_Reason, running, {_Latencies, N, Sup, _Distr}) ->
+    lists:foreach(fun(_N) -> kill_child(Sup, bmworker_id) end, lists:seq(1, N)),
+    ok.
+
+% helper function for terminate/2
+kill_child(Sup, ChildId) ->
+    supervisor:terminate_child(Sup, ChildId),
+    supervisor:delete_child(Sup, ChildId).
+
+handle_event(Event, _StateName, _StateData) ->
+    {stop, "unknown asynchronous event occurred", Event}.
+
+handle_sync_event(Event, _From, _StateName, StateData) ->
+    {stop, "unknown synchronous event occurred", Event}.
+
+handle_info(Info, _StateName, _StateData) ->
+    {stop, "unknown event occurred", Info}.
+
+code_change(_OldVsn, StateName, StateData, _Extra) ->
+    {ok, StateName, StateData}.
