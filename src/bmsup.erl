@@ -1,25 +1,39 @@
 -module(bmsup).
 -behaviour(gen_fsm).
 
+-export([start_bm/5]).
 -export([init/1, terminate/3,
          handle_event/3, handle_sync_event/4,
          handle_info/3, code_change/4,
          waiting/2, running/2]).
 
+-record(state, {
+    latencies=[] :: list(),
+    func :: fun(),
+    conc=0 :: non_neg_integer(),
+    times=0 :: non_neg_integer(),
+    sup :: pid(),
+    distr :: pid()
+}).
+
+start_bm(Sup, Func, Conc, Times, Distr) ->
+    S = #state{func=Func, conc=Conc, times=Times, sup=Sup, distr=Distr},
+    gen_fsm:send_event(Sup, {start, S}).
+
 init([]) ->
     {ok, waiting, []}.
 
-waiting({start, {Func, Conc, Times, Distr}}, []) ->
+waiting({start, S=#state{func=Func, conc=Conc, times=Times, distr=Distr}}, []) ->
     Sup = supervisor:start_link(bmworker, {Func, Times, self()}),
     lists:foreach(fun(_N) -> supervisor:start_child(Sup, []) end, lists:seq(1, Conc)),
-    {next_state, running, {[], Conc, Sup, Distr}}.
+    {next_state, running, S}.
 
-running({done, Latency}, {Latencies, 0, Sup, Distr}) ->
+running({done, Latency}, S=#state{latencies=Latencies, conc=0, distr=Distr}) ->
     Distr ! {self(), done, [Latency|Latencies]},
-    {next_state, waiting, Sup, Distr};
+    {next_state, waiting, S#state{latencies=[]}};
 
-running({done, Latency}, {Latencies, Conc, Sup, Distr}) ->
-    {next_state, running, {[Latency|Latencies], Conc-1, Sup, Distr}}.
+running({done, Latency}, S=#state{latencies=Latencies}) ->
+    {next_state, running, S#state{latencies=[Latency|Latencies]}}.
 
 terminate(_Reason, waiting, _StateData) ->
     ok;
