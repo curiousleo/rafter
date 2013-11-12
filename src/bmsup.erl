@@ -5,7 +5,7 @@
 -export([init/1, terminate/3,
          handle_event/3, handle_sync_event/4,
          handle_info/3, code_change/4,
-         waiting/2, running/2]).
+         waiting/2, running/3]).
 
 -record(state, {
     latencies=[] :: list(),
