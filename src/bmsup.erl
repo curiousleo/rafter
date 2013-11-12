@@ -24,23 +24,22 @@ start_bm(Sup, Func, Conc, Times, Distr) ->
 init([]) ->
     {ok, waiting, []}.
 
-waiting({start, S=#state{func=Func, conc=Conc, times=Times, distr=Distr}}, []) ->
-    Sup = supervisor:start_link(bmworker, {Func, Times, self()}),
-    lists:foreach(fun(_N) -> supervisor:start_child(Sup, []) end, lists:seq(1, Conc)),
-    {next_state, running, S}.
+waiting({start, S=#state{func=Func, conc=Conc, times=Times}}, []) ->
+    {ok, Sup} = supervisor:start_link(bmworker, {Func, Times, self()}),
+    Children = lists:map(fun(_N) -> io:format("child started~n"), {ok, Child} = supervisor:start_child(Sup, []), Child end, lists:seq(1, Conc)),
+    {next_state, running, S#state{children=Children}}.
 
-running({done, Latency}, S=#state{latencies=Latencies, conc=0, distr=Distr}) ->
-    Distr ! {self(), done, [Latency|Latencies]},
-    {next_state, waiting, S#state{latencies=[]}};
+running({done, Latency}, _From, S=#state{latencies=Latencies, conc=0}) ->
+    {reply, [Latency|Latencies], waiting, S#state{latencies=[]}};
 
-running({done, Latency}, S=#state{latencies=Latencies}) ->
+running({done, Latency}, _From, S=#state{latencies=Latencies}) ->
     {next_state, running, S#state{latencies=[Latency|Latencies]}}.
 
 terminate(_Reason, waiting, _StateData) ->
     ok;
 
-terminate(_Reason, running, {_Latencies, N, Sup, _Distr}) ->
-    lists:foreach(fun(_N) -> kill_child(Sup, bmworker_id) end, lists:seq(1, N)),
+terminate(_Reason, running, #state{sup=Sup, children=Children}) ->
+    lists:foreach(fun(Child) -> kill_child(Sup, Child) end, Children),
     ok.
 
 % helper function for terminate/2
