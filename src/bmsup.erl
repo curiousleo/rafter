@@ -13,7 +13,8 @@
     conc=0 :: non_neg_integer(),
     times=0 :: non_neg_integer(),
     sup :: pid(),
-    distr :: pid()
+    distr :: pid(),
+    children=[] :: list()
 }).
 
 start_bm(Sup, Func, Conc, Times, Distr) ->
