@@ -27,7 +27,7 @@ waiting({add_node, Node}, State=#state{nodes=Nodes}) ->
 
 waiting({start, {Func, Conc, Times}}, State=#state{nodes=Nodes}) ->
     Msg = {start, {Func, Conc, Times, self()}},
-    lists:foreach(fun(Node) ->  {Node, bmsup_p} ! Msg end, Nodes),
+    lists:foreach(fun(Node) ->  {bmsup_p, Node} ! Msg end, Nodes),
     NewState = State#state{conc=Conc, times=Times, running=length(Nodes)},
     {next_state, running, NewState}.
 
