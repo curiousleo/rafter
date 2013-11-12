@@ -2,7 +2,7 @@
 -behaviour(supervisor).
 
 -export([init/1]).
--export([time_rpc/3]).
+-export([repeat_rpc/2, time_rpc/3]).
 
 -define(TIMEOUT, 3000).
 
@@ -12,7 +12,7 @@ repeat_rpc({Node, M, F, A}, N) ->
     repeat_rpc({Node, M, F, A}, N-1).
 
 time_rpc(Func, N, Sup) ->
-    {Latency, ok} = timer:tc(?MODULE, repeat_rpc, [Func, N]),
+    {Latency, _Value} = timer:tc(?MODULE, repeat_rpc, [Func, N]),
     Sup ! {done, Latency / N}.
 
 init({Func, N, Sup}) ->
