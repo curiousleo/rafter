@@ -32,7 +32,8 @@ waiting({start, {Func, Conc, Times}}, State=#state{nodes=Nodes}) ->
     {next_state, running, NewState}.
 
 running({done, Latencies}, State=#state{latencies=AvgLatencies, running=0}) ->
-    lists:foreach(fun(L) -> io:format("Latency: ~w~n", L) end, [Latencies|AvgLatencies]),
+    Avg = lists:sum(Latencies) / State#state.times,
+    lists:foreach(fun(L) -> io:format("Latency: ~w~n", L) end, [Avg|AvgLatencies]),
     {next_state, waiting, State}; % ??
 
 running({done, Latencies}, State=#state{latencies=AvgLatencies, running=R}) ->
