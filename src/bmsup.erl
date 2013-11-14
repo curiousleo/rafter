@@ -25,8 +25,15 @@ init([]) ->
 
 waiting({start, {Func, Conc, Times, Distr}}, []) ->
     {ok, Sup} = supervisor:start_link(bmworker, {Func, Times, self()}),
-    Children = lists:map(fun(_N) -> io:format("child started~n"), {ok, Child} = supervisor:start_child(Sup, []), Child end, lists:seq(1, Conc)),
-    {next_state, running, S#state{children=Children}}.
+    Children = lists:map(fun(_N) -> start_child(Sup) end, lists:seq(1, Conc)),
+    S = #state{func=Func, conc=Conc, times=Times, sup=Sup, distr=Distr,
+               children=Children},
+    {next_state, running, S}.
+
+% helper function for waiting/2
+start_child(Sup) ->
+    {ok, Child} = supervisor:start_child(Sup, []),
+    Child.
 
 running({done, Latency}, _From, S=#state{latencies=Latencies, conc=0}) ->
     {reply, [Latency|Latencies], waiting, S#state{latencies=[]}};
