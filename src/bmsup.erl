@@ -18,13 +18,12 @@
 }).
 
 start_bm(Sup, Func, Conc, Times, Distr) ->
-    S = #state{func=Func, conc=Conc, times=Times, sup=Sup, distr=Distr},
-    gen_fsm:send_event(Sup, {start, S}).
+    gen_fsm:send_event(Sup, {start, {Func, Conc, Times, Distr}}).
 
 init([]) ->
     {ok, waiting, []}.
 
-waiting({start, S=#state{func=Func, conc=Conc, times=Times}}, []) ->
+waiting({start, {Func, Conc, Times, Distr}}, []) ->
     {ok, Sup} = supervisor:start_link(bmworker, {Func, Times, self()}),
     Children = lists:map(fun(_N) -> io:format("child started~n"), {ok, Child} = supervisor:start_child(Sup, []), Child end, lists:seq(1, Conc)),
     {next_state, running, S#state{children=Children}}.
