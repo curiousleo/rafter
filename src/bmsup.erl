@@ -1,6 +1,7 @@
 -module(bmsup).
 -behaviour(gen_server).
 
+-export([start/4]).
 -export([init/1, terminate/2,
          handle_call/3, handle_cast/2,
          handle_info/2, code_change/3]).
@@ -14,6 +15,10 @@
     distr :: pid(),
     children=[] :: list()
 }).
+
+start(Func, Conc, Times, Timeout) ->
+    {ok, Sup} = gen_server:start_link(?MODULE, {Func, Conc, Times}, []),
+    gen_server:call(Sup, start, Timeout).
 
 init({Func, Conc, Times}) ->
     S = #state{func=Func, conc=Conc, times=Times},
