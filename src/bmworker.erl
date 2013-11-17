@@ -17,7 +17,7 @@ repeat_rpc({Node, M, F, A}, N) ->
 
 time_rpc(Func, N, Sup) ->
     {Latency, _Value} = timer:tc(?MODULE, repeat_rpc, [Func, N]),
-    Sup ! {done, Latency / N}.
+    gen_server:cast(Sup, {done, Latency / N}).
 
 init({Func, N, Sup}) ->
     {ok, {{simple_one_for_one, 5, 60},
