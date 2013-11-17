@@ -1,11 +1,9 @@
 -module(bmsup).
--behaviour(gen_fsm).
+-behaviour(gen_server).
 
--export([start_bm/5]).
--export([init/1, terminate/3,
-         handle_event/3, handle_sync_event/4,
-         handle_info/3, code_change/4,
-         waiting/2, running/3]).
+-export([init/1, terminate/2,
+         handle_call/3, handle_cast/2,
+         handle_info/2, code_change/3]).
 
 -record(state, {
     latencies=[] :: list(),
@@ -17,50 +15,42 @@
     children=[] :: list()
 }).
 
-start_bm(Sup, Func, Conc, Times, Distr) ->
-    gen_fsm:send_event(Sup, {start, {Func, Conc, Times, Distr}}).
+init({Func, Conc, Times}) ->
+    S = #state{func=Func, conc=Conc, times=Times},
+    {ok, S}.
 
-init([]) ->
-    {ok, waiting, []}.
-
-waiting({start, {Func, Conc, Times, Distr}}, []) ->
+handle_call({start, Timeout}, From, S=#state{func=Func, times=Times, conc=Conc}) ->
     {ok, Sup} = supervisor:start_link(bmworker, {Func, Times, self()}),
     Children = lists:map(fun(_N) -> start_child(Sup) end, lists:seq(1, Conc)),
-    S = #state{func=Func, conc=Conc, times=Times, sup=Sup, distr=Distr,
-               children=Children},
-    {next_state, running, S}.
+    {noreply, S#state{sup=Sup, distr=From, children=Children}, Timeout}.
+
+handle_cast({done, Latency}, S=#state{latencies=Latencies, distr=Distr, conc=1}) ->
+    io:format("handle_cast received ~w (last one)~n", [{done, Latency}]),
+    FinalLatencies = [Latency|Latencies],
+    gen_server:reply(Distr, {done, FinalLatencies}),
+    {stop, normal, S#state{latencies=FinalLatencies}};
+
+handle_cast({done, Latency}, S=#state{latencies=Latencies, conc=Conc}) ->
+    io:format("handle_cast received ~w (remaining ~w)~n", [{done, Latency}, S#state.conc]),
+    {noreply, S#state{latencies=[Latency|Latencies], conc=Conc-1}}.
+
+terminate(_Reason, #state{sup=Sup, children=Children}) ->
+    lists:foreach(fun(Child) -> kill_child(Sup, Child) end, Children),
+    ok.
+
+handle_info(Info, State) ->
+    io:format("handle_info received ~w~n", [Info]),
+    {stop, {"unknown event", Info, State}, State}.
+
+code_change(_OldVsn, State, _Extra) ->
+    {ok, State}.
 
 % helper function for waiting/2
 start_child(Sup) ->
     {ok, Child} = supervisor:start_child(Sup, []),
     Child.
 
-running({done, Latency}, _From, S=#state{latencies=Latencies, conc=0}) ->
-    {reply, [Latency|Latencies], waiting, S#state{latencies=[]}};
-
-running({done, Latency}, _From, S=#state{latencies=Latencies}) ->
-    {next_state, running, S#state{latencies=[Latency|Latencies]}}.
-
-terminate(_Reason, waiting, _StateData) ->
-    ok;
-
-terminate(_Reason, running, #state{sup=Sup, children=Children}) ->
-    lists:foreach(fun(Child) -> kill_child(Sup, Child) end, Children),
-    ok.
-
 % helper function for terminate/2
 kill_child(Sup, ChildId) ->
     supervisor:terminate_child(Sup, ChildId),
     supervisor:delete_child(Sup, ChildId).
-
-handle_event(Event, StateName, StateData) ->
-    {stop, {"unknown asynchronous event", StateName, Event}, StateData}.
-
-handle_sync_event(Event, From, StateName, StateData) ->
-    {stop, {"unknown synchronous event", From, StateName, Event}, StateData}.
-
-handle_info(Info, StateName, StateData) ->
-    {stop, {"unknown event", StateName, Info}, StateData}.
-
-code_change(_OldVsn, StateName, StateData, _Extra) ->
-    {ok, StateName, StateData}.
