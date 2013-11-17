@@ -53,14 +53,14 @@ kill_child(Sup, ChildId) ->
     supervisor:terminate_child(Sup, ChildId),
     supervisor:delete_child(Sup, ChildId).
 
-handle_event(Event, _StateName, _StateData) ->
-    {stop, "unknown asynchronous event occurred", Event}.
+handle_event(Event, StateName, StateData) ->
+    {stop, {"unknown asynchronous event", StateName, Event}, StateData}.
 
-handle_sync_event(Event, _From, _StateName, _StateData) ->
-    {stop, "unknown synchronous event occurred", Event}.
+handle_sync_event(Event, From, StateName, StateData) ->
+    {stop, {"unknown synchronous event", From, StateName, Event}, StateData}.
 
-handle_info(Info, _StateName, _StateData) ->
-    {stop, "unknown event occurred", Info}.
+handle_info(Info, StateName, StateData) ->
+    {stop, {"unknown event", StateName, Info}, StateData}.
 
 code_change(_OldVsn, StateName, StateData, _Extra) ->
     {ok, StateName, StateData}.
