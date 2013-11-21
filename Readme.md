@@ -5,27 +5,27 @@
 2.  Connect the nodes: connect one of the nodes to all other nodes, e.g.:
     
         (sup@mycomp)1> net_kernel:connect(fib@mycomp).
-	true
+        true
         (sup@mycomp)2> net_kernel:connect(w1@mycomp).
-	true
+        true
         (sup@mycomp)3> net_kernel:connect(w2@mycomp).
-	true
+        true
 
 3.  Compile the required files:
     
         (sup@mycomp)4> c("src/bmsup").
-	ok
+        ok
         (sup@mycomp)5> c("src/bmdistr").
-	ok
+        ok
         (sup@mycomp)6> c("src/bmworker").
-	ok
+        ok
 
 4.  Start the gen_servers:
     
         (w1@mycomp)1> {ok, S} = gen_server:start_link(bmsup, [], []).
-	{ok,<0.248.0>}
-	(w1@mycomp)2> register(bmsup_p, S).
-	true
+        {ok,<0.248.0>}
+        (w1@mycomp)2> register(bmsup_p, S).
+        true
 
     ... and the same on w2@mycomp.
 
