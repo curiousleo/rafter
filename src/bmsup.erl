@@ -36,7 +36,7 @@ handle_cast({done, Latency}, S=#state{latencies=Latencies, from=From, conc=1}) -
     {stop, normal, S#state{latencies=FinalLatencies}};
 
 handle_cast({done, Latency}, S=#state{latencies=Latencies, conc=Conc}) ->
-    io:format("handle_cast received ~w (remaining ~w)~n", [{done, Latency}, S#state.conc]),
+    io:format("handle_cast received ~w (~w remaining)~n", [{done, Latency}, S#state.conc]),
     {noreply, S#state{latencies=[Latency|Latencies], conc=Conc-1}}.
 
 terminate(_Reason, #state{sup=Sup, children=Children}) ->
