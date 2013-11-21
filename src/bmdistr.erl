@@ -37,7 +37,7 @@ waiting({start, {Func, Conc, Times}}, State=#state{nodes=Nodes}) ->
 callback(Node, Msg, Distr) ->
     {done, Latencies} = gen_server:call({bmsup_p, Node}, Msg),
     io:format("callback received ~w~n", [{done, Latencies}]),
-    Distr ! {done, Latencies}.
+    gen_fsm:send_event(Distr, {done, Latencies}).
 
 running({done, Latencies}, State=#state{latencies=AvgLatencies, running=1}) ->
     io:format("running received ~w (last one)~n", [{done, Latencies}]),
