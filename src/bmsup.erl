@@ -12,7 +12,7 @@
     conc=0 :: non_neg_integer(),
     times=0 :: non_neg_integer(),
     sup :: pid(),
-    distr :: pid(),
+    from :: pid(),
     children=[] :: list()
 }).
 
@@ -27,15 +27,15 @@ handle_call({start, Args}, From, S) ->
     handle_cast({start, Args, From}, S).
 
 handle_cast({start, {Func, Conc, Times}, From}, S) ->
-    NewS = S#state{func=Func, conc=Conc, times=Times, distr=From},
+    NewS = S#state{func=Func, conc=Conc, times=Times, from=From},
     {ok, Sup} = supervisor:start_link(bmworker, {Func, Times, self()}),
     Children = lists:map(fun(_N) -> start_child(Sup) end, lists:seq(1, Conc)),
     {noreply, NewS#state{sup=Sup, children=Children}};
 
-handle_cast({done, Latency}, S=#state{latencies=Latencies, distr=Distr, conc=1}) ->
+handle_cast({done, Latency}, S=#state{latencies=Latencies, from=From, conc=1}) ->
     io:format("handle_cast received ~w (last one)~n", [{done, Latency}]),
     FinalLatencies = [Latency|Latencies],
-    gen_server:reply(Distr, {done, FinalLatencies}),
+    gen_server:reply(From, {done, FinalLatencies}),
     {stop, normal, S#state{latencies=FinalLatencies}};
 
 handle_cast({done, Latency}, S=#state{latencies=Latencies, conc=Conc}) ->
