@@ -41,12 +41,12 @@ callback(Node, Msg, Distr) ->
 
 running({done, Latencies}, State=#state{latencies=AvgLatencies, running=1}) ->
     io:format("running received ~w (last one)~n", [{done, Latencies}]),
-    Avg = lists:sum(Latencies) / State#state.times,
+    Avg = lists:sum(Latencies) / State#state.conc,
     {stop, normal, State#state{latencies=[Avg|AvgLatencies]}}; % ??
 
 running({done, Latencies}, State=#state{latencies=AvgLatencies, running=R}) ->
     io:format("running received ~w (~w to go)~n", [{done, Latencies}, R]),
-    Avg = lists:sum(Latencies) / State#state.times,
+    Avg = lists:sum(Latencies) / State#state.conc,
     {next_state, running, State#state{latencies=[Avg|AvgLatencies], running=R-1}}.
 
 terminate(_Reason, waiting, _StateData) ->
