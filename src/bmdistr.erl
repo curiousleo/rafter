@@ -29,7 +29,8 @@ waiting({add_node, Node}, State=#state{nodes=Nodes}) ->
 waiting({start, {Func, Conc, Times}}, State=#state{nodes=Nodes}) ->
     Msg = {start, {Func, Conc, Times}},
     Args = [Msg, self()],
-    lists:foreach(fun(Node) -> spawn(?MODULE, callback, [Node|Args]) end, Nodes),
+    lists:foreach(fun(Node) -> spawn(?MODULE, callback, [Node|Args]) end,
+                  Nodes),
     NewState = State#state{conc=Conc, times=Times, running=length(Nodes)},
     {next_state, running, NewState}.
 
