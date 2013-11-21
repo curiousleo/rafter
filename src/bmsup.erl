@@ -23,14 +23,11 @@ start(Func, Conc, Times, Timeout) ->
 init([]) ->
     {ok, #state{}}.
 
-handle_call({start, Args}, From, S) ->
-    handle_cast({start, Args, From}, S).
-
-handle_cast({start, {Func, Conc, Times}, From}, S) ->
+handle_call({start, {Func, Conc, Times}}, From, S) ->
     NewS = S#state{func=Func, conc=Conc, times=Times, from=From},
     {ok, Sup} = supervisor:start_link(bmworker, {Func, Times, self()}),
     Children = lists:map(fun(_N) -> start_child(Sup) end, lists:seq(1, Conc)),
-    {noreply, NewS#state{sup=Sup, children=Children}};
+    {noreply, NewS#state{sup=Sup, children=Children}}.
 
 handle_cast({done, Latency}, S=#state{latencies=Latencies, from=From, conc=1}) ->
     io:format("handle_cast received ~w (last one)~n", [{done, Latency}]),
