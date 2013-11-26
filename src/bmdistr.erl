@@ -31,11 +31,6 @@ waiting({start, {Func, Conc, Times}}, State=#state{nodes=Nodes}) ->
     NewState = State#state{conc=Conc, times=Times, running=length(Nodes)},
     {next_state, running, NewState}.
 
-callback(Node, Msg, Distr) ->
-    {done, Latencies} = gen_server:call({bmsup_p, Node}, Msg),
-    io:format("callback received ~w~n", [{done, Latencies}]),
-    gen_fsm:send_event(Distr, {done, Latencies}).
-
 running({done, Latencies}, State=#state{latencies=AvgLatencies, running=1}) ->
     io:format("running received ~w (last one)~n", [{done, Latencies}]),
     Avg = lists:sum(Latencies) / State#state.conc,
@@ -47,6 +42,11 @@ running({done, Latencies}, State=#state{latencies=AvgLatencies, running=R}) ->
     {next_state, running, State#state{latencies=[Avg|AvgLatencies], running=R-1}}.
 
 terminate(_Reason, waiting, _StateData) ->
+callback(Node, Msg, Distr) ->
+    {done, Latencies} = gen_server:call({bmsup_p, Node}, Msg),
+    io:format("callback received ~w~n", [{done, Latencies}]),
+    gen_fsm:send_event(Distr, {done, Latencies}).
+
     ok;
 
 terminate(normal, running, #state{latencies=Latencies}) ->
