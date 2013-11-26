@@ -23,9 +23,6 @@ benchmark(Nodes, Func, Conc, Times) ->
 init(Nodes) ->
     {ok, waiting, #state{nodes=Nodes}}.
 
-waiting({add_node, Node}, State=#state{nodes=Nodes}) ->
-    {next_state, waiting, State#state{nodes=[Node|Nodes]}};
-
 waiting({start, {Func, Conc, Times}}, State=#state{nodes=Nodes}) ->
     Msg = {start, {Func, Conc, Times}},
     Args = [Msg, self()],
