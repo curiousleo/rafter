@@ -1,12 +1,11 @@
 -module(bmdistr).
--behaviour(gen_fsm).
+-behaviour(gen_server).
 
 -export([benchmark/4]).
 -export([callback/3]).
--export([init/1, terminate/3,
-         handle_event/3, handle_sync_event/4,
-         handle_info/3, code_change/4,
-         waiting/2, running/2]).
+-export([init/1, terminate/2,
+         handle_call/3, handle_cast/2,
+         handle_info/2, code_change/3]).
 
 -record(state, {
     nodes=[] :: list(),
@@ -23,46 +22,42 @@ benchmark(Nodes, Func, Conc, Times) ->
 init(Nodes) ->
     {ok, waiting, #state{nodes=Nodes}}.
 
-waiting({start, {Func, Conc, Times}}, State=#state{nodes=Nodes}) ->
+handle_call(_, _, S) -> {stop, error, S}.
+
+handle_cast({start, {Func, Conc, Times}}, State=#state{nodes=Nodes}) ->
     Msg = {start, {Func, Conc, Times}},
     Args = [Msg, self()],
     lists:foreach(fun(Node) -> spawn(?MODULE, callback, [Node|Args]) end,
                   Nodes),
     NewState = State#state{conc=Conc, times=Times, running=length(Nodes)},
-    {next_state, running, NewState}.
+    {noreply, NewState};
 
-running({done, Latencies}, State=#state{latencies=AvgLatencies, running=1}) ->
+handle_cast({done, Latencies}, State=#state{latencies=AvgLatencies, running=1}) ->
     io:format("running received ~w (last one)~n", [{done, Latencies}]),
     Avg = lists:sum(Latencies) / State#state.conc,
     {stop, normal, State#state{latencies=[Avg|AvgLatencies]}}; % ??
 
-running({done, Latencies}, State=#state{latencies=AvgLatencies, running=R}) ->
+handle_cast({done, Latencies}, State=#state{latencies=AvgLatencies, running=R}) ->
     io:format("running received ~w (~w to go)~n", [{done, Latencies}, R]),
     Avg = lists:sum(Latencies) / State#state.conc,
-    {next_state, running, State#state{latencies=[Avg|AvgLatencies], running=R-1}}.
+    {noreply, State#state{latencies=[Avg|AvgLatencies], running=R-1}}.
 
-terminate(_Reason, waiting, _StateData) ->
 callback(Node, Msg, Distr) ->
     {done, Latencies} = gen_server:call({bmsup_p, Node}, Msg),
     io:format("callback received ~w~n", [{done, Latencies}]),
     gen_fsm:send_event(Distr, {done, Latencies}).
 
-    ok;
-
-terminate(normal, running, #state{latencies=Latencies}) ->
+terminate(normal, #state{latencies=Latencies}) ->
     % TODO: do something
     io:format("Latencies: ~w~n", [Latencies]),
+    ok;
+
+terminate(_Reason, _StateData) ->
     ok.
 
-handle_event(Event, _StateName, _StateData) ->
-    {stop, "unknown asynchronous event occurred", Event}.
-
-handle_sync_event(Event, _From, _StateName, _StateData) ->
-    {stop, "unknown synchronous event occurred", Event}.
-
-handle_info(Info, _StateName, _StateData) ->
+handle_info(Info, _StateData) ->
     io:format("unknown event: ~w~n", [Info]),
     {stop, "unknown event occurred", Info}.
 
-code_change(_OldVsn, StateName, StateData, _Extra) ->
-    {ok, StateName, StateData}.
+code_change(_OldVsn, StateData, _Extra) ->
+    {ok, StateData}.
