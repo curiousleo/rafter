@@ -1,6 +1,6 @@
 -module(voting).
 
--export([init_vstate/1, vote/3]).
+-export([init_vstate/1, vote_rec/3]).
 
 -include("voting.hrl").
 
@@ -21,14 +21,14 @@ init_vstate_tree(Parent,
                        Structs),
     #vstate_v{parent = Parent, children = States, thresh = T}.
 
--spec vote(#vstate_v{} | #vstate_p{}, [ non_neg_integer ], yes | no) ->
+-spec vote_rec(#vstate_v{} | #vstate_p{}, [ non_neg_integer ], yes | no) ->
     #vstate_v{} | accept | reject.
 
-vote(State = #vstate_v{children = States, yes_votes = YesVotes, thresh = T,
-                       no_votes = NoVotes},
-     [Index|Path], Vote) ->
+vote_rec(State = #vstate_v{children = States, yes_votes = YesVotes,
+                           thresh = T, no_votes = NoVotes},
+         [Index|Path], Vote) ->
     {Init, [Node1|Tail]} = lists:split(Index, States),
-    case vote(Node1, Path, Vote) of
+    case vote_rec(Node1, Path, Vote) of
         accept ->
             case YesVotes + 1 >= T of
                 true -> accept;
@@ -43,5 +43,5 @@ vote(State = #vstate_v{children = States, yes_votes = YesVotes, thresh = T,
             State#vstate_v{children = Init ++ [Node2|Tail]}
     end;
 
-vote(#vstate_p{vote = pending}, [], yes) -> accept;
-vote(#vstate_p{vote = pending}, [], no) -> reject.
+vote_rec(#vstate_p{vote = pending}, [], yes) -> accept;
+vote_rec(#vstate_p{vote = pending}, [], no) -> reject.
