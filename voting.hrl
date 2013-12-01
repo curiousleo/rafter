@@ -10,6 +10,11 @@
           children :: [ #vstruct_v{} | #vstruct_p{} ]
 }).
 
+-record(vstruct, {
+          tree :: #vstruct_v{},
+          indices :: [ { { term(), pid() }, [ non_neg_integer ] } ]
+}).
+
 -record(vstate_p, {
           vote = pending :: pending | yes | no,
           parent :: term() %% should be #vstate_v{}
@@ -21,4 +26,9 @@
           thresh :: non_neg_integer,
           parent :: #vstate_v{},
           children :: [ #vstate_v{} | #vstate_p{} ]
+}).
+
+-record(vstate, {
+          tree :: #vstate_v{},
+          indices :: [ { { term(), pid() }, [ non_neg_integer ] } ]
 }).
