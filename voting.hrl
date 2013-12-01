@@ -6,7 +6,7 @@
 -record(vstruct_v, {
           votes = 1 :: non_neg_integer,
           thresh :: non_neg_integer,
-          parent :: #vstruct_v{} | null,
+          parent :: #vstruct_v{},
           children :: [ #vstruct_v{} | #vstruct_p{} ]
 }).
 
@@ -18,6 +18,7 @@
 -record(vstate_v, {
           yes_votes = 0 :: non_neg_integer,
           no_votes = 0 :: non_neg_integer,
-          parent :: #vstate_v{} | null,
+          thresh :: non_neg_integer,
+          parent :: #vstate_v{},
           children :: [ #vstate_v{} | #vstate_p{} ]
 }).
