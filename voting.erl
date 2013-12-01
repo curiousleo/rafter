@@ -1,6 +1,6 @@
 -module(voting).
 
--export([init_vstate/1, vote_rec/3]).
+-export([init_vstate/1, vote/3]).
 
 -include("voting.hrl").
 
@@ -20,6 +20,20 @@ init_vstate_tree(Parent,
     States = lists:map(fun(Child) -> init_vstate_tree(Struct, Child) end,
                        Structs),
     #vstate_v{parent = Parent, children = States, thresh = T}.
+
+-spec vote(#vstate{}, vid(), yes | no) -> #vstate{} | accept | reject.
+
+vote(State = #vstate{tree = Tree, indices = Indices}, Vid, Vote) ->
+    Paths = orddict:fetch(Vid, Indices),
+    case lists:foldl(
+                fun(accept, _Path) -> accept;
+                   (reject, _Path) -> reject;
+                   (S, Path) -> vote_rec(S, Path, Vote) end,
+                Tree, Paths) of
+        accept -> accept;
+        reject -> reject;
+        NewTree -> State#vstate{tree = NewTree}
+    end.
 
 -spec vote_rec(#vstate_v{} | #vstate_p{}, [ non_neg_integer ], yes | no) ->
     #vstate_v{} | accept | reject.
