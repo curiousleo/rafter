@@ -9,7 +9,7 @@
 init_vstate(#vstruct{tree = Tree, indices = Indices}) ->
     #vstate{tree = init_vstate_tree(undefined, Tree), indices = Indices}.
 
--spec init_vstate_tree(#vstruct_v{}, #vstruct_p{} | #vstruct_v{}) ->
+-spec init_vstate_tree(#vstruct_v{} | undefined, #vstruct_p{} | #vstruct_v{}) ->
     #vstate_p{} | #vstate_v{}.
 
 init_vstate_tree(Parent, #vstruct_p{}) ->
