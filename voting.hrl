@@ -1,5 +1,11 @@
+-type vid() :: { term(), pid() }. %% should be { Host, Pid }
+
+-type index() :: { vid(), [ [ non_neg_integer() ] ] }.
+
+-type vote() :: pending | yes | no.
+
 -record(vstruct_p, {
-          id :: { term(), pid() }, %% should be { Host, Pid }
+          id :: vid(),
           parent :: term() %% should be #vstruct_v{}
 }).
 
@@ -12,11 +18,11 @@
 
 -record(vstruct, {
           tree :: #vstruct_v{},
-          indices :: [ { { term(), pid() }, [ [ non_neg_integer() ] ] } ]
+          indices :: [ index() ]
 }).
 
 -record(vstate_p, {
-          vote = pending :: pending | yes | no,
+          vote = pending :: vote(),
           parent :: term() %% should be #vstate_v{}
 }).
 
@@ -30,5 +36,5 @@
 
 -record(vstate, {
           tree :: #vstate_v{},
-          indices :: [ { { term(), pid() }, [ non_neg_integer() ] } ]
+          indices :: [ index() ]
 }).
