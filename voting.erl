@@ -9,8 +9,8 @@
 %% Leaf vstruct
 init_vstate(Parent, #vstruct_p{}) ->
     #vstate_p{parent = Parent};
-init_vstate(Parent, VStruct = #vstruct_v{children = Children}) ->
-    ChildStates = lists:map(
-                   fun(Child) -> init_vstate(VStruct, Child) end,
-                   Children),
-    #vstate_v{parent = Parent, children = ChildStates}.
+init_vstate(Parent, Struct = #vstruct_v{thresh = T, children = Structs}) ->
+    States = lists:map(
+                   fun(Child) -> init_vstate(Struct, Child) end,
+                   Structs),
+    #vstate_v{parent = Parent, children = States, thresh = T}.
