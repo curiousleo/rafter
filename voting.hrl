@@ -1,6 +1,8 @@
 -type vid() :: { term(), pid() }. %% should be { Host, Pid }
 
--type index() :: { vid(), [ [ non_neg_integer() ] ] }.
+-type path() :: [ non_neg_integer() ].
+
+-type index() :: { vid(), [ path() ] }.
 
 -type vote() :: pending | yes | no.
 
