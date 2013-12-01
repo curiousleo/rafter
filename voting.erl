@@ -41,8 +41,8 @@ vote(State = #vstate{tree = Tree, indices = Indices}, Vid, Vote) ->
 vote_rec(State = #vstate_v{children = States, yes_votes = YesVotes,
                            thresh = T, no_votes = NoVotes},
          [Index|Path], Vote) ->
-    {Init, [Node1|Tail]} = lists:split(Index, States),
-    case vote_rec(Node1, Path, Vote) of
+    {Init, [Node|Tail]} = lists:split(Index, States),
+    case vote_rec(Node, Path, Vote) of
         accept ->
             case YesVotes + 1 >= T of
                 true -> accept;
@@ -53,8 +53,8 @@ vote_rec(State = #vstate_v{children = States, yes_votes = YesVotes,
                 true -> reject;
                 false -> State#vstate_v{no_votes = NoVotes + 1}
             end;
-        Node2 ->
-            State#vstate_v{children = Init ++ [Node2|Tail]}
+        NewNode ->
+            State#vstate_v{children = Init ++ [NewNode|Tail]}
     end;
 
 vote_rec(#vstate_p{vote = pending}, [], yes) -> accept;
