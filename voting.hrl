@@ -4,15 +4,15 @@
 }).
 
 -record(vstruct_v, {
-          votes = 1 :: non_neg_integer,
-          thresh :: non_neg_integer,
+          votes = 1 :: non_neg_integer(),
+          thresh :: non_neg_integer(),
           parent :: #vstruct_v{},
           children :: [ #vstruct_v{} | #vstruct_p{} ]
 }).
 
 -record(vstruct, {
           tree :: #vstruct_v{},
-          indices :: [ { { term(), pid() }, [ non_neg_integer ] } ]
+          indices :: [ { { term(), pid() }, [ [ non_neg_integer() ] ] } ]
 }).
 
 -record(vstate_p, {
@@ -21,14 +21,14 @@
 }).
 
 -record(vstate_v, {
-          yes_votes = 0 :: non_neg_integer,
-          no_votes = 0 :: non_neg_integer,
-          thresh :: non_neg_integer,
+          yes_votes = 0 :: non_neg_integer(),
+          no_votes = 0 :: non_neg_integer(),
+          thresh :: non_neg_integer(),
           parent :: #vstate_v{},
           children :: [ #vstate_v{} | #vstate_p{} ]
 }).
 
 -record(vstate, {
           tree :: #vstate_v{},
-          indices :: [ { { term(), pid() }, [ non_neg_integer ] } ]
+          indices :: [ { { term(), pid() }, [ non_neg_integer() ] } ]
 }).
