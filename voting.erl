@@ -7,19 +7,17 @@
 -spec init_vstate(#vstruct{}) -> #vstate{}.
 
 init_vstate(#vstruct{tree = Tree, indices = Indices}) ->
-    #vstate{tree = init_vstate_rec(undefined, Tree), indices = Indices}.
+    #vstate{tree = init_vstate_rec(Tree), indices = Indices}.
 
--spec init_vstate_rec(#vstruct_v{} | undefined, #vstruct_p{}) -> #vstate_p{}
-                   ; (#vstruct_v{} | undefined, #vstruct_v{}) -> #vstate_v{}.
+-spec init_vstate_rec(#vstruct_p{}) -> #vstate_p{}
+                   ; (#vstruct_v{}) -> #vstate_v{}.
 
-init_vstate_rec(Parent, #vstruct_p{}) ->
-    #vstate_p{parent = Parent};
+init_vstate_rec(#vstruct_p{votes = V}) ->
+    #vstate_p{votes = V};
 
-init_vstate_rec(Parent,
-                Struct = #vstruct_v{thresh = T, children = Structs}) ->
-    States = lists:map(fun(Child) -> init_vstate_rec(Struct, Child) end,
-                       Structs),
-    #vstate_v{parent = Parent, children = States, thresh = T}.
+init_vstate_rec(#vstruct_v{votes = V, thresh = T, children = Structs}) ->
+    States = lists:map(fun init_vstate_rec/1, Structs),
+    #vstate_v{votes = V, thresh = T, children = States}.
 
 -spec vote(#vstate{}, vid(), yes | no) -> #vstate{} | accept | reject.
 
