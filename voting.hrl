@@ -7,8 +7,7 @@
 -type vote() :: pending | yes | no.
 
 -record(vstruct_p, {
-          id :: vid(),
-          parent :: term() %% should be #vstruct_v{}
+          id :: vid()
 }).
 
 -record(vstruct_v, {
