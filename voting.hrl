@@ -7,13 +7,13 @@
 -type vote() :: pending | yes | no.
 
 -record(vstruct_p, {
+          votes = 1 :: non_neg_integer(),
           id :: vid()
 }).
 
 -record(vstruct_v, {
           votes = 1 :: non_neg_integer(),
           thresh :: non_neg_integer(),
-          parent :: #vstruct_v{},
           children :: [ #vstruct_v{} | #vstruct_p{} ]
 }).
 
@@ -23,15 +23,15 @@
 }).
 
 -record(vstate_p, {
-          vote = pending :: vote(),
-          parent :: term() %% should be #vstate_v{}
+          votes = 1 :: non_neg_integer(),
+          vote = pending :: vote()
 }).
 
 -record(vstate_v, {
+          votes = 1 :: non_neg_integer(),
           yes_votes = 0 :: non_neg_integer(),
           no_votes = 0 :: non_neg_integer(),
           thresh :: non_neg_integer(),
-          parent :: #vstate_v{},
           children :: [ #vstate_v{} | #vstate_p{} ]
 }).
 
