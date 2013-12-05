@@ -1,14 +1,9 @@
 -type vid() :: { term(), pid() }. %% should be { Host, Pid }
 
--type path() :: [ non_neg_integer() ].
-
--type index() :: { vid(), [ path() ] }.
-
 -type vote() :: pending | yes | no.
 
 -record(vstruct_p, {
           id :: vid(),
-          parent :: term() %% should be #vstruct_v{}
 }).
 
 -record(vstruct_v, {
@@ -18,15 +13,12 @@
           children :: [ #vstruct_v{} | #vstruct_p{} ]
 }).
 
--record(vstruct, {
-          tree :: #vstruct_v{},
-          indices :: [ index() ]
-}).
-
 -record(vstate_p, {
           vote = pending :: vote(),
           parent :: term() %% should be #vstate_v{}
 }).
+
+-type index() :: { vid(), [ #vstate_p{} ] }.
 
 -record(vstate_v, {
           yes_votes = 0 :: non_neg_integer(),
@@ -37,6 +29,6 @@
 }).
 
 -record(vstate, {
-          tree :: #vstate_v{},
-          indices :: [ index() ]
+          state :: #vstate_v{} | #vstate_p{},
+          phys :: [ index() ]
 }).

@@ -4,16 +4,16 @@
 
 -include("voting.hrl").
 
--spec init_vstate(#vstruct{}) -> #vstate{}.
+-spec init_vstate(#vstruct_v{}) -> #vstate{}.
 
-init_vstate(#vstruct{tree = Tree, indices = Indices}) ->
-    #vstate{tree = init_vstate_rec(undefined, Tree), indices = Indices}.
+init_vstate(Struct) -> init_vstate_rec(undefined, Struct).
 
--spec init_vstate_rec(#vstruct_v{} | undefined, #vstruct_p{}) -> #vstate_p{}
-                   ; (#vstruct_v{} | undefined, #vstruct_v{}) -> #vstate_v{}.
+-spec init_vstate_rec(#vstruct_v{} | undefined, #vstruct_p{}) -> #vstate{}
+                   ; (#vstruct_v{} | undefined, #vstruct_v{}) -> #vstate{}.
 
-init_vstate_rec(Parent, #vstruct_p{}) ->
-    #vstate_p{parent = Parent};
+init_vstate_rec(Parent, #vstruct_p{id = Id}) ->
+    Leaf = #vstate_p{parent = Parent},
+    #vstate{state = Leaf, phys = [{Id, Leaf}]};
 
 init_vstate_rec(Parent,
                 Struct = #vstruct_v{thresh = T, children = Structs}) ->
@@ -23,8 +23,8 @@ init_vstate_rec(Parent,
 
 -spec vote(#vstate{}, vid(), yes | no) -> #vstate{} | accept | reject.
 
-vote(State = #vstate{tree = Tree, indices = Indices}, Vid, Vote) ->
-    Paths = orddict:fetch(Vid, Indices),
+vote(State = #vstate{tree = Tree, phys = Phys}, Vid, Vote) ->
+    Paths = orddict:fetch(Vid, Phys),
     case lists:foldl(
                 fun(accept, _Path) -> accept;
                    (reject, _Path) -> reject;
