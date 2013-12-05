@@ -26,9 +26,9 @@ init_vstate_rec(Parent,
 vote(State = #vstate{tree = Tree, indices = Indices}, Vid, Vote) ->
     Paths = orddict:fetch(Vid, Indices),
     case lists:foldl(
-                fun(accept, _Path) -> accept;
-                   (reject, _Path) -> reject;
-                   (S, Path) -> vote_rec(S, Path, Vote) end,
+                fun(_Path, accept) -> accept;
+                   (_Path, reject) -> reject;
+                   (Path, S) -> vote_rec(S, Path, Vote) end,
                 Tree, Paths) of
         accept -> accept;
         reject -> reject;
