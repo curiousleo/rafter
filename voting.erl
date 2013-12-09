@@ -1,8 +1,27 @@
 -module(voting).
 
--export([init_vstate/1, vote/3]).
+-export([merge_vstruct/3, init_vstate/1, vote/3]).
 
 -include("voting.hrl").
+
+-spec merge_vstruct(#vstruct_v{}, #vstruct{}, #vstruct{}) -> #vstruct{}.
+
+merge_vstruct(#vstruct_v{votes = V, thresh = T},
+              #vstruct{tree = T1, indices = I1},
+              #vstruct{tree = T2, indices = I2}) ->
+    NewI1 = orddict:map(fun(_, Paths) ->
+                                lists:map(fun(Path) -> [0|Path] end, Paths)
+                        end, I1),
+    NewI2 = orddict:map(fun(_, Paths) ->
+                                lists:map(fun(Path) -> [1|Path] end, Paths)
+                        end, I2),
+    I3 = orddict:fold(fun(Id, Paths, Indices) ->
+                              lists:foldl(fun(Path, Indices1) ->
+                                                  orddict:append(Id, Path, Indices1)
+                                          end, Indices, Paths)
+                      end, NewI1, NewI2),
+    Root = #vstruct_v{votes = V, thresh = T, children = [T1, T2]},
+    #vstruct{tree = Root, indices = I3}.
 
 -spec init_vstate(#vstruct{}) -> #vstate{}.
 
