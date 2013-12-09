@@ -17,7 +17,7 @@ dot(#vstruct{tree = Tree, indices = [{Vid1, _}|Indices]}) ->
 
     dot_rec([], Tree),
 
-    io:fwrite("}").
+    io:fwrite("}~n").
 
 dot_rec(Path, #vstruct_p{votes = V, id = Id}) ->
     io:format("\"~p\" [label=\"~p | { ~p | 0 }\"];~n", [Path, Id, V]),
