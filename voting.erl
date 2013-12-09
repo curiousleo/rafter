@@ -4,24 +4,8 @@
 
 -include("voting.hrl").
 
--spec merge_vstruct(#vstruct_v{}, #vstruct{}, #vstruct{}) -> #vstruct{}.
-
-merge_vstruct(#vstruct_v{votes = V, thresh = T},
-              #vstruct{tree = T1, indices = I1},
-              #vstruct{tree = T2, indices = I2}) ->
-    NewI1 = orddict:map(fun(_, Paths) ->
-                                lists:map(fun(Path) -> [0|Path] end, Paths)
-                        end, I1),
-    NewI2 = orddict:map(fun(_, Paths) ->
-                                lists:map(fun(Path) -> [1|Path] end, Paths)
-                        end, I2),
-    I3 = orddict:fold(fun(Id, Paths, Indices) ->
-                              lists:foldl(fun(Path, Indices1) ->
-                                                  orddict:append(Id, Path, Indices1)
-                                          end, Indices, Paths)
-                      end, NewI1, NewI2),
-    Root = #vstruct_v{votes = V, thresh = T, children = [T1, T2]},
-    #vstruct{tree = Root, indices = I3}.
+-spec merge_vstructs(non_neg_integer(), non_neg_integer(), [#vstruct{}]) ->
+    #vstruct{}.
 
 merge_vstructs(Votes, Thresh, Structs) ->
     {Children, {_, Indices}} = lists:mapfoldl(
@@ -33,6 +17,8 @@ merge_vstructs(Votes, Thresh, Structs) ->
     Root = #vstruct_v{votes = Votes, thresh = Thresh, children = Children},
     #vstruct{tree = Root, indices = Indices}.
 
+-spec combine_indices([ index() ], [ index() ]) -> [ index() ].
+
 combine_indices(I1, I2) ->
     orddict:fold(
       fun(Id, Paths, Indices) ->
@@ -40,6 +26,9 @@ combine_indices(I1, I2) ->
                                   orddict:append(Id, Path, Indices1)
                           end, Indices, Paths)
       end, I1, I2).
+
+-spec prepend_paths(non_neg_integer(), #vstruct{}) ->
+    {#vstruct_p{} | #vstruct_v{}, [ index() ]}.
 
 prepend_paths(Index, #vstruct{tree = T, indices = I}) ->
     NewI = orddict:map(
