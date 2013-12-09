@@ -12,4 +12,4 @@ majority(Ids) ->
     {Indices, _} = lists:mapfoldl(fun(Id, K) -> {{Id, [[K]]}, K+1} end,
                                   0, Ids),
     #vstruct{tree = #vstruct_v{thresh = T, children = Phys},
-             indices = Indices}.
+             indices = orddict:from_list(Indices)}.
