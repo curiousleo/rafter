@@ -10,8 +10,10 @@
 merge_vstructs(Votes, Thresh, Structs) ->
     {Children, {_, Indices}} = lists:mapfoldl(
                                  fun(Struct, {I, AllIndices}) ->
-                                         {Child, Indices} = prepend_paths(I, Struct),
-                                         NewIndices = combine_indices(AllIndices, Indices),
+                                         {Child, Indices} = prepend_paths(
+                                                              I, Struct),
+                                         NewIndices = combine_indices(
+                                                        AllIndices, Indices),
                                          {Child, {I + 1, NewIndices}}
                                  end, {0, orddict:new()}, Structs),
     Root = #vstruct_v{votes = Votes, thresh = Thresh, children = Children},
