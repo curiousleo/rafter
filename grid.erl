@@ -1,6 +1,6 @@
 -module(grid).
 
--export([completeColumnCover/3, columnCover/3, makeGrid/2, grid/1]).
+-export([grid/1]).
 
 -include("voting.hrl").
 -type grid_spec() :: {non_neg_integer(), non_neg_integer(), non_neg_integer()}.
