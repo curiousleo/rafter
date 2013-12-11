@@ -3,6 +3,7 @@
 -export([completeColumnCover/3, columnCover/3, makeGrid/2, grid/1]).
 
 -include("voting.hrl").
+-type grid_spec() :: {non_neg_integer(), non_neg_integer(), non_neg_integer()}.
 
 -spec grid([vid()]) -> #vstruct{}.
 
@@ -10,8 +11,6 @@ grid(Ids) ->
     GridSpec = makeGrid(length(Ids), true),
     voting:merge_vstructs(1, 2, [columnCovers(Ids, GridSpec),
                                  completeColumnCovers(Ids, GridSpec)]).
-
--type grid_spec() :: {non_neg_integer(), non_neg_integer(), non_neg_integer()}.
 
 -spec columnCovers([vid()], grid_spec()) -> #vstruct{}.
 
