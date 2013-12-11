@@ -7,19 +7,44 @@
 -spec grid([vid()]) -> #vstruct{}.
 
 grid(Ids) ->
-    {Rows, Cols, D} = makeGrid(length(Ids), true),
-    %% use columnCover, completeColumnCover, merge_vstructs to construct the
-    %% tree-shaped voting structure
-    ok.
+    GridSpec = makeGrid(length(Ids), true),
+    voting:merge_vstructs(1, 2, [columnCovers(Ids, GridSpec),
+                                 completeColumnCovers(Ids, GridSpec)]).
 
 -type grid_spec() :: {non_neg_integer(), non_neg_integer(), non_neg_integer()}.
+
+-spec columnCovers([vid()], grid_spec()) -> #vstruct{}.
+
+columnCovers(Ids, {Rows, Cols, D}) ->
+    Covers = lists:map(
+               fun(Col) -> columnCover(Ids, Col, {Rows, Cols, D}) end,
+               lists:seq(1, Cols)),
+    voting:merge_vstructs(1, Cols, Covers).
+
+-spec completeColumnCovers([vid()], grid_spec()) -> #vstruct{}.
+
+completeColumnCovers(Ids, {Rows, Cols, D}) ->
+    Covers = lists:map(
+               fun(Col) -> completeColumnCover(Ids, Col, {Rows, Cols, D}) end,
+               lists:seq(1, Cols)),
+    voting:merge_vstructs(1, 1, Covers).
+
 
 -spec completeColumnCover([vid()], non_neg_integer(), grid_spec()) ->
     #vstruct{}.
 
 completeColumnCover(Ids, Col, {Rows, Cols, _}) ->
     RowsIds = chunk(Cols, Ids),
-    ColIds = lists:map(fun(RowIds) -> lists:nth(Col, RowIds) end, RowsIds),
+    %% ColIds = lists:map(fun(RowIds) -> lists:nth(Col, RowIds) end, RowsIds),
+    %% cannot use map here: lists:nth may fail
+    ColIds = lists:foldl(
+               fun(RowIds, Acc) ->
+                       try lists:nth(Col, RowIds) of
+                           Id -> Acc ++ [Id]
+                       catch
+                           error:function_clause -> Acc
+                       end
+               end, [], RowsIds),
     Phys = lists:map(fun(Id) -> #vstruct_p{id = Id} end, ColIds),
     {Indices, _} = lists:mapfoldl(fun(Id, K) -> {{Id, [[K]]}, K+1} end,
                                   0, ColIds),
