@@ -56,48 +56,57 @@ init_vstate_rec(#vstruct_v{votes = V, thresh = T, children = Structs}) ->
 
 -spec vote(#vstate{}, vid(), yes | no) -> #vstate{} | accept | reject.
 
-vote(State = #vstate{tree = Tree, indices = Indices}, Vid, Vote) ->
+vote(#vstate{tree = Tree, indices = Indices}, Vid, Vote) ->
     Paths = orddict:fetch(Vid, Indices),
     case lists:foldl(
                 fun(_Path, accept) -> accept;
                    (_Path, reject) -> reject;
                    (Path, S) -> case vote_rec(S, Path, Vote) of
-                                    {accept, _} -> accept;
-                                    {reject, _} -> reject;
-                                    Node -> Node
+                                    {_, yes} -> accept;
+                                    {_, no} -> reject;
+                                    {Node, pending} -> Node
                                 end
                 end,
                 Tree, Paths) of
         accept -> accept;
         reject -> reject;
-        NewTree -> State#vstate{tree = NewTree}
+        NewTree -> #vstate{tree = NewTree,
+                           indices = orddict:erase(Vid, Indices)}
     end.
 
 -spec vote_rec(#vstate_v{} | #vstate_p{}, path(), yes | no) ->
-    #vstate_v{} | {accept, non_neg_integer()} | {reject, non_neg_integer()}.
+    {#vstate_v{} | #vstate_p{}, vote()}.
 
-vote_rec(State = #vstate_v{children = States, votes = Votes, thresh = T,
-                           yes_votes = YesVotes, no_votes = NoVotes},
+vote_rec(S = #vstate_v{children = States, thresh = T,
+                       yes_votes = YesVotes, no_votes = NoVotes},
          [Index|Path], Vote) ->
     {Init, [Node|Tail]} = lists:split(Index, States),
-    YesNode = Node#vstate_p{vote = yes},
-    NoNode = Node#vstate_p{vote = no},
-    case vote_rec(Node, Path, Vote) of
-        {accept, V} ->
-            case YesVotes + V >= T of
-                true -> {accept, Votes};
-                false -> State#vstate_v{children = Init ++ [YesNode|Tail],
-                                        yes_votes = YesVotes + V}
-            end;
-        {reject, V} ->
-            case NoVotes + V > length(States) - T of
-                true -> {reject, Votes};
-                false -> State#vstate_v{children = Init ++ [NoNode|Tail],
-                                        no_votes = NoVotes + V}
-            end;
-        NewNode ->
-            State#vstate_v{children = Init ++ [NewNode|Tail]}
+    {State, SubVote} = vote_rec(Node, Path, Vote),
+    Votes = case State of
+                #vstate_v{votes = V} -> V;
+                #vstate_p{votes = V} -> V
+            end,
+    case SubVote of
+        yes ->
+            NewVote = case YesVotes + Votes >= T of
+                          true -> yes;
+                          false -> pending
+                      end,
+            NewState = S#vstate_v{children = Init ++ [State|Tail],
+                                  yes_votes = YesVotes + Votes},
+            {NewState, NewVote};
+        no ->
+            NewVote = case NoVotes + Votes > length(States) - T of
+                          true -> no;
+                          false -> pending
+                      end,
+            NewState = S#vstate_v{children = Init ++ [State|Tail],
+                                  no_votes = NoVotes + Votes},
+            {NewState, NewVote};
+        pending ->
+            NewState = S#vstate_v{children = Init ++ [State|Tail]},
+            {NewState, pending}
     end;
 
-vote_rec(#vstate_p{vote = pending, votes = V}, [], yes) -> {accept, V};
-vote_rec(#vstate_p{vote = pending, votes = V}, [], no) -> {reject, V}.
+vote_rec(S = #vstate_p{vote = pending}, [], Vote) ->
+    {S#vstate_p{vote = Vote}, Vote}.
