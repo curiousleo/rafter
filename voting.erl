@@ -86,26 +86,22 @@ vote_rec(S = #vstate_v{children = States, thresh = T,
                 #vstate_v{votes = V} -> V;
                 #vstate_p{votes = V} -> V
             end,
+    NewS = S#vstate_v{children = Init ++ [State|Tail]},
     case SubVote of
         yes ->
             NewVote = case YesVotes + Votes >= T of
                           true -> yes;
                           false -> pending
                       end,
-            NewState = S#vstate_v{children = Init ++ [State|Tail],
-                                  yes_votes = YesVotes + Votes},
-            {NewState, NewVote};
+            {NewS#vstate_v{yes_votes = YesVotes + Votes}, NewVote};
         no ->
             NewVote = case NoVotes + Votes > length(States) - T of
                           true -> no;
                           false -> pending
                       end,
-            NewState = S#vstate_v{children = Init ++ [State|Tail],
-                                  no_votes = NoVotes + Votes},
-            {NewState, NewVote};
+            {NewS#vstate_v{no_votes = NoVotes + Votes}, NewVote};
         pending ->
-            NewState = S#vstate_v{children = Init ++ [State|Tail]},
-            {NewState, pending}
+            {NewS, pending}
     end;
 
 vote_rec(S = #vstate_p{vote = pending}, [], Vote) ->
