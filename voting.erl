@@ -54,25 +54,18 @@ init_vstate_rec(#vstruct_v{votes = V, thresh = T, children = Structs}) ->
     States = lists:map(fun init_vstate_rec/1, Structs),
     #vstate_v{votes = V, thresh = T, children = States}.
 
--spec vote(#vstate{}, vid(), yes | no) -> #vstate{} | accept | reject.
+-spec vote(#vstate{}, vid(), yes | no) -> {#vstate{}, vote()}.
 
 vote(#vstate{tree = Tree, indices = Indices}, Vid, Vote) ->
     Paths = orddict:fetch(Vid, Indices),
-    case lists:foldl(
-                fun(_Path, accept) -> accept;
-                   (_Path, reject) -> reject;
-                   (Path, S) -> case vote_rec(S, Path, Vote) of
-                                    {_, yes} -> accept;
-                                    {_, no} -> reject;
-                                    {Node, pending} -> Node
-                                end
-                end,
-                Tree, Paths) of
-        accept -> accept;
-        reject -> reject;
-        NewTree -> #vstate{tree = NewTree,
-                           indices = orddict:erase(Vid, Indices)}
-    end.
+    {NewTree, SubVote} = lists:foldl(
+                           fun(Path, {State, _SubVote}) ->
+                                   vote_rec(State, Path, Vote)
+                           end,
+                           {Tree, pending}, Paths),
+    NewState = #vstate{tree = NewTree,
+                       indices = orddict:erase(Vid, Indices)},
+    {NewState, SubVote}.
 
 -spec vote_rec(#vstate_v{} | #vstate_p{}, path(), yes | no) ->
     {#vstate_v{} | #vstate_p{}, vote()}.
