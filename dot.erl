@@ -35,7 +35,7 @@ vstruct_dot_rec(Path, #vstruct_v{votes = V, thresh = T, children = Children}) ->
                 end,
                 1, Children).
 
--spec vstate_dot(#vstruct{}) -> ok.
+-spec vstate_dot(#vstate{}) -> ok.
 
 vstate_dot(#vstate{tree = Tree}) ->
     io:fwrite("digraph vstate {~n"),
