@@ -17,7 +17,7 @@ vstruct_dot(#vstruct{tree = Tree, indices = [{Vid1, _}|Indices]}) ->
 
 -spec vstruct_dot_rec([non_neg_integer()], #vstruct_p{} | #vstruct_v{}) -> ok.
 vstruct_dot_rec(Path, #vstruct_p{votes = V, id = Id}) ->
-    io:format("\"~p\" [label=\"~p | { ~p | 0 }\"];~n", [Path, Id, V]);
+    io:format("\"~p\" [label=\"~p | ~p\"];~n", [Path, Id, V]);
     %% io:format("indices:\"~p\" -> \"~p\";~n", [Id, Path]);
 vstruct_dot_rec(Path, #vstruct_v{votes = V, thresh = T, children = Children}) ->
     io:format("\"~p\" [label=\"V | { ~p | ~p }\"];~n", [Path, V, T]),
@@ -37,14 +37,9 @@ vstate_dot(#vstate{tree = Tree}) ->
     io:fwrite("}~n").
 
 -spec vstate_dot_rec([non_neg_integer()], #vstate_p{} | #vstate_v{}) -> ok.
-vstate_dot_rec(Path, #vstate_p{votes = Votes, vote = Vote}) ->
-    {V, C} = case Vote of
-                 yes -> {"Y", "green"};
-                 no -> {"N", "red"};
-                 pending -> {"P", "black"}
-             end,
-    io:format("\"~p\" [label=\"p | { ~p | ~s }\", color=~s];~n",
-              [Path, Votes, V, C]);
+vstate_dot_rec(Path, #vstate_p{vote = Vote}) ->
+    C = case Vote of yes -> "green"; no -> "red"; pending -> "black" end,
+    io:format("\"~p\" [label=\"p\", color=~s];~n", [Path, C]);
 vstate_dot_rec(Path, #vstate_v{votes = V, yes_votes = YesVotes,
                                no_votes = NoVotes, thresh = T,
                                children = Children}) ->
