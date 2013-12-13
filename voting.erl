@@ -107,5 +107,7 @@ vote_rec_aux(State = #vstate_v{no_votes = No}, Votes, no) ->
 vote_rec_aux(State, _Votes, pending) ->
     {State, pending}.
 
+-spec votes(#vstate_v{} | #vstate_p{}) -> non_neg_integer().
+
 votes(#vstate_v{votes = V}) -> V;
 votes(#vstate_p{votes = V}) -> V.
