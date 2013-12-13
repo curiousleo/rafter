@@ -5,7 +5,6 @@
 -include("voting.hrl").
 
 -spec majority([vid()]) -> #vstruct{}.
-
 majority(Ids) ->
     T = round((length(Ids) + 1) / 2),
     Phys = lists:map(fun(Id) -> #vstruct_p{id = Id} end, Ids),

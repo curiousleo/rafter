@@ -6,14 +6,12 @@
 -type grid_spec() :: {non_neg_integer(), non_neg_integer(), non_neg_integer()}.
 
 -spec grid([vid()]) -> #vstruct{}.
-
 grid(Ids) ->
     GridSpec = makeGrid(length(Ids), true),
     voting:merge_vstructs(1, 2, [columnCovers(Ids, GridSpec),
                                  completeColumnCovers(Ids, GridSpec)]).
 
 -spec columnCovers([vid()], grid_spec()) -> #vstruct{}.
-
 columnCovers(Ids, {Rows, Cols, D}) ->
     Covers = lists:map(
                fun(Col) -> columnCover(Ids, Col, {Rows, Cols, D}) end,
@@ -21,7 +19,6 @@ columnCovers(Ids, {Rows, Cols, D}) ->
     voting:merge_vstructs(1, Cols, Covers).
 
 -spec completeColumnCovers([vid()], grid_spec()) -> #vstruct{}.
-
 completeColumnCovers(Ids, {Rows, Cols, D}) ->
     Covers = lists:map(
                fun(Col) -> completeColumnCover(Ids, Col, {Rows, Cols, D}) end,
@@ -31,7 +28,6 @@ completeColumnCovers(Ids, {Rows, Cols, D}) ->
 
 -spec completeColumnCover([vid()], non_neg_integer(), grid_spec()) ->
     #vstruct{}.
-
 completeColumnCover(Ids, Col, {Rows, Cols, _}) ->
     RowsIds = chunk(Cols, Ids),
     %% ColIds = lists:map(fun(RowIds) -> lists:nth(Col, RowIds) end, RowsIds),
@@ -51,13 +47,11 @@ completeColumnCover(Ids, Col, {Rows, Cols, _}) ->
              indices = orddict:from_list(Indices)}.
 
 -spec columnCover([vid()], non_neg_integer(), grid_spec()) -> #vstruct{}.
-
 columnCover(Ids, Col, GridSpec) ->
     #vstruct{tree = T, indices = I} = completeColumnCover(Ids, Col, GridSpec),
     #vstruct{tree = T#vstruct_v{thresh = 1}, indices = I}.
 
 -spec makeGrid(non_neg_integer(), boolean()) -> grid_spec().
-
 makeGrid(N, FavoringRows) ->
     {Rows, Cols} = makeGridFavoringRows(N),
     D = Rows * Cols - N,
@@ -67,10 +61,8 @@ makeGrid(N, FavoringRows) ->
 
 -spec makeGridFavoringRows(non_neg_integer()) ->
     {non_neg_integer(), non_neg_integer()}.
-
 makeGridFavoringRows(N) when N < 3 ->
     {N, 1};
-
 makeGridFavoringRows(N) ->
     Sqrt = math:sqrt(N),
     Rows = ceil(Sqrt),
@@ -96,17 +88,16 @@ ceil(X) ->
         _ -> T
     end.
 
+-spec drop(non_neg_integer(), list()) -> list().
 drop(_, []) ->
     [];
-
 drop(0, L) ->
     L;
-
 drop(N, [_|L]) ->
     drop(N-1, L).
 
+-spec chunk(non_neg_integer(), list()) -> [ list() ].
 chunk(_, []) ->
     [];
-
 chunk(N, L) ->
     [lists:sublist(L, N) | chunk(N, drop(N, L))].
