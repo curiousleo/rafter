@@ -9,14 +9,11 @@
 vstruct_dot(#vstruct{tree = Tree, indices = [{Vid1, _}|Indices]}) ->
     io:fwrite("digraph vstruct {~n"),
     io:fwrite("node [shape=Mrecord];~n"),
-
     %% io:format("indices [label=\"<~p>~p", [Vid1, Vid1]),
     %% lists:foreach(fun({Vid, _}) -> io:format(" | <~p>~p", [Vid, Vid]) end,
     %%               Indices),
     %% io:fwrite("\"];~n"),
-
     vstruct_dot_rec([], Tree),
-
     io:fwrite("}~n").
 
 -spec vstruct_dot_rec([non_neg_integer()], #vstruct_p{} | #vstruct_v{}) -> ok.
@@ -40,9 +37,7 @@ vstruct_dot_rec(Path, #vstruct_v{votes = V, thresh = T, children = Children}) ->
 vstate_dot(#vstate{tree = Tree}) ->
     io:fwrite("digraph vstate {~n"),
     io:fwrite("node [shape=Mrecord];~n"),
-
     vstate_dot_rec([], Tree),
-
     io:fwrite("}~n").
 
 vstate_dot_rec(Path, #vstate_p{votes = Votes, vote = Vote}) ->
