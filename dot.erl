@@ -54,13 +54,13 @@ vstate_dot_rec(Path, #vstate_p{votes = Votes, vote = Vote}) ->
     io:format("\"~p\" [label=\"p | { ~p | ~s }\", color=~s];~n",
               [Path, Votes, V, C]);
 
-vstate_dot_rec(Path, #vstate_v{vote = Vote, votes = V, yes_votes = YesVotes,
+vstate_dot_rec(Path, #vstate_v{votes = V, yes_votes = YesVotes,
                                no_votes = NoVotes, thresh = T,
                                children = Children}) ->
-    C = case Vote of
-            yes -> "green";
-            no -> "red";
-            pending -> "black"
+    C = case {YesVotes >= T, length(Children) < T + NoVotes} of
+            {true, _} -> "green";
+            {_, true} -> "red";
+            _ -> "black"
         end,
     io:format("\"~p\" [label=\"V | { ~p | ~p (~p/~p) }\", color=~s];~n",
               [Path, V, T, YesVotes, NoVotes, C]),
