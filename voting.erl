@@ -1,6 +1,6 @@
 -module(voting).
 
--export([merge_vstructs/3, init_vstate/1, vote/3]).
+-export([merge_vstructs/3, init_vstate/1, vote/3, vote/1]).
 
 -include("voting.hrl").
 
@@ -54,18 +54,29 @@ init_vstate_rec(#vstruct_v{votes = V, thresh = T, children = Structs}) ->
     States = lists:map(fun init_vstate_rec/1, Structs),
     #vstate_v{votes = V, thresh = T, children = States}.
 
--spec vote(#vstate{}, vid(), yes | no) -> {#vstate{}, vote()}.
+-spec vote(#vstate{}, vid(), yes | no) -> #vstate{}.
 
 vote(#vstate{tree = Tree, indices = Indices}, Vid, Vote) ->
     Paths = orddict:fetch(Vid, Indices),
-    {NewTree, SubVote} = lists:foldl(
-                           fun(Path, {State, _SubVote}) ->
-                                   vote_rec(State, Path, Vote)
-                           end,
-                           {Tree, pending}, Paths),
-    NewState = #vstate{tree = NewTree,
-                       indices = orddict:erase(Vid, Indices)},
-    {NewState, SubVote}.
+    {NewTree, _SubVote} = lists:foldl(
+                            fun(Path, {State, _SubVote}) ->
+                                    vote_rec(State, Path, Vote)
+                            end,
+                            {Tree, pending}, Paths),
+    #vstate{tree = NewTree, indices = orddict:erase(Vid, Indices)}.
+
+-spec vote(#vstate{}) -> vote().
+
+vote(#vstate{tree = #vstate_v{yes_votes = Yes, thresh = T}})
+  when Yes >= T ->
+    yes;
+
+vote(#vstate{tree = #vstate_v{thresh = T, no_votes = No, children = States}})
+  when No > length(States) - T ->
+    no;
+
+vote(#vstate{tree = #vstate_v{}}) ->
+    pending.
 
 -spec vote_rec(#vstate_v{} | #vstate_p{}, path(), yes | no) ->
     {#vstate_v{} | #vstate_p{}, vote()}.
