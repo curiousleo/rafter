@@ -58,15 +58,19 @@ vote(#vstate{tree = Tree, indices = Indices}, Vid, Vote) ->
                             {Tree, pending}, Paths),
     #vstate{tree = NewTree, indices = orddict:erase(Vid, Indices)}.
 
--spec vote(#vstate{}) -> vote().
-vote(#vstate{tree = #vstate_v{yes_votes = Yes, thresh = T}})
+-spec vote(#vstate{} | #vstate_v{} | #vstate_p{}) -> vote().
+vote(#vstate_v{yes_votes = Yes, thresh = T})
   when Yes >= T ->
     yes;
-vote(#vstate{tree = #vstate_v{thresh = T, no_votes = No, children = States}})
+vote(#vstate_v{thresh = T, no_votes = No, children = States})
   when No > length(States) - T ->
     no;
-vote(#vstate{tree = #vstate_v{}}) ->
-    pending.
+vote(#vstate_v{}) ->
+    pending;
+vote(#vstate{tree = T}) ->
+    vote(T);
+vote(#vstate_p{vote = V}) ->
+    V.
 
 -spec vote_rec(#vstate_v{} | #vstate_p{}, path(), yes | no) ->
     {#vstate_v{} | #vstate_p{}, vote()}.
