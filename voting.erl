@@ -1,6 +1,6 @@
 -module(voting).
 
--export([quorum/2, merge_vstructs/3, init_vstate/1, vote/3, vote/1]).
+-export([quorum/2, merge_vstructs/3, init_vstate/1, vote/3, vote/1, to_list/1]).
 
 -include("voting.hrl").
 
@@ -102,3 +102,9 @@ acc_votes(State = #vstate_v{children = States}) ->
     Yes = length(lists:filter(Voted(yes), States)),
     No = length(lists:filter(Voted(no), States)),
     State#vstate_v{yes_votes = Yes, no_votes = No}.
+
+-spec to_list(#vstate{} | #vstruct{}) -> [ vid() ].
+to_list(#vstate{indices = Indices}) ->
+    orddict:fetch_keys(Indices);
+to_list(#vstruct{indices = Indices}) ->
+    orddict:fetch_keys(Indices).
