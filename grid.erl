@@ -28,7 +28,7 @@ completeColumnCovers(Ids, {Rows, Cols, D}) ->
 
 -spec completeColumnCover([vid()], non_neg_integer(), grid_spec()) ->
     #vstruct{}.
-completeColumnCover(Ids, Col, {Rows, Cols, _}) ->
+completeColumnCover(Ids, Col, {_Rows, Cols, _D}) ->
     RowsIds = chunk(Cols, Ids),
     %% ColIds = lists:map(fun(RowIds) -> lists:nth(Col, RowIds) end, RowsIds),
     %% cannot use map here: lists:nth may fail
