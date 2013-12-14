@@ -1,6 +1,6 @@
 -module(voting).
 
--export([merge_vstructs/3, init_vstate/1, vote/3, vote/1]).
+-export([quorum/2, merge_vstructs/3, init_vstate/1, vote/3, vote/1]).
 
 -include("voting.hrl").
 
@@ -47,6 +47,20 @@ init_vstate_rec(#vstruct_p{votes = V}) ->
 init_vstate_rec(#vstruct_v{votes = V, thresh = T, children = Structs}) ->
     States = lists:map(fun init_vstate_rec/1, Structs),
     #vstate_v{votes = V, thresh = T, children = States}.
+
+-spec quorum(#vstruct{}, [{vid(), yes | no}]) -> boolean().
+quorum(Struct, Votes) ->
+    State0 = init_vstate(Struct),
+    State1 = lists:foldl(
+               fun({_Vid, _Vote}, yes) -> yes;
+                  ({_Vid, _Vote}, no) -> no;
+                  ({Vid, Vote}, State) ->
+                       NewState = vote(State, Vid, Vote),
+                       Result = vote(NewState),
+                       case Result of pending -> NewState; _ -> Result end
+               end,
+               State0, Votes),
+    case State1 of yes -> true; _ -> false end.
 
 -spec vote(#vstate{}, vid(), yes | no) -> #vstate{}.
 vote(#vstate{tree = Tree, indices = Indices}, Vid, Vote) ->
