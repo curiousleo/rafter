@@ -51,11 +51,11 @@ init_vstate_rec(#vstruct_v{votes = V, thresh = T, children = Structs}) ->
 -spec vote(#vstate{}, vid(), yes | no) -> #vstate{}.
 vote(#vstate{tree = Tree, indices = Indices}, Vid, Vote) ->
     Paths = orddict:fetch(Vid, Indices),
-    {NewTree, _SubVote} = lists:foldl(
-                            fun(Path, {State, _SubVote}) ->
-                                    vote_rec(State, Path, Vote)
-                            end,
-                            {Tree, pending}, Paths),
+    NewTree = lists:foldl(
+                fun(Path, State) ->
+                        vote_rec(State, Path, Vote)
+                end,
+                Tree, Paths),
     #vstate{tree = NewTree, indices = orddict:erase(Vid, Indices)}.
 
 -spec vote(#vstate{} | #vstate_v{} | #vstate_p{}) -> vote().
@@ -73,31 +73,18 @@ vote(#vstate_p{vote = V}) ->
     V.
 
 -spec vote_rec(#vstate_v{} | #vstate_p{}, path(), yes | no) ->
-    {#vstate_v{} | #vstate_p{}, vote()}.
+    #vstate_v{} | #vstate_p{}.
 vote_rec(State = #vstate_v{children = States}, [Index|Path], Vote) ->
     {States1, [SubState|States2]} = lists:split(Index, States),
-    {NewSubState, SubVote} = vote_rec(SubState, Path, Vote),
+    NewSubState= vote_rec(SubState, Path, Vote),
     NewState = State#vstate_v{children = States1 ++ [NewSubState|States2]},
-    vote_rec_aux(NewState, votes(NewSubState), SubVote);
+    acc_votes(NewState);
 vote_rec(State = #vstate_p{vote = pending}, [], Vote) ->
-    {State#vstate_p{vote = Vote}, Vote}.
+    State#vstate_p{vote = Vote}.
 
--spec vote_rec_aux(#vstate_v{}, non_neg_integer(), vote()) ->
-    {#vstate_v{}, vote()}.
-vote_rec_aux(State = #vstate_v{yes_votes = Yes, thresh = T}, Votes, yes)
-  when Yes + Votes >= T ->
-    {State#vstate_v{yes_votes = Yes + Votes}, yes};
-vote_rec_aux(State = #vstate_v{yes_votes = Yes}, Votes, yes) ->
-    {State#vstate_v{yes_votes = Yes + Votes}, pending};
-vote_rec_aux(State = #vstate_v{thresh = T, no_votes = No, children = States},
-             Votes, no)
-  when No + Votes > length(States) - T ->
-    {State#vstate_v{no_votes = No + Votes}, no};
-vote_rec_aux(State = #vstate_v{no_votes = No}, Votes, no) ->
-    {State#vstate_v{no_votes = No + Votes}, pending};
-vote_rec_aux(State, _Votes, pending) ->
-    {State, pending}.
-
--spec votes(#vstate_v{} | #vstate_p{}) -> non_neg_integer().
-votes(#vstate_v{votes = V}) -> V;
-votes(#vstate_p{votes = V}) -> V.
+-spec acc_votes(#vstate_v{}) -> #vstate_v{}.
+acc_votes(State = #vstate_v{children = States}) ->
+    Voted = fun(Vote) -> fun(S) -> vote(S) =:= Vote end end,
+    Yes = length(lists:filter(Voted(yes), States)),
+    No = length(lists:filter(Voted(no), States)),
+    State#vstate_v{yes_votes = Yes, no_votes = No}.
