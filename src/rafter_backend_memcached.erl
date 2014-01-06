@@ -63,7 +63,7 @@ write({replace, Key, Value, Flags, Exptime}, State) ->
 write({append, Key, Append}, State) ->
     Val = try
               Value = ets:lookup_element(?TABLE, Key, 1),
-              NewValue = <<Value,Append>>,
+              NewValue = <<Value/binary,Append/binary>>,
               true = ets:update_element(?TABLE, Key, {1, NewValue})
           catch _:E ->
               {error, E}
@@ -73,7 +73,7 @@ write({append, Key, Append}, State) ->
 write({prepend, Key, Prepend}, State) ->
     Val = try
               Value = ets:lookup_element(?TABLE, Key, 1),
-              NewValue = <<Prepend,Value>>,
+              NewValue = <<Prepend/binary,Value/binary>>,
               true = ets:update_element(?TABLE, Key, {1, NewValue})
           catch _:E ->
               {error, E}
