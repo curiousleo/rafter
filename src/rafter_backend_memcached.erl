@@ -47,10 +47,8 @@ write({set, Key, Value, Flags, Exptime}, State) ->
 
 write({add, Key, Value, Flags, Exptime}, State) ->
     Val = try
-              case ets:insert(?TABLE, {Key, {Value, Flags, Exptime}}) of
-                  false -> not_stored;
-                  _ -> {ok, Value}
-              end
+              true = ets:insert(?TABLE, {Key, {Value, Flags, Exptime}}),
+              {ok, Value}
           catch _:E ->
               {error, E}
           end,
