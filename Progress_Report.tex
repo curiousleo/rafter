@@ -1,0 +1,58 @@
+\documentclass[11pt]{scrartcl}
+\usepackage{fixltx2e} % LaTeX patches, \textsubscript
+\usepackage{cmap} % fix search and cut-and-paste in Acrobat
+\usepackage{ifthen}
+\usepackage[oldstylenums,light,largesmallcaps]{kpfonts}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{tabularx}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue]{hyperref}
+
+%%% Custom LaTeX preamble
+% serif headings:
+\addtokomafont{disposition}{\rmfamily}
+\addtokomafont{descriptionlabel}{\rmfamily}
+% no section numbering
+\setcounter{secnumdepth}{0}
+% hyperlinks
+\urlstyle{same} % normal text font (alternatives: tt, rm, sf)
+\hypersetup{
+  pdftitle={Extending Raft with Structured Voting},
+  pdfauthor={Leonhard Markert (lm510), Emmanuel College}
+}
+
+%%% Body
+\begin{document}
+\thispagestyle{empty}
+
+\rightline{\large\it Leonhard Markert} \medskip
+\rightline{\large\it Emmanuel College} \medskip
+\rightline{\large\it lm510}
+
+\vfil
+
+\centerline{\large Computer Science Part \textsc{ii} Project Proposal} \vspace{0.4in}
+\centerline{\Large\bf Extending Raft with Structured Voting} \vspace{0.3in}
+\centerline{\large\it \today}
+
+\vfil
+
+\begin{center}
+\begin{tabularx}{316pt}{rX}
+\textbf{Project Supervisors} & \textit{Malte Schwarzkopf} and \textit{Ionel Gog} \\ \\
+\textbf{Director of Studies} & \textit{Dr Jonathan Hayman} \\ \\
+\textbf{Overseers} & \textit{Dr Markus Kuhn} and \textit{Dr Neal Lathia}
+\end{tabularx}
+\end{center}
+
+\newpage
+
+\section{Progress Report%
+  \label{progress-report}%
+}
+
+At the time of this writing, my project is roughly on schedule. During Michaelmas term, I fell behind by two to three weeks, but fortunately after lectures and supervisions had finished, I was able to catch up with the work plan and have stayed on top of it since.
+
+As laid out in my original work plan, I started by familiarising myself with Erlang. I produced a working implementation of a banker's deque (ref. Okasaki) with type annotations for Dialyzer and QuickCheck unit tests. In order to learn about asynchronous programming with Erlang, I wrote a distributed benchmarking tool. Writing asynchronous code in Erlang using OTP idioms turned out to be more difficult than I had anticipated. Completing the benchmarking tool took longer than expected, and this was why I fell behind the schedule even though the project had barely started.
+
+\end{document}
