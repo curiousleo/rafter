@@ -1,48 +1,36 @@
 -module(rafter_memcached_tcp).
 
--behaviour(gen_server).
+-behaviour(supervisor).
 
 -include("rafter.hrl").
 -include("rafter_opts.hrl").
 
 %% api
--export([start_link/2, stop/1]).
+-export([start_link/2]).
 
-%% gen_server callbacks
--export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2,
-         code_change/3]).
+%% supervisor callbacks
+-export([init/1]).
 
 %%
 %% api
 %%
 
 start_link(Peer, Opts = #rafter_opts{state_machine = rafter_backend_memcached}) ->
-    gen_server:start_link({local, server_name(Peer)}, ?MODULE, [Peer, Opts], []).
-
-stop(Peer) ->
-    gen_server:cast(server_name(Peer), stop).
+    supervisor:start_link({local, server_name(Peer)}, ?MODULE, [Peer, Opts], []).
 
 %%
-%% gen_server callbacks
+%% supervisor callbacks
 %%
 
 init([_Name, _Opts]) ->
-    start_server(8091).
-
-handle_call(_Request, _From, State) ->
-    {noreply, State}.
-
-handle_cast(_Request, State) ->
-    {noreply, State}.
-
-handle_info(_Info, State) ->
-    {noreply, State}.
-
-terminate(_Reason, _State) ->
-    ok.
-
-code_change(_OldVsn, State, _Extra) ->
-    {ok, State}.
+    Port = 8091,
+    {ok, ListenSocket} = gen_tcp:listen(Port, [{active, once}, {packet, line}]),
+    spawn_link(fun empty_listeners/0),
+    {ok, {{simple_one_for_one, 60, 3600},
+          [{socket,
+            {rafter_memcached_sock, start_link, [ListenSocket]},
+            temporary, 1000, worker, [rafter_memcached_sock]}
+          ]}}.
 
 %%
 %% helper functions
@@ -51,26 +39,9 @@ code_change(_OldVsn, State, _Extra) ->
 server_name(Me) ->
     list_to_atom(atom_to_list(Me) ++ "_memcached").
 
-start_server(Port) ->
-    Pid = spawn_link(fun() ->
-                             {ok, Listen} = gen_tcp:listen(Port, [binary, {active, false}]),
-                             spawn(fun() -> acceptor(Listen) end),
-                             timer:sleep(infinity)
-                     end),
-    {ok, Pid}.
+start_socket() ->
+    supervisor:start_child(?MODULE, []).
 
-acceptor(ListenSocket) ->
-    {ok, Socket} = gen_tcp:accept(ListenSocket),
-    spawn(fun() -> acceptor(ListenSocket) end),
-    handle(Socket).
-
-%% Echoing back whatever was obtained
-handle(Socket) ->
-    inet:setopts(Socket, [{active, once}]),
-    receive
-        {tcp, Socket, <<"quit", _/binary>>} ->
-            gen_tcp:close(Socket);
-        {tcp, Socket, Msg} ->
-            gen_tcp:send(Socket, Msg),
-            handle(Socket)
-    end.
+empty_listeners() ->
+    [start_socket() || _ <- lists:seq(1, 20)],
+    ok.
