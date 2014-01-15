@@ -25,7 +25,11 @@ init([NameAtom, Me, Opts]) ->
                     {rafter_consensus_fsm, start_link, [NameAtom, Me, Opts]},
                     permanent, 5000, worker, [rafter_consensus_fsm]},
 
-    {ok, {{one_for_all, 5, 10}, [LogServer, ConsensusFsm]}}.
+    MemcachedTcp = {rafter_memcached_tcp,
+                    {rafter_memcached_tcp, start_link, [NameAtom, Opts]},
+                    permanent, 5000, worker, [rafter_memcached_tcp]},
+
+    {ok, {{one_for_all, 5, 10}, [LogServer, ConsensusFsm, MemcachedTcp]}}.
 
 %% ===================================================================
 %% Private Functions
