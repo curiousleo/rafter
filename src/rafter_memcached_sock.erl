@@ -35,7 +35,11 @@ handle_cast(accept, {ListenSocket, Peer}) ->
 
 handle_info({tcp, Socket, Str}, {AcceptSocket, Peer}) ->
     send(Socket, Str, []),
-    {noreply, {AcceptSocket, Peer}}.
+    {noreply, {AcceptSocket, Peer}};
+handle_info({tcp_closed, _Socket}, S) ->
+    {stop, normal, S};
+handle_info({tcp_error, _Socket}, S) ->
+    {stop, normal, S}.
 
 code_change(_OldVsn, State, _Extra) ->
     {ok, State}.
