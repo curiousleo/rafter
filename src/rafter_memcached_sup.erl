@@ -27,7 +27,7 @@ start_socket(Peer) ->
 
 init([Peer, _Opts]) ->
     Port = 8092,
-    {ok, ListenSocket} = gen_tcp:listen(Port, [{active, once}]),
+    {ok, ListenSocket} = gen_tcp:listen(Port, [binary, {active, once}]),
     spawn_link(fun () -> empty_listeners(Peer) end),
     {ok, {{simple_one_for_one, 60, 3600},
           [{rafter_memcached_sock,
