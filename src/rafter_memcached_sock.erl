@@ -9,6 +9,23 @@
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, code_change/3,
          terminate/2]).
 
+-type normal_cmd() ::
+   {set | add | replace | append | prepend,   % command
+    binary(),                                 % key
+    binary(),                                 % flags
+    non_neg_integer(),                        % exptime
+    non_neg_integer(),                        % bytes
+    boolean()}.                               % noreply?
+-type cas_cmd() ::
+   {cas,
+    binary(),                                 % key
+    binary(),                                 % flags
+    non_neg_integer(),                        % exptime
+    non_neg_integer(),                        % bytes
+    binary(),                                 % cas unique
+    boolean()}.                               % noreply?
+-type cmd() :: normal_cmd() | cas_cmd().
+
 %%
 %% api
 %%
@@ -34,7 +51,7 @@ handle_cast(accept, {ListenSocket, Peer}) ->
     {noreply, {AcceptSocket, Peer}}.
 
 handle_info({tcp, Socket, Str}, {AcceptSocket, Peer}) ->
-    send(Socket, Str, []),
+    send(Socket, "~p", [parse_command(Str)]),
     {noreply, {AcceptSocket, Peer}};
 handle_info({tcp_closed, _Socket}, S) ->
     {stop, normal, S};
@@ -50,6 +67,42 @@ terminate(_Reason, _State) ->
 %%
 %% helper functions
 %%
+
+-spec parse_command(binary()) -> {ok, cmd()} | error.
+parse_command(CmdBin) ->
+    StrippedCmdBin = binary:part(CmdBin, {0, byte_size(CmdBin) - 2}),
+    case binary:split(StrippedCmdBin, [<<" ">>], [global]) of
+        [<<"set">> | Args] ->       parse_args(set, Args);
+        [<<"add">> | Args] ->       parse_args(add, Args);
+        [<<"replace">> | Args] ->   parse_args(replace, Args);
+        [<<"append">> | Args] ->    parse_args(append, Args);
+        [<<"prepend">> | Args] ->   parse_args(prepend, Args);
+        [<<"cas">> | Args] ->       parse_args(cas, Args);
+        _ ->                        error
+    end.
+
+parse_args(cas, [Key, Flags, Exp, Bytes, CasUnique]) ->
+    {ok,
+     {cas, Key, Flags, binary_to_integer(Exp),
+      binary_to_integer(Bytes), CasUnique, false}
+    };
+parse_args(cas, [Key, Flags, Exp, Bytes, CasUnique, <<"noreply">>]) ->
+    {ok,
+     {cas, Key, Flags, binary_to_integer(Exp),
+      binary_to_integer(Bytes), CasUnique, true}
+    };
+parse_args(Cmd, [Key, Flags, Exp, Bytes]) ->
+    {ok,
+     {Cmd, Key, Flags, binary_to_integer(Exp),
+      binary_to_integer(Bytes), false}
+    };
+parse_args(Cmd, [Key, Flags, Exp, Bytes, <<"noreply">>]) ->
+    {ok,
+     {Cmd, Key, Flags, binary_to_integer(Exp),
+      binary_to_integer(Bytes), true}
+    };
+parse_args(_, _) ->
+    error.
 
 send(Socket, Str, Args) ->
     ok = gen_tcp:send(Socket, io_lib:format(Str ++ "~n", Args)),
