@@ -36,10 +36,14 @@
           cas_unique :: binary(),
           noreply = false :: boolean()
          }).
+-record(update_cmd, {
+          command :: incr | decr | touch,
+          key :: binary()
+         }).
 -record(retrieval_cmd, {
           keys :: [binary()]
          }).
--type cmd() :: #storage_cmd{} | #cas_cmd{} | #retrieval_cmd{}.
+-type cmd() :: #storage_cmd{} | #cas_cmd{} | #update_cmd{} | #retrieval_cmd{}.
 
 %%
 %% api
@@ -69,6 +73,10 @@ handle_info({tcp, Socket, Str}, S = #state{peer = Peer, next = command}) ->
     case parse_cmd(Str) of
         {ok, Cmd = #retrieval_cmd{}} ->
             Result = execute_read_cmd(Peer, Cmd),
+            send(Socket, "~p", [Result]),
+            {noreply, S};
+        {ok, Cmd = #update_cmd{}} ->
+            Result = execute_update_cmd(Peer, Cmd),
             send(Socket, "~p", [Result]),
             {noreply, S};
         {ok, Cmd} ->
@@ -131,6 +139,9 @@ parse_cmd(CmdBin) ->
         [<<"cas">> | Args] ->       parse_args(cas, Args);
         [<<"get">> | Keys] ->       parse_args(get, Keys);
         [<<"gets">> | Keys] ->      parse_args(get, Keys);
+        [<<"incr">> | Keys] ->      parse_args(incr, Keys);
+        [<<"decr">> | Keys] ->      parse_args(decr, Keys);
+        [<<"touch">> | Keys] ->     parse_args(touch, Keys);
         _ ->                        error
     end.
 
@@ -146,6 +157,8 @@ parse_args(cas, [Key, Flags, Exp, Bytes, CasUnique, <<"noreply">>]) ->
     };
 parse_args(get, Keys) ->
     {ok, #retrieval_cmd{keys = Keys}};
+parse_args(Cmd, [Key]) ->
+    {ok, #update_cmd{command = Cmd, key = Key}};
 parse_args(Cmd, [Key, Flags, Exp, Bytes]) ->
     {ok, #storage_cmd{command = Cmd, key = Key, flags = Flags,
                       exptime = binary_to_integer(Exp),
@@ -159,10 +172,13 @@ parse_args(Cmd, [Key, Flags, Exp, Bytes, <<"noreply">>]) ->
 parse_args(_, _) ->
     error.
 
--spec execute_read_cmd(peer(), #retrieval_cmd{}) ->
-    {ok, term()} | {error, term()}.
+-spec execute_read_cmd(peer(), #retrieval_cmd{}) -> term().
 execute_read_cmd(Peer, #retrieval_cmd{keys = Keys}) ->
     rafter:read_op(Peer, {get, Keys}).
+
+-spec execute_update_cmd(peer(), #update_cmd{}) -> term().
+execute_update_cmd(Peer, #update_cmd{command = Cmd, key = Key}) ->
+    rafter:op(Peer, {Cmd, Key}).
 
 -spec execute_write_cmd(peer(), #cas_cmd{} | #storage_cmd{}, binary()) ->
         {ok, term()} | {error, term()}.
