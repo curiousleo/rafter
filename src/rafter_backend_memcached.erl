@@ -24,11 +24,14 @@ read({get, Keys}, State) ->
                          fun (Key) ->
                                  lists:map(
                                    fun({_Key, {Value, Flags, _Exptime}}) ->
-                                           {Value, Flags}
+                                           {Key, Value, Flags}
                                    end, ets:lookup(?TABLE, Key))
                          end,
                          Keys),
-              {ok, Values}
+              case Values of
+                  [] -> not_found;
+                  _ -> {ok, Values}
+              end
           catch _:E ->
               {error, E}
           end,
@@ -37,7 +40,7 @@ read({get, Keys}, State) ->
 write({set, Key, Value, Flags, Exptime}, State) ->
     Val = try
               ets:insert(?TABLE, {Key, {Value, Flags, Exptime}}),
-              {ok, Value}
+              stored
           catch _:E ->
               {error, E}
           end,
@@ -46,7 +49,7 @@ write({set, Key, Value, Flags, Exptime}, State) ->
 write({add, Key, Value, Flags, Exptime}, State) ->
     Val = try
               case ets:insert_new(?TABLE, {Key, {Value, Flags, Exptime}}) of
-                  true -> {ok, Value};
+                  true -> stored;
                   false -> not_stored
               end
           catch _:E ->
