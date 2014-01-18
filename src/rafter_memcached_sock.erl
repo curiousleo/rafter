@@ -23,8 +23,8 @@
 -record(storage_cmd, {
           command :: set | add | replace | append | prepend,
           key :: binary(),
-          flags :: binary(),
-          exptime :: non_neg_integer(),
+          flags :: binary(),            % not used by append and prepend
+          exptime :: non_neg_integer(), % not used by append and prepend
           bytes :: non_neg_integer(),
           noreply = false :: boolean()
          }).
@@ -83,7 +83,10 @@ handle_info({tcp, Socket, Str}, S = #state{peer = Peer, next = command}) ->
             send(Socket, "Waiting for data", []),
             {noreply, S#state{next = data, command = Cmd, bytes = bytes(Cmd)}};
         error ->
-            send(Socket, "ERROR in 1st clause", []),
+            send(Socket, "ERROR", []),
+            {noreply, S};
+        client_error ->
+            send(Socket, "CLIENT_ERROR", []),
             {noreply, S}
     end;
 handle_info({tcp, Socket, Str},
@@ -145,6 +148,18 @@ parse_cmd(CmdBin) ->
         _ ->                        error
     end.
 
+parse_args(append, [Key, Bytes]) ->
+    {ok, #storage_cmd{command = append, key = Key, bytes = Bytes,
+                      noreply = false}};
+parse_args(append, [Key, Bytes, <<"noreply">>]) ->
+    {ok, #storage_cmd{command = append, key = Key, bytes = Bytes,
+                      noreply = true}};
+parse_args(prepend, [Key, Bytes]) ->
+    {ok, #storage_cmd{command = prepend, key = Key, bytes = Bytes,
+                      noreply = false}};
+parse_args(prepend, [Key, Bytes, <<"noreply">>]) ->
+    {ok, #storage_cmd{command = prepend, key = Key, bytes = Bytes,
+                      noreply = true}};
 parse_args(cas, [Key, Flags, Exp, Bytes, CasUnique]) ->
     {ok, #cas_cmd{key = Key, flags = Flags, exptime = binary_to_integer(Exp),
                   bytes = binary_to_integer(Bytes), cas_unique = CasUnique,
@@ -170,7 +185,7 @@ parse_args(Cmd, [Key, Flags, Exp, Bytes, <<"noreply">>]) ->
                       bytes = binary_to_integer(Bytes), noreply = false}
     };
 parse_args(_, _) ->
-    error.
+    client_error.
 
 -spec execute_read_cmd(peer(), #retrieval_cmd{}) -> term().
 execute_read_cmd(Peer, #retrieval_cmd{keys = Keys}) ->
