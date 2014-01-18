@@ -66,27 +66,25 @@ handle_call(_Request, _From, State) ->
 handle_cast(accept, S = #state{socket = ListenSocket, peer = Peer}) ->
     {ok, AcceptSocket} = gen_tcp:accept(ListenSocket),
     rafter_memcached_sup:start_socket(Peer),
-    send(AcceptSocket, "WHATS UP", []),
     {noreply, S#state{socket = AcceptSocket}}.
 
 handle_info({tcp, Socket, Str}, S = #state{peer = Peer, next = command}) ->
     case parse_cmd(Str) of
         {ok, Cmd = #retrieval_cmd{}} ->
             Result = execute_read_cmd(Peer, Cmd),
-            send(Socket, "~p", [Result]),
+            send(Socket, Cmd, Result),
             {noreply, S};
         {ok, Cmd = #update_cmd{}} ->
             Result = execute_update_cmd(Peer, Cmd),
-            send(Socket, "~p", [Result]),
+            send(Socket, Cmd, Result),
             {noreply, S};
         {ok, Cmd} ->
-            send(Socket, "Waiting for data", []),
             {noreply, S#state{next = data, command = Cmd, bytes = bytes(Cmd)}};
         error ->
-            send(Socket, "ERROR", []),
+            send(Socket, "ERROR 1"),
             {noreply, S};
         client_error ->
-            send(Socket, "CLIENT_ERROR", []),
+            send(Socket, "CLIENT_ERROR 1"),
             {noreply, S}
     end;
 handle_info({tcp, Socket, Str},
@@ -97,23 +95,22 @@ handle_info({tcp, Socket, Str},
         <<NewData:Bytes/binary, "\r\n">> ->
             Result = execute_write_cmd(Peer, Cmd,
                                        <<Data/binary,NewData/binary>>),
-            send(Socket, "~p", [Result]);
+            send(Socket, Cmd, Result);
         _ ->
-            send(Socket, "ERROR in 2nd clause", [])
+            send(Socket, "ERROR 2")
     end,
     {noreply, S#state{next = command, data = <<>>, bytes = 0}};
-handle_info({tcp, Socket, Str},
+handle_info({tcp, _Socket, Str},
             S = #state{next = data, data = Data, bytes = Bytes})
   when byte_size(Str) < Bytes + 2 ->
-    send(Socket, "Waiting", []),
     {noreply, S#state{data = <<Data/binary,Str/binary>>,
                       bytes = Bytes - byte_size(Str)}};
 handle_info({tcp, Socket, _Str}, S = #state{next = data, bytes = Bytes})
   when Bytes < 1 ->
-    send(Socket, "ERROR in 4th clause", []),
+    send(Socket, "ERROR 3"),
     {noreply, S#state{data = <<>>, bytes = 0, next = command}};
 handle_info({tcp, Socket, _Str}, S = #state{next = data}) ->
-    send(Socket, "ERROR in 5th clause", []),
+    send(Socket, "ERROR 4"),
     {noreply, S#state{data = <<>>, bytes = 0, next = command}};
 handle_info({tcp_closed, _Socket}, S) ->
     {stop, normal, S};
@@ -212,7 +209,29 @@ bytes(#storage_cmd{bytes = Bytes}) ->
 bytes(#cas_cmd{bytes = Bytes}) ->
     Bytes.
 
-send(Socket, Str, Args) ->
-    ok = gen_tcp:send(Socket, io_lib:format(Str ++ "~n", Args)),
+send(Socket, _Cmd, stored) ->
+    send(Socket, "STORED");
+send(Socket, _Cmd, not_stored) ->
+    send(Socket, "NOT_STORED");
+send(Socket, _Cmd, touched) ->
+    send(Socket, "TOUCHED");
+send(Socket, _Cmd, exists) ->
+    send(Socket, "EXISTS");
+send(Socket, _Cmd, not_found) ->
+    send(Socket, "NOT_FOUND");
+send(Socket, _Cmd, deleted) ->
+    send(Socket, "DELETED");
+send(Socket, #update_cmd{}, {ok, Value}) ->
+    send(Socket, Value);
+send(Socket, #retrieval_cmd{}, {ok, Values}) ->
+    lists:map(
+      fun({Key, Value, Flags}) ->
+              send(Socket,
+                   io_lib:format("VALUE ~s ~s ~B~n~s",
+                                 [Key, Flags, byte_size(Value), Value]))
+      end, Values).
+
+send(Socket, Str) ->
+    ok = gen_tcp:send(Socket, Str ++ "~r~n"),
     ok = inet:setopts(Socket, [{active, once}]),
     ok.
