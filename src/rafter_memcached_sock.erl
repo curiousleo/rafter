@@ -12,9 +12,9 @@
          terminate/2]).
 
 -record(state, {
+          next = command :: command | data,
           peer :: peer(),
           socket :: port(),
-          next = command :: command | data,
           command :: cmd(),
           data = <<>> :: binary(),
           bytes = 0 :: non_neg_integer()
@@ -58,7 +58,7 @@ start_link(ListenSocket, Peer) ->
 
 init([ListenSocket, Peer]) ->
     gen_server:cast(self(), accept),
-    {ok, #state{socket = ListenSocket, peer = Peer, next = command}}.
+    {ok, #state{next = command, peer = Peer, socket = ListenSocket}}.
 
 handle_call(_Request, _From, State) ->
     {noreply, State}.
@@ -68,49 +68,53 @@ handle_cast(accept, S = #state{socket = ListenSocket, peer = Peer}) ->
     rafter_memcached_sup:start_socket(Peer),
     {noreply, S#state{socket = AcceptSocket}}.
 
-handle_info({tcp, Socket, Str}, S = #state{peer = Peer, next = command}) ->
+handle_info({tcp, Socket, Str}, S = #state{next = command, peer = Peer}) ->
     case parse_cmd(Str) of
         {ok, Cmd = #retrieval_cmd{}} ->
             Result = execute_read_cmd(Peer, Cmd),
-            send(Socket, Cmd, Result),
+            reply(Socket, Cmd, Result),
             {noreply, S};
         {ok, Cmd = #update_cmd{}} ->
             Result = execute_update_cmd(Peer, Cmd),
-            send(Socket, Cmd, Result),
+            reply(Socket, Cmd, Result),
             {noreply, S};
         {ok, Cmd} ->
+            %% no reply, so set socket active manually
+            ok = inet:setopts(Socket, [{active, once}]),
             {noreply, S#state{next = data, command = Cmd, bytes = bytes(Cmd)}};
         error ->
-            send(Socket, "ERROR 1"),
+            send(Socket, "ERROR 1", []),
             {noreply, S};
         client_error ->
-            send(Socket, "CLIENT_ERROR 1"),
+            send(Socket, "CLIENT_ERROR 1", []),
             {noreply, S}
     end;
 handle_info({tcp, Socket, Str},
-            S = #state{peer = Peer, next = data, data = Data, command = Cmd,
+            S = #state{next = data, peer = Peer, command = Cmd, data = Data,
                        bytes = Bytes})
   when byte_size(Str) =:= Bytes + 2 ->
     case Str of
         <<NewData:Bytes/binary, "\r\n">> ->
             Result = execute_write_cmd(Peer, Cmd,
                                        <<Data/binary,NewData/binary>>),
-            send(Socket, Cmd, Result);
+            reply(Socket, Cmd, Result);
         _ ->
-            send(Socket, "ERROR 2")
+            send(Socket, "ERROR 2", [])
     end,
     {noreply, S#state{next = command, data = <<>>, bytes = 0}};
-handle_info({tcp, _Socket, Str},
+handle_info({tcp, Socket, Str},
             S = #state{next = data, data = Data, bytes = Bytes})
   when byte_size(Str) < Bytes + 2 ->
+    %% no reply, so set socket active manually
+    ok = inet:setopts(Socket, [{active, once}]),
     {noreply, S#state{data = <<Data/binary,Str/binary>>,
                       bytes = Bytes - byte_size(Str)}};
-handle_info({tcp, Socket, _Str}, S = #state{next = data, bytes = Bytes})
+handle_info({tcp, Socket, Str}, S = #state{next = data, bytes = Bytes})
   when Bytes < 1 ->
-    send(Socket, "ERROR 3"),
+    send(Socket, "ERROR 3", []),
     {noreply, S#state{data = <<>>, bytes = 0, next = command}};
-handle_info({tcp, Socket, _Str}, S = #state{next = data}) ->
-    send(Socket, "ERROR 4"),
+handle_info({tcp, Socket, Str}, S = #state{next = data}) ->
+    send(Socket, "ERROR 4", []),
     {noreply, S#state{data = <<>>, bytes = 0, next = command}};
 handle_info({tcp_closed, _Socket}, S) ->
     {stop, normal, S};
@@ -169,8 +173,12 @@ parse_args(cas, [Key, Flags, Exp, Bytes, CasUnique, <<"noreply">>]) ->
     };
 parse_args(get, Keys) ->
     {ok, #retrieval_cmd{keys = Keys}};
-parse_args(Cmd, [Key]) ->
-    {ok, #update_cmd{command = Cmd, key = Key}};
+parse_args(incr, [Key]) ->
+    {ok, #update_cmd{command = incr, key = Key}};
+parse_args(decr, [Key]) ->
+    {ok, #update_cmd{command = decr, key = Key}};
+parse_args(touch, [Key]) ->
+    {ok, #update_cmd{command = touch, key = Key}};
 parse_args(Cmd, [Key, Flags, Exp, Bytes]) ->
     {ok, #storage_cmd{command = Cmd, key = Key, flags = Flags,
                       exptime = binary_to_integer(Exp),
@@ -179,7 +187,7 @@ parse_args(Cmd, [Key, Flags, Exp, Bytes]) ->
 parse_args(Cmd, [Key, Flags, Exp, Bytes, <<"noreply">>]) ->
     {ok, #storage_cmd{command = Cmd, key = Key, flags = Flags,
                       exptime = binary_to_integer(Exp),
-                      bytes = binary_to_integer(Bytes), noreply = false}
+                      bytes = binary_to_integer(Bytes), noreply = true}
     };
 parse_args(_, _) ->
     client_error.
@@ -209,29 +217,32 @@ bytes(#storage_cmd{bytes = Bytes}) ->
 bytes(#cas_cmd{bytes = Bytes}) ->
     Bytes.
 
-send(Socket, _Cmd, stored) ->
-    send(Socket, "STORED");
-send(Socket, _Cmd, not_stored) ->
-    send(Socket, "NOT_STORED");
-send(Socket, _Cmd, touched) ->
-    send(Socket, "TOUCHED");
-send(Socket, _Cmd, exists) ->
-    send(Socket, "EXISTS");
-send(Socket, _Cmd, not_found) ->
-    send(Socket, "NOT_FOUND");
-send(Socket, _Cmd, deleted) ->
-    send(Socket, "DELETED");
-send(Socket, #update_cmd{}, {ok, Value}) ->
-    send(Socket, Value);
-send(Socket, #retrieval_cmd{}, {ok, Values}) ->
+reply(Socket, _Cmd, stored) ->
+    send(Socket, "STORED", []);
+reply(Socket, _Cmd, not_stored) ->
+    send(Socket, "NOT_STORED", []);
+reply(Socket, _Cmd, touched) ->
+    send(Socket, "TOUCHED", []);
+reply(Socket, _Cmd, exists) ->
+    send(Socket, "EXISTS", []);
+reply(Socket, _Cmd, not_found) ->
+    send(Socket, "NOT_FOUND", []);
+reply(Socket, _Cmd, deleted) ->
+    send(Socket, "DELETED", []);
+reply(Socket, #update_cmd{}, {ok, Value}) ->
+    send(Socket, "~s", [Value]);
+reply(Socket, #retrieval_cmd{}, {ok, Values}) ->
     lists:map(
       fun({Key, Value, Flags}) ->
-              send(Socket,
-                   io_lib:format("VALUE ~s ~s ~B~n~s",
-                                 [Key, Flags, byte_size(Value), Value]))
-      end, Values).
+              Str = io_lib:format("VALUE ~s ~s ~B~n~s~n",
+                                  [Key, Flags, byte_size(Value), Value]),
+              ok = gen_tcp:send(Socket, Str)
+      end, Values),
+    send(Socket, "END", []).
+reply(Socket, _Cmd, {error, E}) ->
+    send(Socket, "ERROR ~p", [E]).
 
-send(Socket, Str) ->
-    ok = gen_tcp:send(Socket, Str ++ "~r~n"),
+send(Socket, Str, Args) ->
+    ok = gen_tcp:send(Socket, io_lib:format(Str ++ "~n", Args)),
     ok = inet:setopts(Socket, [{active, once}]),
     ok.
