@@ -12,38 +12,9 @@
          terminate/2]).
 
 -record(state, {
-          next = command :: command | {data, non_neg_integer()},
           peer :: peer(),
-          socket :: port(),
-          command :: cmd(),
-          buffer = <<>> :: binary()
+          socket :: port()
          }).
-
--record(storage_cmd, {
-          command :: set | add | replace | append | prepend,
-          key :: binary(),
-          flags :: binary(),            % not used by append and prepend
-          exptime :: non_neg_integer(), % not used by append and prepend
-          bytes :: non_neg_integer(),
-          noreply = false :: boolean()
-         }).
--record(cas_cmd, {
-          key :: binary(),
-          flags :: binary(),
-          exptime :: non_neg_integer(),
-          bytes :: non_neg_integer(),
-          cas_unique :: binary(),
-          noreply = false :: boolean()
-         }).
--record(update_cmd, {
-          command :: incr | decr | touch,
-          key :: binary(),
-          noreply = false :: boolean()
-         }).
--record(retrieval_cmd, {
-          keys :: [binary()]
-         }).
--type cmd() :: #storage_cmd{} | #cas_cmd{} | #update_cmd{} | #retrieval_cmd{}.
 
 %%
 %% api
@@ -58,7 +29,7 @@ start_link(ListenSocket, Peer) ->
 
 init([ListenSocket, Peer]) ->
     gen_server:cast(self(), accept),
-    {ok, #state{next = command, peer = Peer, socket = ListenSocket}}.
+    {ok, #state{peer = Peer, socket = ListenSocket}}.
 
 handle_call(_Request, _From, State) ->
     {noreply, State}.
@@ -86,184 +57,67 @@ terminate(_Reason, _State) ->
 %%
 
 -spec handle_incoming(binary(), port(), #state{}) -> #state{}.
-handle_incoming(Str, Socket,
-                S = #state{next = command, peer = Peer, buffer = Buffer}) ->
-    case binary:split(<<Buffer/binary,Str/binary>>, [<<"\r\n">>], []) of
-        [CmdStr, Rest] ->
-            NewState = S#state{buffer = <<>>},
-            case parse_cmd(CmdStr) of
-                {ok, Cmd = #retrieval_cmd{}} ->
-                    Result = execute_read_cmd(Peer, Cmd),
-                    reply(Socket, Cmd, Result),
-                    handle_incoming(Rest, Socket, NewState);
-                {ok, Cmd = #update_cmd{}} ->
-                    Result = execute_update_cmd(Peer, Cmd),
-                    reply(Socket, Cmd, Result),
-                    handle_incoming(Rest, Socket, NewState);
-                {ok, Cmd} ->
-                    %% no reply, so set socket active manually
+handle_incoming(<<>>, _Socket, S) ->
+    S;
+handle_incoming(Str, Socket, S = #state{peer = Peer}) ->
+    case Str of
+        <<_Magic:8, Opcode:8, KeyLen:16,
+          ExtrasLen:8, _DataType:8, _BucketId:16,
+          BodyLen:32, Opaque:4/binary, _CAS:64,
+          Body:BodyLen/binary, Next/binary>> ->
+            case {Opcode, ExtrasLen, Body} of
+                {10, 0, <<>>} ->
+                    %% NOOP
                     inet:setopts(Socket, [{active, once}]),
-                    handle_incoming(Rest, Socket,
-                                    NewState#state{next = {data, bytes(Cmd)},
-                                                   command = Cmd});
-                error ->
-                    send(Socket, "ERROR 1", []),
-                    handle_incoming(Rest, Socket, NewState);
-                client_error ->
-                    send(Socket, "CLIENT_ERROR 1", []),
-                    handle_incoming(Rest, Socket, NewState)
-            end;
-        [Part] ->
-            inet:setopts(Socket, [{active, once}]),
-            S#state{buffer = Part}
-    end;
-handle_incoming(Str, Socket,
-                S = #state{next = {data, Bytes}, peer = Peer, command = Cmd,
-                           buffer = Buffer}) ->
-    NewState = S#state{next = command, buffer = <<>>},
-    WithNewlines = Bytes + 2,
-    case <<Buffer/binary, Str/binary>> of
-        <<Data:Bytes/binary, "\r\n", Rest/binary>> ->
-            Result = execute_write_cmd(Peer, Cmd, Data),
-            reply(Socket, Cmd, Result),
-            handle_incoming(Rest, Socket, NewState);
-        <<_Data:WithNewlines/binary, Rest/binary>> ->
-            %% malformed input: data is not followed by \r\n
-            %% TODO: better recovery
-            send(Socket, "CLIENT_ERROR 2", []),
-            handle_incoming(Rest, Socket, NewState);
-        Part ->
-            inet:setopts(Socket, [{active, once}]),
-            S#state{buffer = Part}
+                    S;
+                {0, 0, <<Key:KeyLen/binary>>} ->
+                    %% GET
+                    reply(Socket, get, Opaque, execute_get(Peer, Key)),
+                    handle_incoming(Next, Socket, S);
+                {1, 8, <<Flags:4/binary, Expiry:32, Key:KeyLen/binary,
+                         Value/binary>>} ->
+                    %% SET
+                    Result = execute_set(Peer, {Key, Value, Flags, Expiry}),
+                    reply(Socket, set, Opaque, Result),
+                    handle_incoming(Next, Socket, S)
+            end
     end.
 
--spec parse_cmd(binary()) -> {ok, cmd()} | error.
-parse_cmd(CmdStr) ->
-    case binary:split(CmdStr, [<<" ">>], [global]) of
-        [<<"set">> | Args] ->       parse_args(set, Args);
-        [<<"add">> | Args] ->       parse_args(add, Args);
-        [<<"replace">> | Args] ->   parse_args(replace, Args);
-        [<<"append">> | Args] ->    parse_args(append, Args);
-        [<<"prepend">> | Args] ->   parse_args(prepend, Args);
-        [<<"cas">> | Args] ->       parse_args(cas, Args);
-        [<<"get">> | Keys] ->       parse_args(get, Keys);
-        [<<"gets">> | Keys] ->      parse_args(get, Keys);
-        [<<"incr">> | Keys] ->      parse_args(incr, Keys);
-        [<<"decr">> | Keys] ->      parse_args(decr, Keys);
-        [<<"touch">> | Keys] ->     parse_args(touch, Keys);
-        _ ->                        error
-    end.
+-spec execute_get(peer(), binary()) -> term().
+execute_get(Peer, Key) ->
+    rafter:read_op(Peer, {get, [Key]}).
 
-parse_args(append, [Key, Bytes]) ->
-    {ok, #storage_cmd{command = append, key = Key, bytes = Bytes,
-                      noreply = false}};
-parse_args(append, [Key, Bytes, <<"noreply">>]) ->
-    {ok, #storage_cmd{command = append, key = Key, bytes = Bytes,
-                      noreply = true}};
-parse_args(prepend, [Key, Bytes]) ->
-    {ok, #storage_cmd{command = prepend, key = Key, bytes = Bytes,
-                      noreply = false}};
-parse_args(prepend, [Key, Bytes, <<"noreply">>]) ->
-    {ok, #storage_cmd{command = prepend, key = Key, bytes = Bytes,
-                      noreply = true}};
-parse_args(cas, [Key, Flags, Exp, Bytes, CasUnique]) ->
-    {ok, #cas_cmd{key = Key, flags = Flags, exptime = binary_to_integer(Exp),
-                  bytes = binary_to_integer(Bytes), cas_unique = CasUnique,
-                  noreply = false}
-    };
-parse_args(cas, [Key, Flags, Exp, Bytes, CasUnique, <<"noreply">>]) ->
-    {ok, #cas_cmd{key = Key, flags = Flags, exptime = binary_to_integer(Exp),
-                  bytes = binary_to_integer(Bytes), cas_unique = CasUnique,
-                  noreply = true}
-    };
-parse_args(get, Keys) ->
-    {ok, #retrieval_cmd{keys = Keys}};
-parse_args(incr, [Key]) ->
-    {ok, #update_cmd{command = incr, key = Key}};
-parse_args(decr, [Key]) ->
-    {ok, #update_cmd{command = decr, key = Key}};
-parse_args(touch, [Key]) ->
-    {ok, #update_cmd{command = touch, key = Key}};
-parse_args(incr, [Key, <<"noreply">>]) ->
-    {ok, #update_cmd{command = incr, key = Key, noreply = true}};
-parse_args(decr, [Key, <<"noreply">>]) ->
-    {ok, #update_cmd{command = decr, key = Key, noreply = true}};
-parse_args(touch, [Key, <<"noreply">>]) ->
-    {ok, #update_cmd{command = touch, key = Key, noreply = true}};
-parse_args(Cmd, [Key, Flags, Exp, Bytes]) ->
-    {ok, #storage_cmd{command = Cmd, key = Key, flags = Flags,
-                      exptime = binary_to_integer(Exp),
-                      bytes = binary_to_integer(Bytes), noreply = false}
-    };
-parse_args(Cmd, [Key, Flags, Exp, Bytes, <<"noreply">>]) ->
-    {ok, #storage_cmd{command = Cmd, key = Key, flags = Flags,
-                      exptime = binary_to_integer(Exp),
-                      bytes = binary_to_integer(Bytes), noreply = true}
-    };
-parse_args(_, _) ->
-    client_error.
+-spec execute_set(peer(), {binary(), binary(), binary(), non_neg_integer()}) -> term().
+execute_set(Peer, {Key, Value, Flags, Expiry}) ->
+    rafter:op(Peer, {set, Key, Value, Flags, Expiry}).
 
--spec execute_read_cmd(peer(), #retrieval_cmd{}) -> term().
-execute_read_cmd(Peer, #retrieval_cmd{keys = Keys}) ->
-    rafter:read_op(Peer, {get, Keys}).
-
--spec execute_update_cmd(peer(), #update_cmd{}) -> term().
-execute_update_cmd(Peer, #update_cmd{command = Cmd, key = Key}) ->
-    rafter:op(Peer, {Cmd, Key}).
-
--spec execute_write_cmd(peer(), #cas_cmd{} | #storage_cmd{}, binary()) ->
-        {ok, term()} | {error, term()}.
-execute_write_cmd(Peer, #storage_cmd{command = append, key = Key},
-                  Value) ->
-    rafter:op(Peer, {append, Key, Value});
-execute_write_cmd(Peer, #storage_cmd{command = prepend, key = Key},
-                  Value) ->
-    rafter:op(Peer, {prepend, Key, Value});
-execute_write_cmd(Peer, #storage_cmd{command = Cmd, key = Key,
-                                     flags = Flags, exptime = Exp},
-                  Value) ->
-    rafter:op(Peer, {Cmd, Key, Value, Flags, Exp});
-execute_write_cmd(Peer, #cas_cmd{key = Key, flags = Flags,
-                                 cas_unique = CasUnique, exptime = Exp},
-                  Value) ->
-    rafter:op(Peer, {cas, Key, Value, Flags, Exp, CasUnique}).
-
--spec bytes(#storage_cmd{} | #cas_cmd{}) -> non_neg_integer().
-bytes(#storage_cmd{bytes = Bytes}) ->
-    Bytes;
-bytes(#cas_cmd{bytes = Bytes}) ->
-    Bytes.
-
-reply(Socket, #storage_cmd{noreply = true}, _Result) ->
-    inet:setopts(Socket, [{active, once}]);
-reply(Socket, #cas_cmd{noreply = true}, _Result) ->
-    inet:setopts(Socket, [{active, once}]);
-reply(Socket, #update_cmd{noreply = true}, _Result) ->
-    inet:setopts(Socket, [{active, once}]);
-reply(Socket, _Cmd, stored) ->
-    send(Socket, "STORED", []);
-reply(Socket, _Cmd, not_stored) ->
-    send(Socket, "NOT_STORED", []);
-reply(Socket, _Cmd, touched) ->
-    send(Socket, "TOUCHED", []);
-reply(Socket, _Cmd, exists) ->
-    send(Socket, "EXISTS", []);
-reply(Socket, _Cmd, not_found) ->
-    send(Socket, "NOT_FOUND", []);
-reply(Socket, _Cmd, deleted) ->
-    send(Socket, "DELETED", []);
-reply(Socket, #update_cmd{}, {ok, Value}) ->
-    send(Socket, "~s", [Value]);
-reply(Socket, #retrieval_cmd{}, {ok, Values}) ->
-    lists:map(
-      fun({Key, Value, Flags}) ->
-              Str = io_lib:format("VALUE ~s ~s ~B~n~s~n",
-                                  [Key, Flags, byte_size(Value), Value]),
-              gen_tcp:send(Socket, Str)
-      end, Values),
-    send(Socket, "END", []);
-reply(Socket, _Cmd, {error, E}) ->
-    send(Socket, "ERROR ~p", [E]).
+reply(Socket, get, Opaque, {ok, [{_Key, Value, Flags}]}) ->
+    ValueLen = byte_size(Value),
+    ExtrasLen = byte_size(Flags),
+    BodyLen = ValueLen + ExtrasLen,
+    Resp = <<16#81:8, 0:8, 0:16,
+             ExtrasLen:8, 0:8, 0:16,
+             BodyLen:32,
+             Opaque:4/binary, 0:64,
+             Flags/binary,
+             Value/binary>>,
+    send(Socket, Resp, []);
+reply(Socket, get, Opaque, not_found) ->
+    Message = <<"Not found">>,
+    Resp = <<16#81:8, 0:8, 0:16,
+             0:8, 0:8, 1:16,
+             9:32,
+             Opaque:4/binary, 0:64,
+             Message/binary>>,
+    send(Socket, Resp, []);
+reply(Socket, set, Opaque, stored) ->
+    Resp = <<16#81:8, 1:8, 0:16,
+             0:8, 0:8, 0:16,
+             0:32,
+             Opaque:4/binary, 0:64>>,
+    send(Socket, Resp, []);
+reply(_Socket, Cmd, _Opaque, Result) ->
+    io:format("reply: ~p :: ~p~n", [Cmd, Result]).
 
 send(Socket, Str, Args) ->
     gen_tcp:send(Socket, [io_lib:format(Str, Args), <<"\r\n">>]),
