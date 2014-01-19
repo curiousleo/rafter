@@ -26,8 +26,8 @@ start_socket(Peer) ->
 %%
 
 init([Peer, _Opts]) ->
-    Port = 8092,
-    {ok, ListenSocket} = gen_tcp:listen(Port, [binary, {active, once}]),
+    Port = 11211,
+    ListenSocket = listen(Port),
     spawn_link(fun () -> empty_listeners(Peer) end),
     {ok, {{simple_one_for_one, 60, 3600},
           [{rafter_memcached_sock,
@@ -45,3 +45,11 @@ server_name(Me) ->
 empty_listeners(Peer) ->
     [start_socket(Peer) || _ <- lists:seq(1, 20)],
     ok.
+
+listen(Port) ->
+    case gen_tcp:listen(Port, [binary, {active, once}]) of
+        {ok, Socket} ->
+            Socket;
+        {error, eaddrinuse} ->
+            listen(Port + 1)
+    end.
