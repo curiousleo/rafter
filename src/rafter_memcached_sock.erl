@@ -12,12 +12,11 @@
          terminate/2]).
 
 -record(state, {
-          next = command :: command | data,
+          next = command :: command | {data, non_neg_integer()},
           peer :: peer(),
           socket :: port(),
           command :: cmd(),
-          data = <<>> :: binary(),
-          bytes = 0 :: non_neg_integer()
+          buffer = <<>> :: binary()
          }).
 
 -record(storage_cmd, {
@@ -68,54 +67,8 @@ handle_cast(accept, S = #state{socket = ListenSocket, peer = Peer}) ->
     rafter_memcached_sup:start_socket(Peer),
     {noreply, S#state{socket = AcceptSocket}}.
 
-handle_info({tcp, Socket, Str}, S = #state{next = command, peer = Peer}) ->
-    case parse_cmd(Str) of
-        {ok, Cmd = #retrieval_cmd{}} ->
-            Result = execute_read_cmd(Peer, Cmd),
-            reply(Socket, Cmd, Result),
-            {noreply, S};
-        {ok, Cmd = #update_cmd{}} ->
-            Result = execute_update_cmd(Peer, Cmd),
-            reply(Socket, Cmd, Result),
-            {noreply, S};
-        {ok, Cmd} ->
-            %% no reply, so set socket active manually
-            ok = inet:setopts(Socket, [{active, once}]),
-            {noreply, S#state{next = data, command = Cmd, bytes = bytes(Cmd)}};
-        error ->
-            send(Socket, "ERROR 1", []),
-            {noreply, S};
-        client_error ->
-            send(Socket, "CLIENT_ERROR 1", []),
-            {noreply, S}
-    end;
-handle_info({tcp, Socket, Str},
-            S = #state{next = data, peer = Peer, command = Cmd, data = Data,
-                       bytes = Bytes})
-  when byte_size(Str) =:= Bytes + 2 ->
-    case Str of
-        <<NewData:Bytes/binary, "\r\n">> ->
-            Result = execute_write_cmd(Peer, Cmd,
-                                       <<Data/binary,NewData/binary>>),
-            reply(Socket, Cmd, Result);
-        _ ->
-            send(Socket, "ERROR 2", [])
-    end,
-    {noreply, S#state{next = command, data = <<>>, bytes = 0}};
-handle_info({tcp, Socket, Str},
-            S = #state{next = data, data = Data, bytes = Bytes})
-  when byte_size(Str) < Bytes + 2 ->
-    %% no reply, so set socket active manually
-    ok = inet:setopts(Socket, [{active, once}]),
-    {noreply, S#state{data = <<Data/binary,Str/binary>>,
-                      bytes = Bytes - byte_size(Str)}};
-handle_info({tcp, Socket, Str}, S = #state{next = data, bytes = Bytes})
-  when Bytes < 1 ->
-    send(Socket, "ERROR 3", []),
-    {noreply, S#state{data = <<>>, bytes = 0, next = command}};
-handle_info({tcp, Socket, Str}, S = #state{next = data}) ->
-    send(Socket, "ERROR 4", []),
-    {noreply, S#state{data = <<>>, bytes = 0, next = command}};
+handle_info({tcp, Socket, Str}, S) ->
+    {noreply, handle_incoming(Str, Socket, S)};
 handle_info({tcp_closed, _Socket}, S) ->
     {stop, normal, S};
 handle_info({tcp_error, _Socket}, S) ->
@@ -131,10 +84,61 @@ terminate(_Reason, _State) ->
 %% helper functions
 %%
 
+-spec handle_incoming(binary(), port(), #state{}) -> #state{}.
+handle_incoming(Str, Socket,
+                S = #state{next = command, peer = Peer, buffer = Buffer}) ->
+    case binary:split(<<Buffer/binary,Str/binary>>, [<<"\r\n">>], []) of
+        [CmdStr, Rest] ->
+            NewState = S#state{buffer = <<>>},
+            case parse_cmd(CmdStr) of
+                {ok, Cmd = #retrieval_cmd{}} ->
+                    Result = execute_read_cmd(Peer, Cmd),
+                    reply(Socket, Cmd, Result),
+                    handle_incoming(Rest, Socket, NewState);
+                {ok, Cmd = #update_cmd{}} ->
+                    Result = execute_update_cmd(Peer, Cmd),
+                    reply(Socket, Cmd, Result),
+                    handle_incoming(Rest, Socket, NewState);
+                {ok, Cmd} ->
+                    %% no reply, so set socket active manually
+                    ok = inet:setopts(Socket, [{active, once}]),
+                    handle_incoming(Rest, Socket,
+                                    NewState#state{next = {data, bytes(Cmd)},
+                                                   command = Cmd});
+                error ->
+                    send(Socket, "ERROR 1", []),
+                    handle_incoming(Rest, Socket, NewState);
+                client_error ->
+                    send(Socket, "CLIENT_ERROR 1", []),
+                    handle_incoming(Rest, Socket, NewState)
+            end;
+        [Part] ->
+            ok = inet:setopts(Socket, [{active, once}]),
+            S#state{buffer = Part}
+    end;
+handle_incoming(Str, Socket,
+                S = #state{next = {data, Bytes}, peer = Peer, command = Cmd,
+                           buffer = Buffer}) ->
+    NewState = S#state{next = command, buffer = <<>>},
+    WithNewlines = Bytes + 2,
+    case <<Buffer/binary, Str/binary>> of
+        <<Data:Bytes/binary, "\r\n", Rest/binary>> ->
+            Result = execute_write_cmd(Peer, Cmd, Data),
+            reply(Socket, Cmd, Result),
+            handle_incoming(Rest, Socket, NewState);
+        <<_Data:WithNewlines/binary, Rest/binary>> ->
+            %% malformed input: data is not followed by \r\n
+            %% TODO: better recovery
+            send(Socket, "CLIENT_ERROR 2", []),
+            handle_incoming(Rest, Socket, NewState);
+        Part ->
+            ok = inet:setopts(Socket, [{active, once}]),
+            S#state{buffer = Part}
+    end.
+
 -spec parse_cmd(binary()) -> {ok, cmd()} | error.
-parse_cmd(CmdBin) ->
-    StrippedCmdBin = binary:part(CmdBin, {0, byte_size(CmdBin) - 2}),
-    case binary:split(StrippedCmdBin, [<<" ">>], [global]) of
+parse_cmd(CmdStr) ->
+    case binary:split(CmdStr, [<<" ">>], [global]) of
         [<<"set">> | Args] ->       parse_args(set, Args);
         [<<"add">> | Args] ->       parse_args(add, Args);
         [<<"replace">> | Args] ->   parse_args(replace, Args);
@@ -238,7 +242,7 @@ reply(Socket, #retrieval_cmd{}, {ok, Values}) ->
                                   [Key, Flags, byte_size(Value), Value]),
               ok = gen_tcp:send(Socket, Str)
       end, Values),
-    send(Socket, "END", []).
+    send(Socket, "END", []);
 reply(Socket, _Cmd, {error, E}) ->
     send(Socket, "ERROR ~p", [E]).
 
