@@ -56,5 +56,5 @@ start_cluster() ->
 start_test_node(Name) ->
     {ok, _Started} = application:ensure_all_started(rafter),
     Me = {Name, node()},
-    Opts = #rafter_opts{state_machine=rafter_backend_ets, logdir="./data"},
+    Opts = #rafter_opts{state_machine=rafter_backend_memcached, logdir="./data"},
     start_node(Me, Opts).
