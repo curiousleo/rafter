@@ -37,7 +37,8 @@
          }).
 -record(update_cmd, {
           command :: incr | decr | touch,
-          key :: binary()
+          key :: binary(),
+          noreply = false :: boolean()
          }).
 -record(retrieval_cmd, {
           keys :: [binary()]
@@ -101,7 +102,7 @@ handle_incoming(Str, Socket,
                     handle_incoming(Rest, Socket, NewState);
                 {ok, Cmd} ->
                     %% no reply, so set socket active manually
-                    ok = inet:setopts(Socket, [{active, once}]),
+                    inet:setopts(Socket, [{active, once}]),
                     handle_incoming(Rest, Socket,
                                     NewState#state{next = {data, bytes(Cmd)},
                                                    command = Cmd});
@@ -113,7 +114,7 @@ handle_incoming(Str, Socket,
                     handle_incoming(Rest, Socket, NewState)
             end;
         [Part] ->
-            ok = inet:setopts(Socket, [{active, once}]),
+            inet:setopts(Socket, [{active, once}]),
             S#state{buffer = Part}
     end;
 handle_incoming(Str, Socket,
@@ -132,7 +133,7 @@ handle_incoming(Str, Socket,
             send(Socket, "CLIENT_ERROR 2", []),
             handle_incoming(Rest, Socket, NewState);
         Part ->
-            ok = inet:setopts(Socket, [{active, once}]),
+            inet:setopts(Socket, [{active, once}]),
             S#state{buffer = Part}
     end.
 
@@ -183,6 +184,12 @@ parse_args(decr, [Key]) ->
     {ok, #update_cmd{command = decr, key = Key}};
 parse_args(touch, [Key]) ->
     {ok, #update_cmd{command = touch, key = Key}};
+parse_args(incr, [Key, <<"noreply">>]) ->
+    {ok, #update_cmd{command = incr, key = Key, noreply = true}};
+parse_args(decr, [Key, <<"noreply">>]) ->
+    {ok, #update_cmd{command = decr, key = Key, noreply = true}};
+parse_args(touch, [Key, <<"noreply">>]) ->
+    {ok, #update_cmd{command = touch, key = Key, noreply = true}};
 parse_args(Cmd, [Key, Flags, Exp, Bytes]) ->
     {ok, #storage_cmd{command = Cmd, key = Key, flags = Flags,
                       exptime = binary_to_integer(Exp),
@@ -206,6 +213,12 @@ execute_update_cmd(Peer, #update_cmd{command = Cmd, key = Key}) ->
 
 -spec execute_write_cmd(peer(), #cas_cmd{} | #storage_cmd{}, binary()) ->
         {ok, term()} | {error, term()}.
+execute_write_cmd(Peer, #storage_cmd{command = append, key = Key},
+                  Value) ->
+    rafter:op(Peer, {append, Key, Value});
+execute_write_cmd(Peer, #storage_cmd{command = prepend, key = Key},
+                  Value) ->
+    rafter:op(Peer, {prepend, Key, Value});
 execute_write_cmd(Peer, #storage_cmd{command = Cmd, key = Key,
                                      flags = Flags, exptime = Exp},
                   Value) ->
@@ -221,6 +234,12 @@ bytes(#storage_cmd{bytes = Bytes}) ->
 bytes(#cas_cmd{bytes = Bytes}) ->
     Bytes.
 
+reply(Socket, #storage_cmd{noreply = true}, _Result) ->
+    inet:setopts(Socket, [{active, once}]);
+reply(Socket, #cas_cmd{noreply = true}, _Result) ->
+    inet:setopts(Socket, [{active, once}]);
+reply(Socket, #update_cmd{noreply = true}, _Result) ->
+    inet:setopts(Socket, [{active, once}]);
 reply(Socket, _Cmd, stored) ->
     send(Socket, "STORED", []);
 reply(Socket, _Cmd, not_stored) ->
@@ -240,13 +259,13 @@ reply(Socket, #retrieval_cmd{}, {ok, Values}) ->
       fun({Key, Value, Flags}) ->
               Str = io_lib:format("VALUE ~s ~s ~B~n~s~n",
                                   [Key, Flags, byte_size(Value), Value]),
-              ok = gen_tcp:send(Socket, Str)
+              gen_tcp:send(Socket, Str)
       end, Values),
     send(Socket, "END", []);
 reply(Socket, _Cmd, {error, E}) ->
     send(Socket, "ERROR ~p", [E]).
 
 send(Socket, Str, Args) ->
-    ok = gen_tcp:send(Socket, io_lib:format(Str ++ "~n", Args)),
-    ok = inet:setopts(Socket, [{active, once}]),
+    gen_tcp:send(Socket, [io_lib:format(Str, Args), <<"\r\n">>]),
+    inet:setopts(Socket, [{active, once}]),
     ok.
