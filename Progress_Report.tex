@@ -51,8 +51,18 @@
   \label{progress-report}%
 }
 
-At the time of this writing, my project is roughly on schedule. During Michaelmas term, I fell behind by two to three weeks, but fortunately after lectures and supervisions had finished, I was able to catch up with the work plan and have stayed on top of it since.
+\textbf{The project is on schedule and all milestones so far have been reached.} During Michaelmas term, I fell behind by three weeks, but fortunately after lectures and supervisions had finished, I was able to catch up with the work plan and have stayed on top of it since.
 
-As laid out in my original work plan, I started by familiarising myself with Erlang. I produced a working implementation of a banker's deque (ref. Okasaki) with type annotations for Dialyzer and QuickCheck unit tests. In order to learn about asynchronous programming with Erlang, I wrote a distributed benchmarking tool. Writing asynchronous code in Erlang using OTP idioms turned out to be more difficult than I had anticipated. Completing the benchmarking tool took longer than expected, and this was why I fell behind the schedule even though the project had barely started.
+The project work up to now took place in four phases: I started by familiarising myself with the programming language Erlang, then developed the core voting algorithms, integrated my code with Rafter\footnote{Rafter is an Erlang library by Andrew J.\,Stone which implements the Raft consensus protocol. \url{https://github.com/andrewjstone/rafter}.}, and finally implementated a Memcached\footnote{Memcached is a popular memory object caching system. \url{http://memcached.org}.} compatibility layer.
+
+\begin{description}
+    \item[Familiarisation with Erlang.] I started the project by implementing a purely functional Deque following \cite{okasaki} with type annotations for Dialyzer\footnote{Dialyzer is a tool used to statically type check Erlang programs. \url{http://www.erlang.org/doc/man/dialyzer.html}.} and QuickCheck\footnote{QuickCheck is a commercial property-based Erlang testing framework by Quviq \textsc{ab}. \url{http://www.quiviq.com}.} unit tests. In order to learn about asynchronous programming with Erlang, I wrote a simplistic distributed benchmarking tool. Writing idiomatic asynchronous code in Erlang turned out to be more difficult than I had anticipated, and this was why I fell behind the schedule during Michaelmas term.
+    \item[Development of core algorithms.] About three weeks were spent designing voting structure and voting state type specifications, writing a visualisation tool for both, and implementing voting structure generators for the Majority Protocol and the Grid Protocol.
+    \item[Integration with Rafter.] Due to the modular design of Rafter, integrating my structured voting code took only a weekend. Adapting the test suite to cover the new code took about two weeks.
+    \item[Memcached compatibility layer.] After some deliberation, I decided to implement only the \texttt{set} and \texttt{get} operations using Memcached's binary protocol. This degree of compatibility is sufficient to run Memcached benchmarks and obtain meaningful results whithout too much effort.
+\end{description}
+
+\bibliographystyle{amsplain}
+\bibliography{Bibliography}
 
 \end{document}
