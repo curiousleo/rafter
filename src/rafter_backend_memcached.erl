@@ -19,27 +19,32 @@ stop(State) ->
     State.
 
 read({get, Keys}, State) ->
+    Now = calendar:datetime_to_gregorian_seconds(
+            calendar:universal_time()) - 62167219200,
     Val = try
               Values = lists:flatmap(
                          fun (Key) ->
-                                 lists:map(
-                                   fun({_Key, {Value, Flags, _Exptime}}) ->
-                                           {Key, Value, Flags}
-                                   end, ets:lookup(?TABLE, Key))
-                         end,
-                         Keys),
+                                 lists:foldl(
+                                   fun({_Key, {Value, Flags, NormExp}}, L) ->
+                                           case Now >= NormExp of
+                                               true -> [{Key, Value, Flags}|L];
+                                               false -> L
+                                           end
+                                   end, [], ets:lookup(?TABLE, Key))
+                         end, Keys),
               case Values of
                   [] -> not_found;
                   _ -> {ok, Values}
               end
           catch _:E ->
-              {error, E}
+                    {error, E}
           end,
-     {Val, State}.
+    {Val, State}.
 
 write({set, Key, Value, Flags, Exptime}, State) ->
     Val = try
-              ets:insert(?TABLE, {Key, {Value, Flags, Exptime}}),
+              NormExp = normalize_expiry(Exptime),
+              ets:insert(?TABLE, {Key, {Value, Flags, NormExp}}),
               stored
           catch _:E ->
               {error, E}
@@ -48,7 +53,8 @@ write({set, Key, Value, Flags, Exptime}, State) ->
 
 write({add, Key, Value, Flags, Exptime}, State) ->
     Val = try
-              case ets:insert_new(?TABLE, {Key, {Value, Flags, Exptime}}) of
+              NormExp = normalize_expiry(Exptime),
+              case ets:insert_new(?TABLE, {Key, {Value, Flags, NormExp}}) of
                   true -> stored;
                   false -> not_stored
               end
@@ -58,8 +64,9 @@ write({add, Key, Value, Flags, Exptime}, State) ->
     {Val, State};
 
 write({replace, Key, Value, Flags, Exptime}, State) ->
+    NormExp = normalize_expiry(Exptime),
     case ets:member(?TABLE, Key) of
-        true -> write({set, Key, Value, Flags, Exptime}, State);
+        true -> write({set, Key, Value, Flags, NormExp}, State);
         _ -> {not_stored, State}
     end;
 
@@ -128,7 +135,8 @@ write({decr, Key, Value}, State) ->
 
 write({touch, Key, Exptime}, State) ->
     Val = try
-              ets:update_element(?TABLE, Key, {3, Exptime}),
+              NormExp = normalize_expiry(Exptime),
+              ets:update_element(?TABLE, Key, {3, NormExp}),
               touched
           catch
               _:badarg ->
@@ -137,3 +145,16 @@ write({touch, Key, Exptime}, State) ->
                   {error, E}
           end,
     {Val, State}.
+
+%%
+%% helper functions
+%%
+
+normalize_expiry(Exptime)
+  when Exptime > 2592000 ->                 % 2592000 = 60*60*24*30
+    Exptime;
+normalize_expiry(Exptime) ->
+    % expiration is Exptime seconds in the future
+    SecsSince0 = calendar:datetime_to_gregorian_seconds(
+                   calendar:universal_time()),
+    SecsSince0 - 62167219200 + Exptime.     % 62167219200 = 719528*24*3600
