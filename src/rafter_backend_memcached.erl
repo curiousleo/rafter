@@ -19,8 +19,7 @@ stop(State) ->
     State.
 
 read({get, Keys}, State) ->
-    Now = calendar:datetime_to_gregorian_seconds(
-            calendar:universal_time()) - 62167219200,
+    Now = unix_time(),
     Val = try
               Values = lists:flatmap(
                          fun (Key) ->
@@ -155,6 +154,8 @@ normalize_expiry(Exptime)
     Exptime;
 normalize_expiry(Exptime) ->
     % expiration is Exptime seconds in the future
-    SecsSince0 = calendar:datetime_to_gregorian_seconds(
-                   calendar:universal_time()),
-    SecsSince0 - 62167219200 + Exptime.     % 62167219200 = 719528*24*3600
+    unix_time() + Exptime.
+
+unix_time() ->
+    Now = calendar:universal_time(),        % 62167219200 = 719528*24*3600
+    calendar:datetime_to_gregorian_seconds(Now) - 62167219200.
