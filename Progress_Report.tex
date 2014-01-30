@@ -53,24 +53,26 @@
 
 \textbf{The project is on schedule and all milestones so far have been reached.} During Michaelmas term, I fell behind by three weeks, but fortunately after lectures and supervisions had finished, I was able to catch up with the work plan and have stayed on top of it since.
 
-The project work up to now took place in four phases: I started by familiarising myself with the programming language Erlang, then developed the core voting algorithms, integrated my code with Rafter\footnote{Rafter is an Erlang library by Andrew J. Stone which implements the Raft consensus protocol. \url{https://github.com/andrewjstone/rafter}.}, and finally implementated a Memcached\footnote{Memcached is a popular memory object caching system. \url{http://memcached.org}.} compatibility layer.
+The project work up to now took place in four phases: I started by familiarising myself with the programming language Erlang, then developed the core voting algorithms, integrated my code with Rafter\footnote{Rafter is an Erlang library by Andrew J. Stone which implements the Raft consensus protocol \cite{raft},\\\url{https://github.com/andrewjstone/rafter}.}, and finally implemented a Memcached\footnote{Memcached is a popular memory object caching system, \url{http://memcached.org}.} compatibility layer for a key-value store backend.
 
 \begin{description}
-    \item[Familiarisation with Erlang.] I started the project by implementing a purely functional Deque following \cite{okasaki} with type annotations for Dialyzer\footnote{Dialyzer is a tool used to statically type check Erlang programs. \url{http://www.erlang.org/doc/man/dialyzer.html}.} and QuickCheck\footnote{QuickCheck is a commercial property-based Erlang testing framework by Quviq \textsc{ab}. \url{http://www.quiviq.com}.} unit tests. In order to learn about asynchronous programming with Erlang, I wrote a simplistic distributed benchmarking tool. Writing idiomatic asynchronous code in Erlang turned out to be more difficult than I had anticipated, and this was why I fell behind the schedule during Michaelmas term.
+    \item[Familiarisation with Erlang.] I started the project by implementing a purely functional Deque \cite{okasaki} with type annotations for Dialyzer\footnote{Dialyzer is a tool used to statically type-check Erlang programs,\\\url{http://www.erlang.org/doc/man/dialyzer.html}.} and QuickCheck\footnote{QuickCheck is a commercial property-based Erlang testing framework by Quviq \textsc{ab},\\\url{http://www.quiviq.com}.} unit tests. In order to learn about asynchronous programming with Erlang, I wrote a simplistic distributed benchmarking tool. Writing idiomatic asynchronous code in Erlang turned out to be more difficult than I had anticipated, and this was why I fell behind the schedule during Michaelmas term.
     \item[Development of core algorithms.] About three weeks were spent designing voting structure and voting state type specifications, writing a visualisation tool for both, and implementing voting structure generators for the Majority Protocol and the Grid Protocol.
     \item[Integration with Rafter.] Due to the modular design of Rafter, integrating my structured voting code took only a weekend. Adapting the test suite to cover the new code took about two weeks.
-    \item[Memcached compatibility layer.] After some deliberation, I decided to implement only the \texttt{set} and \texttt{get} operations using Memcached's binary protocol. This degree of compatibility is sufficient to run Memcached benchmarks and obtain meaningful results whithout too much effort.
+    \item[Memcached compatibility layer.] After some deliberation, I decided to implement only the \texttt{set} and \texttt{get} operations using Memcached's binary protocol. This degree of compatibility is sufficient to run Memcached benchmarks and obtain meaningful results without too much effort.
 \end{description}
 
 \section{Remaining Work%
   \label{remaining-work}%
 }
 
-I will use the remaining project time to compare the performance of different voting structures and to assess the overhead caused by using the more general voting algorithms I implemented instead of the straightforward hard-coded Majority Consensus scheme. In order to obtain meaningful results, these benchmarks will have to run on a cluster of physical nodes since that is the most common use case for an application of this type.
+I will use the remaining project time to compare the performance of different voting structures using metrics like the delay and throughput of a key-value store configured to use a certain voting structure. I will also try to assess the overhead caused by using the more general voting algorithms I implemented compared to the hard-coded Majority Consensus scheme used in the original Rafter code.
+
+In order to obtain meaningful results, these benchmarks will have to run on a cluster of nodes since that is the most common use case for an application of this type.
 
 \begin{description}
     \item[Amazon Elastic Cloud set-up.] Early on in the project it was decided that the distributed benchmarks were to be run on Amazon's Elastic Cloud (\textsc{ec2}) infrastructure. I will familiarise myself with its management tools and will try to find ways to automate starting and stopping processes on a cluster of nodes.
-    \item[Writing the benchmark.] Preliminary measurements suggest that the difference in performance between voting schemes may be too small to have a significant impact on benchmarks that use the entire Rafter stack (which includes writing to disk for every operation). Therefore it may be necessary to write a stripped-down piece of software that only measures the time taken to find a quorum, without doing touching the hard disk.
+    \item[Writing the benchmark.] Preliminary measurements suggest that the difference in performance between voting schemes may be too small to have a significant impact on benchmarks that use the entire Rafter stack (which includes writing to disk for every operation). Therefore it may be necessary to write a stripped-down piece of software that only measures the time taken to find a quorum, without touching the hard disk.
     \item[Dissertation.] The dissertation needs to be planned, written, and proofread.
 \end{description}
 
