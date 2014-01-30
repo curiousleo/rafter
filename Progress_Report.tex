@@ -1,4 +1,4 @@
-\documentclass[11pt]{scrartcl}
+\documentclass[10pt]{scrartcl}
 \usepackage{fixltx2e} % LaTeX patches, \textsubscript
 \usepackage{cmap} % fix search and cut-and-paste in Acrobat
 \usepackage{ifthen}
@@ -25,6 +25,9 @@
 \begin{document}
 \thispagestyle{empty}
 
+%%% Set default font size to 11pt for the title page
+\changefontsizes{11pt}
+
 \rightline{\large\it Leonhard Markert} \medskip
 \rightline{\large\it Emmanuel College} \medskip
 \rightline{\large\it lm510}
@@ -46,6 +49,9 @@
 \end{center}
 
 \newpage
+
+%%% Set default font size back to 10pt
+\changefontsizes{10pt}
 
 \section{Progress Report%
   \label{progress-report}%
