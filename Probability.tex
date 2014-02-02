@@ -1,0 +1,91 @@
+\documentclass[10pt]{scrartcl}
+\usepackage{fixltx2e} % LaTeX patches, \textsubscript
+\usepackage{cmap} % fix search and cut-and-paste in Acrobat
+\usepackage{ifthen}
+\usepackage[oldstylenums,light,largesmallcaps]{kpfonts}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{tabularx}
+\usepackage{amsmath}
+\usepackage{mathtools}
+\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue]{hyperref}
+
+%%% Custom LaTeX preamble
+% serif headings:
+\addtokomafont{disposition}{\rmfamily}
+\addtokomafont{descriptionlabel}{\rmfamily}
+% no section numbering
+\setcounter{secnumdepth}{0}
+% hyperlinks
+\urlstyle{same} % normal text font (alternatives: tt, rm, sf)
+\hypersetup{
+  pdftitle={Extending Raft with Structured Voting},
+  pdfauthor={Leonhard Markert (lm510), Emmanuel College}
+}
+\title{Grid protocol probability analysis}
+\author{Leonhard Markert (lm510), Emmanuel College}
+
+%%% Body
+\begin{document}
+
+\maketitle
+
+\section{Grid protocol description%
+  \label{grid-protocol-description}%
+}
+
+``The structured Grid Protocol [\dots] arranges processes in a logical rectangular \(k \times j\) grid having \(k\) columns and \(j\) rows for a system comprising \(k \cdot j = n\) processes. [A] write quorum consists of all processes from a complete column plus one process from each column to meet the quorum system intersection property.'' \cite{voting}
+
+\section{Quorum probability model%
+  \label{quorum-probability-model}%
+}
+
+Our grid has \(r\) rows and \(c\) columns (let \(n = r c\) for convenience), therefore a complete column cover (\textsc{cc}-cover) consists of \(r\) nodes and a column cover (\textsc{c}-cover) consists of \(c\) nodes.
+
+Given \(k \in \{0, 1, \dots, n\}\) votes, what is the probability \(\mathbb{P}(Q\;|\;V=k) = \mathbb{P}(Q_k)\) that the set of votes forms a quorum?
+
+Let \(\mathbb{P}(CC\;|\;V=k)\ = \mathbb{P}(CC_k)\) and \(\mathbb{P}(C\;|\;V=k)\ = \mathbb{P}(C_k)\) be the probability of getting a \textsc{cc}-cover and a \textsc{c}-cover, respectively. Then \(\mathbb{P}(Q_k) = \mathbb{P}(CC_k\,\cap\,C_k) = \mathbb{P}(CC_k\;|\;C_k)\;\mathbb{P}(C_k)\).
+
+\subsection{\textsc{c}-cover probability}
+
+In this section and the next, I will assume that all the binomials we're using are defined, which is not necessarily the case. This issue will be taken care of when we put everything together.
+
+The probability of getting a \textsc{c}-cover with \(k\) nodes is simply the number of ways in which the \(k-c\) nodes that are not part of the \textsc{c}-cover can distribute over the \(n-c\) elements of the grid not taken up by the \textsc{c}-cover, divided by the number of ways in which any \(k\) nodes can distribute over a grid with \(n\) spaces: \[\mathbb{P}(C_k) = {\begin{pmatrix}n-c \\ k-c\end{pmatrix}} \div {\begin{pmatrix}n \\ k\end{pmatrix}}\]
+
+\subsection{\textsc{cc}-cover probability}
+
+Given that we have a \textsc{c}-cover, there are \[\binom{n-c}{k-c}\] different ways are there in which the \(k - c \) nodes that are not part of the \textsc{c}-cover can be distributed over the grid.
+
+Again given that there is a \textsc{c}-cover, in how many different ways could there be a \textsc{cc}-cover? Firstly, the \textsc{cc}-cover could cover any of the \(c\) columns. Now taking the \(r+c-1\) nodes in the \textsc{c}-cover and those in the \textsc{cc}-cover as fixed, there are \[\binom{n-(r+c-1)}{k-(r+c-1)}\] ways in which the remaining nodes can distribute over the grid.
+
+Thus the probability of a \textsc{cc}-cover given a \textsc{c}-cover is \[\mathbb{P}(CC_k\;|\;C_k) = {c \cdot \begin{pmatrix}n-(r+c-1) \\ k-(r+c-1)\end{pmatrix}} \div {\begin{pmatrix}n-c \\ k-c\end{pmatrix}}\].
+
+\subsection{Quorum probability}
+
+Putting everything so far together, we have
+
+\begin{align*}
+\mathbb{P}(Q_k) &= \mathbb{P}(CC_k\;|\;C_k)\;\mathbb{P}(C_k) \\
+                &= \left\{{c \cdot \begin{pmatrix}n-(r+c-1) \\ k-(r+c-1)\end{pmatrix}} \div {\begin{pmatrix}n-c \\ k-c\end{pmatrix}}\right\} \cdot \left\{{\begin{pmatrix}n-c \\ k-c\end{pmatrix}} \div {\begin{pmatrix}n \\ k\end{pmatrix}}\right\} \\
+                &= {c \cdot \begin{pmatrix}n-(r+c-1) \\ k-(r+c-1)\end{pmatrix}} \div {\begin{pmatrix}n \\ k\end{pmatrix}}
+\end{align*}
+
+By the definition of the binomial, this is only defined if \(n \geq k\) (which is true by assumption), \(k \geq r+c-1\) and \(n \geq r+c-1\) (which is implied by transitivity). We know that \(r+c-1\) nodes are needed in order to get a \textsc{c}-cover as well as a \textsc{cc}-cover, so if \(k < r+c-1\) there can be no quorum.
+
+The second special case is when we are sure to get a quorum. Starting from a full grid, we can take \(r-1\) nodes away and still get a  \textsc{c}-cover, or we can take \(c-1\) nodes away and still get a \textsc{cc}-cover. Thus if \(n-k < \min(r,c)\) we will always find a quorum.
+
+This gives us the final expression for the probability of finding a quorum given \(k\) out of \(n\) possible votes,
+
+\[
+\mathbb{P}(Q_k) =
+    \begin{cases}
+        0 & \text{if}\;k < r+c-1 \\
+        1 & \text{if}\;k > n - \min(r,c) \\
+        {c \cdot \begin{pmatrix}n-(r+c-1) \\ k-(r+c-1)\end{pmatrix}} \div {\begin{pmatrix}n \\ k\end{pmatrix}} & \text{otherwise}
+    \end{cases}
+\]
+
+\bibliographystyle{amsplain}
+\bibliography{Bibliography}
+
+\end{document}
