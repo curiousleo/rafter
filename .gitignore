@@ -5,4 +5,4 @@ ebin
 *.beam
 *.swp
 erl_crash.dump
-
+awsfab_settings.py
