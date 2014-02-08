@@ -1,0 +1,99 @@
+\documentclass{beamer}
+\usepackage{fixltx2e} % LaTeX patches, \textsubscript
+\usepackage{cmap} % fix search and cut-and-paste in Acrobat
+\usepackage[oldstylenums,largesmallcaps]{kpfonts}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+\usetheme{Pittsburgh}
+\usefonttheme{serif}
+\title{Extending Raft with Structured Voting}
+\subtitle{Progress presentation}
+\author{Leonhard Markert}
+% \institute{Emmanuel College}
+\date{\today}
+
+%% Custom commands
+\newcommand{\voted}[1]{\textbf{\usebeamercolor[fg]{frametitle}#1}}
+
+\begin{document}
+
+%% Prelude
+
+\begin{frame}
+    \titlepage
+\end{frame}
+
+% \section*{Outline}
+% \begin{frame}
+    % \tableofcontents
+% \end{frame}
+
+%% Main content
+
+\section{Introduction}
+
+% Raft is a new consensus algorithm to be used instead of Paxos, aiming to be easier to understand and implement correctly. It models the distributed system as a replicated state machine using a replicated log. Raft features a strong leader, an explicit membership change mechanism and a (partial) correctness proof.
+
+% Any two quorums overlap.
+
+% Structured voting schemes impose a logical structure on the set of processes and use structural properties to specify quorum systems. Each voting scheme defines a way to construct write quorums, any two of which overlap.
+
+\begin{frame}{Introduction}
+    \begin{columns}[t]
+        \begin{column}{.5\textwidth}
+            \begin{block}{Raft consensus algorithm}
+                \begin{itemize}
+                    \item Strongly consistent
+                    \item Uses majority voting
+                    % \item Replicated state machine model
+                    \item Partial correctness proof
+                    \item Requirement: \emph{Any two quorums overlap.}
+                    % \item Rafter implements Raft
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{.5\textwidth}
+            \begin{block}{Structured voting}
+                \begin{itemize}
+                    \item Impose logical structure
+                    \item Result: smaller quorums
+                \end{itemize}
+
+                \begin{exampleblock}{Example: Grid protocol}
+                    \medskip
+                    \begin{columns}
+                        \begin{column}{.2\textwidth}
+                            \begin{tabular}{c | c | c}
+                                A & \voted{B} & C \\
+                                \hline
+                                D & \voted{E} & \voted{F} \\
+                                \hline
+                                \voted{G} & \voted{H} & I \\
+                                \hline
+                                J & \voted{K} & L \\
+                            \end{tabular}
+                        \end{column}
+                        \begin{column}{.40\textwidth}
+                            \small{One node from each column and one complete column}
+                        \end{column}
+                    \end{columns}
+                \end{exampleblock}
+            \end{block}
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\section{Progress}
+
+\section{Challenges}
+
+\section{To do}
+
+%% Afterlude
+
+\begin{frame}
+    % enforce entries in the ToC
+\end{frame}
+
+\end{document}
