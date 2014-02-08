@@ -7,3 +7,6 @@
 *.blg
 *.ps
 *.dvi
+*.nav
+*.snm
+*.toc
