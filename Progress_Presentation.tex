@@ -33,11 +33,10 @@
         \begin{column}{.47\textwidth}
             \begin{block}{Raft consensus algorithm}
                 \begin{itemize}
-                    \item Strongly consistent
+                    \item Aims to replace Paxos
                     \item Uses majority voting
                     % \item Replicated state machine model
-                    \item Partial correctness proof
-                    \item Requirement: \emph{Any two quorums overlap.}
+                    \item Correctness requires that \emph{any two quorums overlap}
                     % \item Rafter implements Raft
                 \end{itemize}
             \end{block}
@@ -110,7 +109,7 @@
     \end{block}
     \begin{block}{Modelling}
         \begin{itemize}
-            \item Which metric?
+            \item Which metric matters most for performance?
                 \begin{description}[m]
                     \item[Availability.] Probability that an operation succeeds % based on per-node availability
                     \item[Cost.] Expected quorum size
@@ -123,13 +122,17 @@
 \section{To do}
 \begin{frame}{To do}
     \begin{itemize}
-        \item Benchmarking (using stripped-down version of Rafter?)
+        \item Benchmarking voting structures
+            \begin{itemize}
+                \item against each other
+                \item against plain Rafter
+            \end{itemize}
         \item Theoretical model to find expected number of votes required for quorum for different voting schemes
         \item Planning and writing the dissertation
     \end{itemize}
     \begin{block}{Optional}
         \begin{itemize}
-            \item Voting structure generators for Tree Protocol, Triangular Lattice Protocol
+            \item More voting structure generators
             \item Allow changing the voting scheme at run-time % (= heterogeneous voting structure)
         \end{itemize}
     \end{block}
