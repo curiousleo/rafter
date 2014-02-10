@@ -25,21 +25,9 @@
     \titlepage
 \end{frame}
 
-% \section*{Outline}
-% \begin{frame}
-    % \tableofcontents
-% \end{frame}
-
 %% Main content
 
 \section{Introduction}
-
-% Raft is a new consensus algorithm to be used instead of Paxos, aiming to be easier to understand and implement correctly. It models the distributed system as a replicated state machine using a replicated log. Raft features a strong leader, an explicit membership change mechanism and a (partial) correctness proof.
-
-% Any two quorums overlap.
-
-% Structured voting schemes impose a logical structure on the set of processes and use structural properties to specify quorum systems. Each voting scheme defines a way to construct write quorums, any two of which overlap.
-
 \begin{frame}{Introduction}
     \begin{columns}[t]
         \begin{column}{.47\textwidth}
@@ -107,7 +95,7 @@
             \item Integration with Erlang Raft library, \emph{Rafter} % two days
             \item Unit test adaptation % two weeks
             \item Memcached state machine and \textsc{tcp} protocol
-            \item Amazon \textsc{ec2} set-up
+            \item Preparation for scale-up experiments using Amazon \textsc{ec2}
         \end{itemize}
     \end{block}
 \end{frame}
@@ -136,12 +124,12 @@
 \begin{frame}{To do}
     \begin{itemize}
         \item Benchmarking (using stripped-down version of Rafter?)
-        \item Modelling expected number of votes required for quorum for different voting schemes
+        \item Theoretical model to find expected number of votes required for quorum for different voting schemes
         \item Planning and writing the dissertation
     \end{itemize}
     \begin{block}{Optional}
         \begin{itemize}
-            \item Voting structure generators for Tree Protocol, Triangular Lattice Protocol, \ldots
+            \item Voting structure generators for Tree Protocol, Triangular Lattice Protocol
             \item Allow changing the voting scheme at run-time % (= heterogeneous voting structure)
         \end{itemize}
     \end{block}
