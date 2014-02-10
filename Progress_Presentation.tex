@@ -4,14 +4,15 @@
 \usepackage[oldstylenums,largesmallcaps]{kpfonts}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+\usepackage{amssymb} % checkmark
 
 \usetheme{Pittsburgh}
 \usefonttheme{serif}
 \title{Extending Raft with Structured Voting}
-\subtitle{Progress presentation}
-\author{Leonhard Markert}
+\subtitle{Progress report}
+\author{Leonhard Markert \(\cdot\) \textsc{lm510}}
 % \institute{Emmanuel College}
-\date{\today}
+\date{Monday 10, 2014}
 
 %% Custom commands
 \newcommand{\voted}[1]{\textbf{\usebeamercolor[fg]{frametitle}#1}}
@@ -41,7 +42,7 @@
 
 \begin{frame}{Introduction}
     \begin{columns}[t]
-        \begin{column}{.5\textwidth}
+        \begin{column}{.47\textwidth}
             \begin{block}{Raft consensus algorithm}
                 \begin{itemize}
                     \item Strongly consistent
@@ -53,14 +54,14 @@
                 \end{itemize}
             \end{block}
         \end{column}
-        \begin{column}{.5\textwidth}
+        \begin{column}{.53\textwidth}
             \begin{block}{Structured voting}
                 \begin{itemize}
                     \item Impose logical structure
                     \item Result: smaller quorums
                 \end{itemize}
 
-                \begin{exampleblock}{Example: Grid protocol}
+                \begin{exampleblock}{Example: Grid Protocol}
                     \medskip
                     \begin{columns}
                         \begin{column}{.2\textwidth}
@@ -70,11 +71,11 @@
                                 D & \voted{E} & \voted{F} \\
                                 \hline
                                 \voted{G} & \voted{H} & I \\
-                                \hline
-                                J & \voted{K} & L \\
+                                % \hline
+                                % J & \voted{K} & L \\
                             \end{tabular}
                         \end{column}
-                        \begin{column}{.40\textwidth}
+                        \begin{column}{.47\textwidth}
                             \small{One node from each column and one complete column}
                         \end{column}
                     \end{columns}
@@ -85,15 +86,65 @@
 \end{frame}
 
 \section{Progress}
+\begin{frame}{Progress}
+    \begin{block}{Structured voting}
+        \begin{columns}
+            \begin{column}{.7\textwidth}
+                \begin{itemize}
+                    \item Core voting algorithm and data types
+                    \item Voting structure generators for Majority and Grid Protocol
+                \end{itemize}
+            \end{column}
+            \begin{column}{.2\textwidth}
+                \bigskip
+
+                \hspace*{-12mm}\includegraphics[width=1.7\textwidth, clip=true, trim=1.3cm 1.3cm 1.3cm 1.3cm]{Maj_struct.pdf}
+            \end{column}
+        \end{columns}
+    \end{block}
+    \begin{block}{Integration and testing}
+        \begin{itemize}
+            \item Integration with Erlang Raft library, \emph{Rafter} % two days
+            \item Unit test adaptation % two weeks
+            \item Memcached state machine and \textsc{tcp} protocol
+            \item Amazon \textsc{ec2} set-up
+        \end{itemize}
+    \end{block}
+\end{frame}
 
 \section{Challenges}
+\begin{frame}{Challenges}
+    \begin{block}{Erlang: distributed, functional, dynamically typed}
+        \begin{itemize}
+            \item Distributed programming idioms and libraries
+            \item Tool support (debugging, profiling etc.) not great
+        \end{itemize}
+    \end{block}
+    \begin{block}{Modelling}
+        \begin{itemize}
+            \item Which metric?
+                \begin{description}[m]
+                    \item[Availability.] Probability that an operation succeeds % based on per-node availability
+                    \item[Cost.] Expected quorum size
+                    \item[Expected number of votes required for quorum.] \checkmark
+                \end{description}
+        \end{itemize}
+    \end{block}
+\end{frame}
 
 \section{To do}
-
-%% Afterlude
-
-\begin{frame}
-    % enforce entries in the ToC
+\begin{frame}{To do}
+    \begin{itemize}
+        \item Benchmarking (using stripped-down version of Rafter?)
+        \item Modelling expected number of votes required for quorum for different voting schemes
+        \item Planning and writing the dissertation
+    \end{itemize}
+    \begin{block}{Optional}
+        \begin{itemize}
+            \item Voting structure generators for Tree Protocol, Triangular Lattice Protocol, \ldots
+            \item Allow changing the voting scheme at run-time % (= heterogeneous voting structure)
+        \end{itemize}
+    \end{block}
 \end{frame}
 
 \end{document}
