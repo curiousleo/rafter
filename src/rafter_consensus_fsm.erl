@@ -92,13 +92,15 @@ handle_event({fail, T}, StateName, State=#state{me=Me}) ->
 handle_event(_Event, _StateName, State) ->
     {stop, {error, badmsg}, State}.
 
-handle_sync_event(get_leader, _, StateName, State=#state{leader=Leader}) ->
+handle_sync_event(get_leader, _, StateName, State=#state{leader=Leader})
+  when StateName =/= failed ->
     {reply, Leader, StateName, State};
 handle_sync_event(_Event, _From, _StateName, State) ->
     {stop, badmsg, State}.
 
 handle_info({client_read_timeout, Clock, Id}, StateName,
-    #state{read_reqs=Reqs}=State) ->
+    #state{read_reqs=Reqs}=State)
+  when StateName =/= failed ->
         ClientRequests = orddict:fetch(Clock, Reqs),
         {ok, ClientReq} = find_client_req(Id, ClientRequests),
         send_client_timeout_reply(ClientReq),
@@ -107,7 +109,8 @@ handle_info({client_read_timeout, Clock, Id}, StateName,
         NewState = State#state{read_reqs=NewReqs},
         {next_state, StateName, NewState};
 
-handle_info({client_timeout, Id}, StateName, #state{client_reqs=Reqs}=State) ->
+handle_info({client_timeout, Id}, StateName, #state{client_reqs=Reqs}=State)
+  when StateName =/= failed ->
     case find_client_req(Id, Reqs) of
         {ok, ClientReq} ->
             send_client_timeout_reply(ClientReq),
