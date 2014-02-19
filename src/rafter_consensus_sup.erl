@@ -21,9 +21,7 @@ init([NameAtom, Me, Opts]) ->
                  {rafter_log, start_link, [NameAtom, Opts]},
                  permanent, 5000, worker, [rafter_log]},
 
-    ConsensusFsm = { rafter_consensus_fsm,
-                    {rafter_consensus_fsm, start_link, [NameAtom, Me, Opts]},
-                    permanent, 5000, worker, [rafter_consensus_fsm]},
+    ConsensusFsm = consensus_fsm(NameAtom, Me, Opts),
 
     {ok, {{one_for_all, 5, 10}, [LogServer, ConsensusFsm]}}.
 
@@ -34,4 +32,27 @@ name(Name, Extension) ->
     list_to_atom(atom_to_list(Name) ++ "_" ++ Extension).
 
 start_link(NameAtom, SupName, Me, Opts) ->
-    supervisor:start_link({local, SupName}, ?MODULE, [NameAtom, Me, Opts]).
+    process_flag(trap_exit, true),
+    supervisor:start_link({local, SupName}, ?MODULE, [NameAtom, Me, Opts]),
+    fail_loop(NameAtom, Me, Opts).
+
+fail_loop(NameAtom, Me, Opts) ->
+    receive
+        {'EXIT', From, {fail, T}} ->
+            ok = supervisor:terminate_child(?MODULE, From),
+            supervisor:delete_child(?MODULE, From),
+            spawn(
+              fun () ->
+                      io:format("Sleeping for ~p~n", [T]),
+                      timer:sleep(T),
+                      ConsensusFsm = consensus_fsm(NameAtom, Me, Opts),
+                      io:format("Starting new consensus fsm~n", []),
+                      supervisor:start_child(?MODULE, ConsensusFsm)
+              end),
+            fail_loop(NameAtom, Me, Opts)
+    end.
+
+consensus_fsm(NameAtom, Me, Opts) ->
+    { rafter_consensus_fsm,
+      {rafter_consensus_fsm, start_link, [NameAtom, Me, Opts]},
+      transient, 5000, worker, [rafter_consensus_fsm]}.
