@@ -87,7 +87,7 @@ format_status(_, [_, State]) ->
 handle_event(stop, _, State) ->
     {stop, normal, State};
 handle_event({fail, T}, StateName, State=#state{me=Me}) ->
-    timer:send_after(T, Me, failure_timeout),
+    timer:send_after(T, Me, restart),
     {next_state, failed, {StateName, State}};
 handle_event(_Event, _StateName, State) ->
     {stop, {error, badmsg}, State}.
@@ -119,7 +119,7 @@ handle_info({client_timeout, Id}, StateName, #state{client_reqs=Reqs}=State)
         not_found ->
             {next_state, StateName, State}
     end;
-handle_info(failure_timeout, failed, {StateName, State}) ->
+handle_info(restart, failed, {StateName, State}) ->
     {next_state, StateName, State};
 handle_info(_, _, State) ->
     {stop, badmsg, State}.
