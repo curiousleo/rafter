@@ -94,12 +94,12 @@ handle_event({fail, T}, follower, State=#state{me=Me}) ->
     {next_state, failed, {follower, State}};
 handle_event({fail, _}, failed, State) ->
     {next_state, failed, State};
-handle_event({start_failures, Lambda, T}, leader, State=#state{me=Me}) ->
+handle_event({start_failures, Lambda, T}, leader, State=#state{me=Me, failure_tref=undefined}) ->
     {ok, Tref} = timer:send_after(exponential(Lambda), Me, {failure_timeout, Lambda, T}),
     {next_state, leader, State#state{failure_tref=Tref}};
 handle_event(stop_failures, leader, State=#state{failure_tref=Tref}) ->
     timer:cancel(Tref),
-    {next_state, leader, State};
+    {next_state, leader, State#state{failure_tref=undefined}};
 handle_event(_Event, _StateName, State) ->
     {stop, {error, badmsg}, State}.
 
@@ -131,9 +131,9 @@ handle_info({client_timeout, Id}, StateName, #state{client_reqs=Reqs}=State)
             {next_state, StateName, State}
     end;
 handle_info(restart, failed, {StateName, State}) ->
-    {next_state, StateName, State};
+    {next_state, StateName, State#state{failure_tref=undefined}};
 handle_info(restart, StateName, State) ->
-    {next_state, StateName, State};
+    {next_state, StateName, State#state{failure_tref=undefined}};
 handle_info({failure_timeout, Lambda, T}, leader, State=#state{me=Me, config=Config}) ->
     case pick_random_server(Me, Config) of
         undefined ->
