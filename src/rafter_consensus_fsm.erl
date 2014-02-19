@@ -20,7 +20,7 @@
          handle_sync_event/4, terminate/3, format_status/2]).
 
 %% States
--export([follower/2, follower/3, candidate/2, candidate/3, leader/2, leader/3]).
+-export([follower/2, follower/3, candidate/2, candidate/3, leader/2, leader/3, failed/2]).
 
 %% Testing outputs
 -export([set_term/2, candidate_log_up_to_date/4]).
@@ -86,6 +86,9 @@ format_status(_, [_, State]) ->
 
 handle_event(stop, _, State) ->
     {stop, normal, State};
+handle_event({fail, T}, StateName, State=#state{me=Me}) ->
+    timer:send_after(T, Me, failure_timeout),
+    {next_state, failed, {StateName, State}};
 handle_event(_Event, _StateName, State) ->
     {stop, {error, badmsg}, State}.
 
@@ -113,6 +116,8 @@ handle_info({client_timeout, Id}, StateName, #state{client_reqs=Reqs}=State) ->
         not_found ->
             {next_state, StateName, State}
     end;
+handle_info(failure_timeout, failed, {StateName, State}) ->
+    {next_state, StateName, State};
 handle_info(_, _, State) ->
     {stop, badmsg, State}.
 
@@ -128,6 +133,10 @@ code_change(_OldVsn, StateName, State, _Extra) ->
 %% Note: All RPC's and client requests get answered in State/3 functions.
 %% RPC Responses get handled in State/2 functions.
 %%=============================================================================
+
+%% Simulate process failure: ignore incoming messages
+failed(_, S) ->
+    {next_state, failed, S}.
 
 %% Election timeout has expired. Go to candidate state iff we are a voter.
 follower(timeout, #state{config=Config, me=Me}=State0) ->
