@@ -86,9 +86,6 @@ format_status(_, [_, State]) ->
 
 handle_event(stop, _, State) ->
     {stop, normal, State};
-handle_event({fail, T}, _StateName, #state{me=_Me}) ->
-    % {stop, {fail, T}, State}
-    exit({fail, T});
 handle_event(_Event, _StateName, State) ->
     {stop, {error, badmsg}, State}.
 
