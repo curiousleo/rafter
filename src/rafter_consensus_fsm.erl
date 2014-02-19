@@ -89,6 +89,12 @@ handle_event(stop, _, State) ->
 handle_event({fail, T}, StateName, State=#state{me=Me}) ->
     timer:send_after(T, Me, restart),
     {next_state, failed, {StateName, State}};
+handle_event({start_failures, Lambda, T}, leader, State=#state{me=Me}) ->
+    {ok, Tref} = timer:send_after(exponential(Lambda), Me, {failure_timeout, Lambda, T}),
+    {next_state, leader, State#state{failure_tref=Tref}};
+handle_event(stop_failures, leader, State=#state{failure_tref=Tref}) ->
+    timer:cancel(Tref),
+    {next_state, leader, State};
 handle_event(_Event, _StateName, State) ->
     {stop, {error, badmsg}, State}.
 
@@ -121,6 +127,11 @@ handle_info({client_timeout, Id}, StateName, #state{client_reqs=Reqs}=State)
     end;
 handle_info(restart, failed, {StateName, State}) ->
     {next_state, StateName, State};
+handle_info({failure_timeout, Lambda, T}, leader, State=#state{me=Me, config=Config}) ->
+    Victim = pick_random_server(Config),
+    gen_fsm:send_all_state_event(Victim, {fail, T}),
+    {ok, Tref} = timer:send_after(exponential(Lambda), Me, {failure_timeout, Lambda, T}),
+    {next_state, leader, State#state{failure_tref=Tref}};
 handle_info(_, _, State) ->
     {stop, badmsg, State}.
 
@@ -962,6 +973,25 @@ reset_timer(Duration, State=#state{timer=Timer}) ->
     _ = gen_fsm:cancel_timer(Timer),
     NewTimer = gen_fsm:send_event_after(Duration, timeout),
     State#state{timer=NewTimer}.
+
+-spec exponential(float()) -> float().
+exponential(Lambda) ->
+    U = random:uniform(),
+    (-1) * math:log(U) / Lambda.
+
+-spec pick_random(list()) -> term().
+pick_random(List) ->
+    U = random:uniform(),
+    Pos = trunc(U * (length(List) + 1)),
+    lists:nth(Pos, List).
+
+-spec pick_random_server(#config{}) -> peer().
+pick_random_server(#config{state=stable, oldservers=Old}) ->
+    pick_random(Old);
+pick_random_server(#config{state=staging, oldservers=Old}) ->
+    pick_random(Old);
+pick_random_server(#config{state=transitional, newservers=New, oldservers=Old}) ->
+    pick_random(lists:merge(lists:sort(Old), lists:sort(New))).
 
 %%=============================================================================
 %% Tests
