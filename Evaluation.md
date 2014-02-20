@@ -40,6 +40,4 @@ Simulating failures
 
 Allowing the leader to fail would make benchmarking very complicated. Failures of followers, on the other hand, are easier to simulate.
 
-The way I experimentally implemented failure simulation works as follows:
-
-When the leader receives a message `{start_failures, Lambda, T}`, it starts sending `{fail, T}` messages to random followers. The time between two `{fail, T}` messages the leader sends is random, governed by an exponential distribution with parameter `Lambda`. When a follower receives a `{fail, T}` message, it goes into a `failed` state where it discards all incoming messages. After T milliseconds, the node goes back into the `follower` state.
+The way I implemented failure simulation currently works as follows: When the leader receives a message `{start_failures, Lambda, T}`, it starts sending `{fail, T}` messages to random followers. The time between two `{fail, T}` messages the leader sends is random, governed by an exponential distribution with parameter `Lambda`. When a follower receives a `{fail, T}` message, it goes into a `failed` state where it discards all incoming messages. After T milliseconds, the node goes back into the `follower` state.
