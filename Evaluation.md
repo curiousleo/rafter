@@ -38,6 +38,8 @@ Data will be collected in two ways: time to consensus is measured by the leader 
 Simulating failures
 -------------------
 
-Allowing the leader to fail would make benchmarking very complicated. Failures of followers, on the other hand, should be much easier to simulate. One option would be for the leader to send special `fail` (and potentially `recover`) messages to followers.
+Allowing the leader to fail would make benchmarking very complicated. Failures of followers, on the other hand, are easier to simulate.
 
-The failure of a follower could be simulated in several ways. One would be for the follower to enter a `failed` state where it drops all incoming messages and sends none. Upon receiving a `recover` message, it would re-enter the standard Rafter finite state machine. This would potentially complicate the already quite complex follower fsm. Another option would be for the follower's consensus_fsm process to exit when it receives a `fail` message. It would then be restarted by its supervisor within a short amount of time -- potentially too short to have any measurable impact on the system.
+The way I experimentally implemented failure simulation works as follows:
+
+When the leader receives a message `{start_failures, Lambda, T}`, it starts sending `{fail, T}` messages to random followers. The time between two `{fail, T}` messages the leader sends is random, governed by an exponential distribution with parameter `Lambda`. When a follower receives a `{fail, T}` message, it goes into a `failed` state where it discards all incoming messages. After T milliseconds, the node goes back into the `follower` state.
