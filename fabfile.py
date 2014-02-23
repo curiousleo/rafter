@@ -7,8 +7,9 @@ from awsfabrictasks.decorators import ec2instance
 
 @task
 @parallel
-def deploy():
+def deploy(branch='benchmark'):
     with cd(awsfab_settings.RAFTER_DIR):
+        run('git checkout {branch}'.format(branch=branch))
         run('git pull')
         run('make')
         run('rm -rf data')
