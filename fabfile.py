@@ -4,6 +4,33 @@ from fabric.api import task, local, settings, abort, run, cd, env, parallel
 from fabric.contrib.console import confirm
 
 from awsfabrictasks.decorators import ec2instance
+from awsfabrictasks.ec2.api import Ec2LaunchInstance, Ec2InstanceWrapper
+
+"""
+Call as ``awsfab setup:num=X deploy start``. This will
+
+1. *Set up* ``X`` instances
+2. *Deploy* Rafter to all of them
+3. *Start* a Rafter node on each one
+"""
+
+@task
+def setup(num):
+    print env.ec2instances
+    instances = map(
+            lambda n:
+                Ec2LaunchInstance(
+                    configname='arch-configured-micro',
+                    extra_tags={'Name':'benchmark{n}'.format(n=n)}),
+            range(int(num)))
+    Ec2LaunchInstance.run_many_instances(instances)
+    Ec2LaunchInstance.wait_for_running_state_many(instances)
+    for instance in instances:
+        Ec2InstanceWrapper(instance.instance).add_instance_to_env()
+
+@task
+def test():
+    print env.ec2instances
 
 @task
 @parallel
