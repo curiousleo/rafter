@@ -21,11 +21,6 @@ def start():
         run('./bin/start-node rafter ok')
 
 @task
-@parallel
-def supervisor():
-    run('sudo pacman --noconfirm -S supervisor')
-
-@task
 def config():
     peers = map(
         lambda v: (v.instance.tags.get('Name'), v.instance.ip_address),
