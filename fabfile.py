@@ -16,27 +16,20 @@ Call as ``awsfab setup:num=X deploy start``. This will
 
 @task
 def setup(num):
-    print env.ec2instances
-    instances = map(
-            lambda n:
-                Ec2LaunchInstance(
-                    configname='arch-configured-micro',
-                    extra_tags={'Name':'benchmark{n}'.format(n=n)}),
-            range(int(num)))
+    launch = lambda: \
+        Ec2LaunchInstance(
+            configname='arch-configured-micro',
+            extra_tags={'Environment':'benchmark'})
+    instances = [launch() for _ in range(int(num))]
     Ec2LaunchInstance.run_many_instances(instances)
     Ec2LaunchInstance.wait_for_running_state_many(instances)
-    for instance in instances:
-        Ec2InstanceWrapper(instance.instance).add_instance_to_env()
-
-@task
-def test():
-    print env.ec2instances
 
 @task
 @parallel
+@ec2instance(tags={'Environment':'benchmark'})
 def deploy(branch='benchmark'):
     with cd(awsfab_settings.RAFTER_DIR):
-        run('git checkout {branch}'.format(branch=branch))
+        run('git checkout {branch}'.format(*locals()))
         run('git pull')
         run('make')
         run('rm -rf data')
@@ -44,7 +37,7 @@ def deploy(branch='benchmark'):
 
 @task
 @parallel
-def start():
+def start_rafter():
     with cd(awsfab_settings.RAFTER_DIR):
         run('./bin/start-node rafter ok')
 
