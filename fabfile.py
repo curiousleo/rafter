@@ -25,11 +25,11 @@ def setup(num):
     Ec2LaunchInstance.wait_for_running_state_many(instances)
 
 @task
-@parallel
-@ec2instance(tags={'Environment':'benchmark'})
+# @ec2instance(tags={'Environment':'benchmark'})
 def deploy(branch='benchmark'):
     with cd(awsfab_settings.RAFTER_DIR):
-        run('git checkout {branch}'.format(*locals()))
+        run('git fetch origin')
+        run('git checkout {branch}'.format(**locals()))
         run('git pull')
         run('make')
         run('rm -rf data')
