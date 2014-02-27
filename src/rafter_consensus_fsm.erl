@@ -1013,12 +1013,13 @@ pick_random(List) ->
     lists:nth(Pos, List).
 
 -spec pick_random_server(peer(), #config{}) -> peer() | undefined.
-pick_random_server(Me, #config{state=stable, oldservers=Old}) ->
-    pick_random(Old -- [Me]);
-pick_random_server(Me, #config{state=staging, oldservers=Old}) ->
-    pick_random(Old -- [Me]);
-pick_random_server(Me, #config{state=transitional, newservers=New, oldservers=Old}) ->
-    List = lists:merge(lists:sort(Old), lists:sort(New)),
+pick_random_server(Me, #config{state=stable, oldvstruct=Old}) ->
+    pick_random(rafter_voting:to_list(Old) -- [Me]);
+pick_random_server(Me, #config{state=staging, oldvstruct=Old}) ->
+    pick_random(rafter_voting:to_list(Old) -- [Me]);
+pick_random_server(Me, #config{state=transitional, newvstruct=New, oldvstruct=Old}) ->
+    List = lists:merge(lists:sort(rafter_voting:to_list(Old)),
+                       lists:sort(rafter_voting:to_list(New))),
     pick_random(List -- [Me]).
 
 %%=============================================================================
