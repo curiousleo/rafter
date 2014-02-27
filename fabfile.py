@@ -29,10 +29,10 @@ def setup(num):
 def deploy(branch='benchmark'):
     with cd(awsfab_settings.RAFTER_DIR):
         run('git fetch origin')
-        run('git checkout {branch}'.format(**locals()))
-        run('git pull')
-        run('make')
+        run('git reset --hard origin/{branch}'.format(**locals()))
         run('rm -rf data')
+        run('rm ebin/*')
+        run('make')
         run('mkdir data')
 
 @task
