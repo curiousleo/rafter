@@ -26,6 +26,10 @@
     %% contains match_indexes as val when leader
     responses = dict:new() :: dict(),
 
+    %% Current voting state -- can be computed from the "responses" field, but
+    %% we cache it here for performance
+    vstate :: #vstate{},
+
     %% Logical clock to allow read linearizability
     %% Reset to 0 on leader election.
     send_clock = 0 :: non_neg_integer(),

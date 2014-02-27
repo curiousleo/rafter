@@ -6,6 +6,8 @@
 
 -include_lib("eqc/include/eqc.hrl").
 
+-define(MAX_RUNNING, 40).
+
 %% ====================================================================
 %% EQC Generators 
 %% ====================================================================
@@ -17,6 +19,29 @@ peers() ->
 
 peer() ->
     oneof(peers()).
+
+server() ->
+    ?LET(Servers, servers(), oneof(Servers)).
+
+vsgen() ->
+    oneof([{rafter_voting_majority, majority},
+           {rafter_voting_grid, grid}]).
+
+vstruct(Peers) when is_list(Peers) ->
+    ?LET({Mod, Fun}, vsgen(), apply(Mod, Fun, [Peers]));
+vstruct(Peer) ->
+    ?LET(Servers, servers(),
+         vstruct(shuffle([Peer|Servers]))).
+
+vstruct() ->
+    ?LET(Servers, servers(), vstruct(Servers)).
+
+servers() ->
+    ?LET(N, choose(3, ?MAX_RUNNING),
+         shuffle([list_to_atom(integer_to_list(I)) || I <- lists:seq(0, N)])).
+
+max_running() ->
+    ?MAX_RUNNING.
 
 %% Generate a lower 7-bit ACSII character that should not cause any problems
 %% with utf8 conversion.

@@ -108,7 +108,7 @@ You should see something similar to the following, which is the state of
 (peer1@127.0.0.1)2> sys:get_state(peer1).
 {follower,#state{leader = undefined,term = 0,
     voted_for = undefined,commit_index = 0,
-    init_config = undefined,timer =#Ref<0.0.0.284>,
+    init_config = undefined,timer = #Ref<0.0.0.284>,
     followers = {dict,0,16,16,8,80,48,
                     {[],[],[],[],[],[],[],[],[],[],[],...},
                     {{[],[],[],[],[],[],[],[],[],...}}},
@@ -121,8 +121,8 @@ You should see something similar to the following, which is the state of
                                 {{[],[],[],[],[],[],...}}},
     client_reqs = [],read_reqs = [],
     me = {peer1,'peer1@127.0.0.1'},
-    config = #config{state = blank, oldservers = [],
-                     newservers = []},
+    config = #config{state = blank,oldvstruct = undefined,
+                     newvstruct = undefined},
     state_machine = rafter_backend_ets,
     backend_state = {state,{peer1,'peer1@127.0.0.1'}}}}
 ```
@@ -136,7 +136,8 @@ peer1.
     Peers = [{peer1, 'peer1@127.0.0.1'}, 
              {peer2, 'peer2@127.0.0.1'}, 
              {peer3, 'peer3@127.0.0.1'}],
-    rafter:set_config(peer1, Peers).
+    Vstruct = rafter_voting_majority:majority(Peers),
+    rafter:set_config(peer1, Vstruct).
 ```
 
 ### Write Operations

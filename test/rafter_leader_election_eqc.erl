@@ -27,8 +27,20 @@ eqc_test_() ->
         {timeout, 30,
          ?_assertEqual(true, 
              eqc:quickcheck(
-                 eqc:conjunction([{prop_leader_elected, 
-                                   eqc:numtests(100, prop_leader_elected())}])))}
+                 eqc:conjunction([
+                   {prop_leader_elected,
+                    eqc:numtests(100,
+                                 prop_leader_elected(
+                                   fun(X) ->
+                                           rafter_voting_majority:majority(X)
+                                   end))},
+                   {prop_leader_elected,
+                    eqc:numtests(100,
+                                 prop_leader_elected(
+                                    fun(X) ->
+                                            rafter_voting_grid:grid(X)
+                                    end))}
+        ])))}
        ]
       }
      ]
@@ -44,13 +56,13 @@ cleanup(_) ->
 %% EQC Properties
 %% ====================================================================
 
-prop_leader_elected() ->
+prop_leader_elected(Generator) ->
     rafter:start_cluster(),
     assert_each_node_is_follower_with_blank_config(),
-    rafter:set_config(peer1, peers()),
+    rafter:set_config(peer1, Generator(peers())),
     %% leader election should occur in less than 1 second with the defaults. 
     %% This is a liveness constraint I'd like to maintain if possible.
-    timer:sleep(1000),
+    timer:sleep(2000),
     assert_exactly_one_leader(),
     application:stop(rafter),
     true.

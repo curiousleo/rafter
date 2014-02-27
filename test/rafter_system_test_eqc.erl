@@ -20,11 +20,13 @@
 
 -compile(export_all).
 
+-type vstruct_spec() :: {[peer()], {atom(), atom()}}.
+
 -record(model_state, {to :: atom(),
-                      running=[] :: list(atom()),
+                      running = {[], undefined} :: vstruct_spec(),
                       state=init :: init | blank | transitional | stable,
-                      oldservers=[] :: list(atom()),
-                      newservers=[] :: list(atom()),
+                      oldvstruct :: vstruct_spec(),
+                      newvstruct :: vstruct_spec(),
                       commit_index=0 :: non_neg_integer(),
                       last_committed_op :: term(),
                       leader :: atom()}).
@@ -78,8 +80,8 @@ run_print_cleanup(Cmds) ->
         {H, S, Res},
         cleanup_test(S, Res)).
 
-cleanup_test(S, Res) ->
-    [rafter:stop_node(P) || P <- S#model_state.running],
+cleanup_test(#model_state{running={Running, _}}, Res) ->
+    [rafter:stop_node(P) || P <- Running],
     os:cmd(["rm -rf ", ?logdir]),
     os:cmd(["mkdir ", ?logdir]),
     ok =:= Res.
@@ -88,8 +90,10 @@ start_node(Peer) ->
     Opts = #rafter_opts{logdir=?logdir},
     rafter:start_node(Peer, Opts).
 
-start_nodes(Peers) ->
-    [start_node(P) || P <- Peers].
+start_nodes({Servers, _}) ->
+    [start_node(S) || S <- Servers];
+start_nodes(Servers) ->
+    [start_node(S) || S <- Servers].
 
 %% ====================================================================
 %% EQC Properties
@@ -106,40 +110,49 @@ initial_state() ->
     #model_state{}.
 
 command(#model_state{state=init}) ->
-    {call, ?MODULE, start_nodes, [servers()]};
+    {call, ?MODULE, start_nodes, [vstruct_spec()]};
 
-command(#model_state{state=blank, to=To, running=Running}) ->
-    {call, rafter, set_config, [To, Running]};
+command(#model_state{state=blank, to=To, running={Running, Gen}}) ->
+    {call, rafter, set_config, [To, gen_vstruct(Running, Gen)]};
 
-command(#model_state{state=stable, oldservers=Old, running=Running})
-  when length(Running) =< (length(Old) div 2) ->
-    NodeToStart = oneof(lists:subtract(Old, Running)),
-    {call, rafter, start_node, [NodeToStart]};
-
-command(#model_state{state=stable, to=To, running=Running}) ->
-    frequency([{100, {call, rafter, op, [To, command()]}},
-               {1, {call, rafter, stop_node, [oneof(Running)]}}]).
+command(#model_state{state=stable, to=To,
+                     running={Running, _}, oldvstruct={Old, Gen}}) ->
+    YesVotes = dict:from_list([{S, true} || S <- Running]),
+    case rafter_voting:quorum(gen_vstruct(Old, Gen), YesVotes) of
+        false ->
+            NodeToStart = oneof(lists:subtract(Old, Running)),
+            {call, rafter, start_node, [NodeToStart]};
+        true ->
+            frequency([{100, {call, rafter, op, [To, command()]}},
+                       {1, {call, rafter, stop_node, [oneof(Running)]}}])
+    end.
 
 precondition(#model_state{state=init}, _) ->
     true;
-precondition(#model_state{running=[]}, {call, rafter, _, _}) ->
-    false;
-precondition(#model_state{running=Running}, {call, rafter, _, [To]}) ->
-    lists:member(To, Running);
-precondition(#model_state{running=Running}, {call, rafter, op, [To, _]}) ->
-    lists:member(To, Running);
-precondition(#model_state{running=Running}, {call, rafter, set_config, [To, _]}) ->
-    lists:member(To, Running).
+precondition(#model_state{running=undefined},
+    {call, rafter, _, _}) ->
+        false;
+precondition(#model_state{running={Running, _}},
+    {call, rafter, _, [To]}) ->
+        lists:member(To, Running);
+precondition(#model_state{running={Running, _}},
+    {call, rafter, op, [To, _]}) ->
+        lists:member(To, Running);
+precondition(#model_state{running={Running, _}},
+    {call, rafter, set_config, [To, _]}) ->
+        lists:member(To, Running).
 
 next_state(#model_state{state=init}=S, _,
-    {call, ?MODULE, start_nodes, [Running]}) ->
+    {call, ?MODULE, start_nodes, [{Running, Gen}]}) ->
         Leader = lists:nth(1, Running),
-        S#model_state{state=blank, running=Running, to=Leader, leader=Leader};
+        S#model_state{state=blank, running={Running, Gen}, to=Leader,
+                      leader=Leader};
 
 %% The initial config is always just the running servers
-next_state(#model_state{state=blank, to=To, running=Running}=S,
-    _Result, {call, rafter, set_config, [To, Running]}) ->
-        S#model_state{commit_index=1, state=stable, oldservers=Running};
+next_state(#model_state{state=blank, to=To, running={Running, Gen}}=S,
+    _Result, {call, rafter, set_config, [To, RunningVstruct]}) ->
+        RunningVstruct = gen_vstruct(Running, Gen),
+        S#model_state{commit_index=1, state=stable, oldvstruct={Running, Gen}};
 
 next_state(#model_state{state=stable, commit_index=CI, leader=Leader,
   last_committed_op=LastOp}=S, Result, {call, rafter, op, [_, Op]}) ->
@@ -147,16 +160,16 @@ next_state(#model_state{state=stable, commit_index=CI, leader=Leader,
                   leader={call, ?MODULE, maybe_change_leader, [Leader, Result]},
                   last_committed_op={call, ?MODULE, maybe_change_last_op, [LastOp, Op, Result]}};
 
-next_state(#model_state{state=stable, to=To, running=Running}=S,
+next_state(#model_state{state=stable, to=To, running={Running, Gen}}=S,
     _Result, {call, rafter, stop_node, [Node]}) ->
         NewRunning = lists:delete(Node, Running),
         case To of
             Node ->
                 S#model_state{leader=unknown,
-                              running=NewRunning,
+                              running={NewRunning, Gen},
                               to=lists:nth(1, NewRunning)};
             _ ->
-                S#model_state{running=NewRunning}
+                S#model_state{running={NewRunning, Gen}}
         end.
 
 
@@ -166,9 +179,9 @@ postcondition(#model_state{state=blank},
   {call, rafter, set_config, [_To, _Servers]}, {ok, _}) ->
     true;
 
-postcondition(#model_state{state=stable, oldservers=Servers, to=To},
+postcondition(#model_state{state=stable, oldvstruct={Old, _}, to=To},
   {call, rafter, op, [To, _]}, {ok, _}) ->
-    true =:= lists:member(To, Servers);
+    true =:= lists:member(To, Old);
 postcondition(#model_state{state=stable, to=To}, {call, rafter, op, [To, _]},
     {error, {redirect, Leader}}) ->
         Leader =/= To;
@@ -208,6 +221,9 @@ maybe_change_last_op(_, Op, {ok, _}) ->
 maybe_change_last_op(CurrentLastOp, _, {error, _}) ->
     CurrentLastOp.
 
+gen_vstruct(Peers, {Mod, Fun}) ->
+    apply(Mod, Fun, [Peers]).
+
 %% ====================================================================
 %% Invariants
 %% ====================================================================
@@ -240,23 +256,11 @@ committed_entry_exists_in_log(#model_state{commit_index=CI,
 command() ->
     oneof(["inc key val", "get key", "set key val", "keyspace", "config"]).
 
-server() ->
-    oneof([a,b,c,d,e,f,g,h,i]).
+vstruct_spec() ->
+    ?LET({Servers, Gen}, {servers(), rafter_gen:vsgen()}, {Servers, Gen}).
 
 servers() ->
-    ?SUCHTHAT(Servers, oneof([three_servers(), five_servers(), seven_servers()]),
-       begin
-            Uniques = sets:to_list(sets:from_list(Servers)),
-            length(Uniques) =:= length(Servers)
-       end).
-
-three_servers() ->
-    vector(3, server()).
-
-five_servers() ->
-    vector(5, server()).
-
-seven_servers() ->
-    vector(7, server()).
+    ?LET(Seq, ?SIZED(Size, resize(0.5, lists:seq(0, Size + 2))),
+         shuffle([list_to_atom(integer_to_list(I)) || I <- Seq])).
 
 -endif.
