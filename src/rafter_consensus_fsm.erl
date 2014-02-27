@@ -22,6 +22,9 @@
 %% States
 -export([follower/2, follower/3, candidate/2, candidate/3, leader/2, leader/3]).
 
+%% Failure simulation
+-export([failed/2, failed/3]).
+
 %% Testing outputs
 -export([set_term/2, candidate_log_up_to_date/4]).
 
@@ -86,16 +89,29 @@ format_status(_, [_, State]) ->
 
 handle_event(stop, _, State) ->
     {stop, normal, State};
+handle_event({fail, T}, follower, State=#state{me=Me}) ->
+    timer:send_after(T, Me, restart),
+    {next_state, failed, {follower, State}};
+handle_event({fail, _}, failed, State) ->
+    {next_state, failed, State};
+handle_event({start_failures, Lambda, T}, leader, State=#state{me=Me, failure_tref=undefined}) ->
+    {ok, Tref} = timer:send_after(exponential(Lambda), Me, {failure_timeout, Lambda, T}),
+    {next_state, leader, State#state{failure_tref=Tref}};
+handle_event(stop_failures, leader, State=#state{failure_tref=Tref}) ->
+    timer:cancel(Tref),
+    {next_state, leader, State#state{failure_tref=undefined}};
 handle_event(_Event, _StateName, State) ->
     {stop, {error, badmsg}, State}.
 
-handle_sync_event(get_leader, _, StateName, State=#state{leader=Leader}) ->
+handle_sync_event(get_leader, _, StateName, State=#state{leader=Leader})
+  when StateName =/= failed ->
     {reply, Leader, StateName, State};
 handle_sync_event(_Event, _From, _StateName, State) ->
     {stop, badmsg, State}.
 
 handle_info({client_read_timeout, Clock, Id}, StateName,
-    #state{read_reqs=Reqs}=State) ->
+    #state{read_reqs=Reqs}=State)
+  when StateName =/= failed ->
         ClientRequests = orddict:fetch(Clock, Reqs),
         {ok, ClientReq} = find_client_req(Id, ClientRequests),
         send_client_timeout_reply(ClientReq),
@@ -104,7 +120,8 @@ handle_info({client_read_timeout, Clock, Id}, StateName,
         NewState = State#state{read_reqs=NewReqs},
         {next_state, StateName, NewState};
 
-handle_info({client_timeout, Id}, StateName, #state{client_reqs=Reqs}=State) ->
+handle_info({client_timeout, Id}, StateName, #state{client_reqs=Reqs}=State)
+  when StateName =/= failed ->
     case find_client_req(Id, Reqs) of
         {ok, ClientReq} ->
             send_client_timeout_reply(ClientReq),
@@ -113,7 +130,21 @@ handle_info({client_timeout, Id}, StateName, #state{client_reqs=Reqs}=State) ->
         not_found ->
             {next_state, StateName, State}
     end;
-handle_info(_, _, State) ->
+handle_info(restart, failed, {StateName, State}) ->
+    {next_state, StateName, State#state{failure_tref=undefined}};
+handle_info(restart, StateName, State) ->
+    {next_state, StateName, State#state{failure_tref=undefined}};
+handle_info({failure_timeout, Lambda, T}, leader, State=#state{me=Me, config=Config}) ->
+    case pick_random_server(Me, Config) of
+        undefined ->
+            {ok, Tref} = timer:send_after(exponential(Lambda), Me, {failure_timeout, Lambda, T}),
+            {next_state, leader, State#state{failure_tref=Tref}};
+        Victim ->
+            gen_fsm:send_all_state_event(Victim, {fail, T}),
+            {ok, Tref} = timer:send_after(exponential(Lambda), Me, {failure_timeout, Lambda, T}),
+            {next_state, leader, State#state{failure_tref=Tref}}
+    end;
+handle_info(_Event, _StateName, State) ->
     {stop, badmsg, State}.
 
 terminate(_, _, _) ->
@@ -128,6 +159,13 @@ code_change(_OldVsn, StateName, State, _Extra) ->
 %% Note: All RPC's and client requests get answered in State/3 functions.
 %% RPC Responses get handled in State/2 functions.
 %%=============================================================================
+
+%% Simulate process failure: ignore incoming messages
+failed(_, S) ->
+    {next_state, failed, S}.
+
+failed(_, _, S) ->
+    {next_state, failed, S}.
 
 %% Election timeout has expired. Go to candidate state iff we are a voter.
 follower(timeout, #state{config=Config, me=Me}=State0) ->
@@ -950,6 +988,29 @@ reset_timer(Duration, State=#state{timer=Timer}) ->
     _ = gen_fsm:cancel_timer(Timer),
     NewTimer = gen_fsm:send_event_after(Duration, timeout),
     State#state{timer=NewTimer}.
+
+-spec exponential(float()) -> pos_integer().
+exponential(Lambda) ->
+    U = random:uniform(),
+    trunc(-1000 * math:log(U) / Lambda).
+
+-spec pick_random([term()|list()]) -> term()
+               ; ([]) -> undefined.
+pick_random([]) ->
+    undefined;
+pick_random(List) ->
+    U = random:uniform(),
+    Pos = 1 + trunc(U * length(List)),
+    lists:nth(Pos, List).
+
+-spec pick_random_server(peer(), #config{}) -> peer() | undefined.
+pick_random_server(Me, #config{state=stable, oldservers=Old}) ->
+    pick_random(Old -- [Me]);
+pick_random_server(Me, #config{state=staging, oldservers=Old}) ->
+    pick_random(Old -- [Me]);
+pick_random_server(Me, #config{state=transitional, newservers=New, oldservers=Old}) ->
+    List = lists:merge(lists:sort(Old), lists:sort(New)),
+    pick_random(List -- [Me]).
 
 %%=============================================================================
 %% Tests

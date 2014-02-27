@@ -46,6 +46,8 @@
 
     config :: term(),
 
+    failure_tref :: timer:tref(),
+
     %% We allow pluggable backend state machine modules.
     state_machine :: atom(),
     backend_state :: term()}).
