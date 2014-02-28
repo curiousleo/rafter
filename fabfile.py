@@ -45,14 +45,12 @@ def start_rafter():
 
 @task
 def config():
-    peers = map(
-        lambda v: (v.instance.tags.get('Name'), v.instance.ip_address),
-        env.ec2instances.values())
-    peers = ','.join(map(
-        lambda (n, ip): '{{{n},\'rafter@{ip}\'}}'.format(n=n.lower(), ip=ip),
-        peers))
-    peers = 'Peers=[{peers}].'.format(peers=peers)
-    print peers
+    instances = env.ec2instances.values()
+    ip_addresses = (v.instance.ip_address for v in instances)
+    peers = ('{{peer{n},\'rafter@{ip}\'}}'.format(**locals())
+            for (ip, n) in zip(ip_addresses, range(len(instances))))
+    assignment = 'Peers=[{peers_string}].'.format(peers_string=','.join(peers))
+    print assignment
     # with cd(awsfab_settings.RAFTER_DIR):
         # run('./bin/start-node rafter ')
 
