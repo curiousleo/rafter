@@ -38,21 +38,30 @@ def deploy(branch='benchmark'):
         run('mkdir data')
 
 @task
-@parallel
-def start_rafter():
-    with cd(awsfab_settings.RAFTER_DIR):
-        run('./bin/start-node rafter ok')
+def start_cluster(leader_name='leader'):
+    instance = Ec2InstanceWrapper.get_from_host_string().instance
 
-@task
-def config():
-    instances = env.ec2instances.values()
-    ip_addresses = (v.instance.ip_address for v in instances)
-    peers = ('{{peer{n},\'rafter@{ip}\'}}'.format(**locals())
-            for (ip, n) in zip(ip_addresses, range(len(instances))))
-    assignment = 'Peers=[{peers_string}].'.format(peers_string=','.join(peers))
-    print assignment
-    # with cd(awsfab_settings.RAFTER_DIR):
-        # run('./bin/start-node rafter ')
+    command = 'ok'
+
+    if instance.tags.get('Name') == leader_name:
+        follower_ips = [follower.instance.ip_address
+                for follower in env.ec2instances.values()
+                if follower.instance.tags.get('Name') != leader_name]
+        follower_tuples = ['{{follower{n},\'rafter@{ip}\'}}'.format(**locals())
+                for (ip, n) in zip(follower_ips, range(len(follower_ips)))]
+
+        leader_tuple = '{{leader,\'rafter@{ip}\'}}'.format(ip=instance.ip_address)
+        assign = 'Peers=[{followers},{leader}]'.format(followers=','.join(follower_tuples), leader=leader_tuple)
+        create_vstruct = 'Vstruct=rafter_voting_grid:grid(Peers)'
+        set_config = 'rafter:set_config(leader,Vstruct)'
+
+        command = '{assign},{create_vstruct},{set_config}.'.format(**locals())
+
+        print 'leader:', leader_tuple
+
+    with cd(awsfab_settings.RAFTER_DIR):
+        print command
+        # run('./bin/start-node rafter {command}'.format(**locals()))
 
 #####################
 # Import awsfab tasks
