@@ -1,6 +1,7 @@
 from __future__ import with_statement
 
 from tempfile import NamedTemporaryFile
+from os.path import split as split_path
 
 from fabric.api import cd
 from fabric.api import env
@@ -57,7 +58,7 @@ def start_followers(leader_name='leader'):
     if name != leader_name:
         # instance is a follower
         with cd(awsfab_settings.RAFTER_DIR):
-            run('./bin/start-node {name}'.format(**locals()))
+            run('./bin/start-ec2-node {name}'.format(**locals()))
 
 @task
 def start_leader(leader_name='leader'):
@@ -79,13 +80,12 @@ def start_leader(leader_name='leader'):
         script = leader_script(instance, followers)
         script_name = None
         with NamedTemporaryFile() as script_file:
-            script_name = script_file.name
+            script_name = split_path(script_file.name)[1]
             script_file.write(script)
             script_file.flush()
-            ec2_rsync_upload(script_name, awsfab_settings.SCRIPT_DIR)
+            ec2_rsync_upload(script_file.name, awsfab_settings.SCRIPT_DIR)
         with cd(awsfab_settings.RAFTER_DIR):
-            print 'starting leader'
-            # run('sh ./bin/{script_name}'.format(**locals()))
+            run('sh ./bin/{script_name}'.format(**locals()))
 
 def leader_script(leader, followers):
     follower_names = [follower.tags.get('Name') for follower in followers]
@@ -103,7 +103,8 @@ def leader_script(leader, followers):
     command = '{assign},{create_vstruct},{set_config}.'.format(**locals())
     script = '''cd /root/Code/rafter.git
 IP=$(curl --silent http://instance-data/latest/meta-data/public-ipv4)
-erl -detached \
+erl \
+-detached \
 -pa deps/*/ebin ebin \
 -setcookie rafter_localhost_test \
 -name leader@$IP \
