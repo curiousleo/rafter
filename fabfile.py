@@ -8,6 +8,7 @@ from fabric.api import env
 from fabric.api import parallel
 from fabric.api import run
 from fabric.api import task
+from fabric.context_managers import settings
 
 from awsfabrictasks.decorators import ec2instance
 from awsfabrictasks.ec2.api import Ec2InstanceWrapper
@@ -40,17 +41,20 @@ def deploy(branch='benchmark'):
     with cd(awsfab_settings.RAFTER_DIR):
         run('git fetch {remote}'.format(**locals()))
         run('git reset --hard {remote}/{branch}'.format(**locals()))
-        run('rm -rf data')
         run('rm ebin/*')
         run('make')
+
+@task
+@parallel
+def stop_cluster():
+    with cd(awsfab_settings.RAFTER_DIR):
+        with settings(warn_only=True):
+            run('killall beam')
+        run('rm -rf data')
         run('mkdir data')
 
 @task
-def start_cluster(leader_name='leader'):
-    start_followers(leader_name=leader_name)
-    start_leader(leader_name=leader_name)
-
-@task
+@parallel
 def start_followers(leader_name='leader'):
     instance = Ec2InstanceWrapper.get_from_host_string().instance
     name = instance.tags.get('Name')
@@ -58,7 +62,9 @@ def start_followers(leader_name='leader'):
     if name != leader_name:
         # instance is a follower
         with cd(awsfab_settings.RAFTER_DIR):
-            run('sh bin/start-ec2-node {name}'.format(**locals()))
+            run('rm -rf data')
+            run('mkdir data')
+            run('sh bin/start-ec2-node {name}; sleep 1'.format(**locals()))
 
 @task
 def start_leader(leader_name='leader'):
@@ -66,11 +72,10 @@ def start_leader(leader_name='leader'):
 
     if instance.tags.get('Name') == leader_name:
         # instance is the leader
-        instancewrappers = env.ec2instances.values()
-        not_leader = lambda instance: \
-                instance.instance.tags.get('Name') != leader_name
-        followers = [follower.instance for follower in
-                filter(not_leader, instancewrappers)]
+        instances = [instancewrapper.instance for instancewrapper
+                in env.ec2instances.values()]
+        followers = [instance for instance in instances
+                if instance.tags.get('Name') != leader_name]
 
         if len(followers) == 0:
             print 'No followers! Quitting ...'
@@ -85,6 +90,8 @@ def start_leader(leader_name='leader'):
             script_file.flush()
             ec2_rsync_upload(script_file.name, awsfab_settings.SCRIPT_DIR)
         with cd(awsfab_settings.RAFTER_DIR):
+            run('rm -rf data')
+            run('mkdir data')
             run('sh bin/{script_name}'.format(**locals()))
 
 def leader_script(leader, followers):
@@ -104,11 +111,10 @@ def leader_script(leader, followers):
     script = '''cd /root/Code/rafter.git
 IP=$(curl --silent http://instance-data/latest/meta-data/public-ipv4)
 erl \
--detached \
 -pa deps/*/ebin ebin \
 -setcookie rafter_localhost_test \
 -name leader@$IP \
--eval "rafter:start_test_node(rafter),{command}" '''.format(**locals())
+-eval "rafter:start_test_node(leader),{command}" '''.format(**locals())
     return script
 
 #####################
