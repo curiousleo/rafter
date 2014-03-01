@@ -54,6 +54,7 @@ def stop_cluster():
         run('mkdir data')
 
 @task
+@parallel
 def start_followers(leader_name='leader'):
     instance = Ec2InstanceWrapper.get_from_host_string().instance
     name = instance.tags.get('Name')
