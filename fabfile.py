@@ -41,27 +41,45 @@ def deploy(branch='benchmark'):
 def start_cluster(leader_name='leader'):
     instance = Ec2InstanceWrapper.get_from_host_string().instance
 
-    command = 'ok'
-
     if instance.tags.get('Name') == leader_name:
+        # instance is the leader
+        not_leader = lambda instance: \
+                instance.instance.tags.get('Name') != leader_name
         follower_ips = [follower.instance.ip_address
-                for follower in env.ec2instances.values()
-                if follower.instance.tags.get('Name') != leader_name]
-        follower_tuples = ['{{follower{n},\'rafter@{ip}\'}}'.format(**locals())
-                for (ip, n) in zip(follower_ips, range(len(follower_ips)))]
+                for follower in filter(not_leader, env.ec2instances.values())]
 
-        leader_tuple = '{{leader,\'rafter@{ip}\'}}'.format(ip=instance.ip_address)
-        assign = 'Peers=[{followers},{leader}]'.format(followers=','.join(follower_tuples), leader=leader_tuple)
-        create_vstruct = 'Vstruct=rafter_voting_grid:grid(Peers)'
-        set_config = 'rafter:set_config(leader,Vstruct)'
+        if len(follower_ips) == 0:
+            print 'No followers! Quitting ...'
+            return
+        if not all(follower_ips):
+            print 'Some followers do not have an IP address! Quitting ...'
+            return
 
-        command = '{assign},{create_vstruct},{set_config}.'.format(**locals())
+        # create startup script for leader
+        script = leader_script(follower_ips)
 
-        print 'leader:', leader_tuple
+    # with cd(awsfab_settings.RAFTER_DIR):
+        # print command
+        # run('./bin/start-node rafter')
 
-    with cd(awsfab_settings.RAFTER_DIR):
-        print command
-        # run('./bin/start-node rafter {command}'.format(**locals()))
+def leader_script(follower_ips):
+    follower_tuples = ['{{follower{n},\'rafter@{ip}\'}}'.format(**locals())
+            for (ip, n) in zip(follower_ips, range(len(follower_ips)))]
+
+    leader_tuple = '{{leader,\'rafter@{ip}\'}}'.format(ip=instance.ip_address)
+    assign = 'Peers=[{followers},{leader}]'.format(followers=','.join(follower_tuples), leader=leader_tuple)
+    create_vstruct = 'Vstruct=rafter_voting_grid:grid(Peers)'
+    set_config = 'rafter:set_config(leader,Vstruct)'
+
+    command = '{assign},{create_vstruct},{set_config}.'.format(**locals())
+    script = '''cd /root/Code/rafter.git
+IP=$(curl --silent http://instance-data/latest/meta-data/public-ipv4)
+erl -detached \
+-pa deps/*/ebin ebin \
+-setcookie rafter_localhost_test \
+-name rafter@$IP \
+-eval "rafter:start_test_node(rafter),{command}"'''.format(**locals())
+    return script
 
 #####################
 # Import awsfab tasks
