@@ -15,20 +15,18 @@ from awsfabrictasks.ec2.api import Ec2InstanceWrapper
 from awsfabrictasks.ec2.api import Ec2LaunchInstance
 from awsfabrictasks.ec2.api import ec2_rsync_upload
 
-"""
-Call as ``awsfab setup:num=X deploy start``. This will
-
-1. *Set up* ``X`` instances
-2. *Deploy* Rafter to all of them
-3. *Start* a Rafter node on each one
-"""
-
 @task
-def setup(num):
+def setup(num, config='arch-configured-micro', environment='benchmark'):
+    '''
+    Launch a number of instances.
+
+    :param num: The number of instances to launch.
+    :param config: The configuration to use for the new instances.
+    :param environment: The value of the 'Environment' tag for the new instances.
+    '''
     launch = lambda: \
         Ec2LaunchInstance(
-            configname='arch-configured-micro',
-            extra_tags={'Environment':'benchmark'})
+            configname=config, extra_tags={'Environment':environment})
     instances = [launch() for _ in range(int(num))]
     Ec2LaunchInstance.run_many_instances(instances)
     Ec2LaunchInstance.wait_for_running_state_many(instances)
@@ -37,6 +35,11 @@ def setup(num):
 @parallel
 # @ec2instance(tags={'Environment':'benchmark'})
 def deploy(branch='benchmark'):
+    '''
+    Update an existing deployment Git repository.
+
+    :param branch: The branch to reset to.
+    '''
     remote = 'origin'
     with cd(awsfab_settings.RAFTER_DIR):
         run('git fetch {remote}'.format(**locals()))
@@ -47,6 +50,9 @@ def deploy(branch='benchmark'):
 @task
 @parallel
 def stop_cluster():
+    '''
+    Stop and clean up a cluster.
+    '''
     with cd(awsfab_settings.RAFTER_DIR):
         with settings(warn_only=True):
             run('killall beam')
@@ -56,6 +62,11 @@ def stop_cluster():
 @task
 @parallel
 def start_followers(leader_name='leader'):
+    '''
+    Start follower Erlang nodes.
+
+    :param leader_name: The name of the leader node (which is handled by start_leader).
+    '''
     instance = Ec2InstanceWrapper.get_from_host_string().instance
     name = instance.tags.get('Name')
 
@@ -68,6 +79,11 @@ def start_followers(leader_name='leader'):
 
 @task
 def start_leader(leader_name='leader'):
+    '''
+    Start leader Erlang node.
+
+    :param leader_name: The name of the leader node.
+    '''
     instance = Ec2InstanceWrapper.get_from_host_string().instance
 
     if instance.tags.get('Name') == leader_name:
