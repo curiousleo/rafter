@@ -1,6 +1,7 @@
 from __future__ import with_statement
 
 from tempfile import NamedTemporaryFile
+from os.path import split as split_path
 
 from fabric.api import cd
 from fabric.api import env
@@ -79,13 +80,12 @@ def start_leader(leader_name='leader'):
         script = leader_script(instance, followers)
         script_name = None
         with NamedTemporaryFile() as script_file:
-            script_name = script_file.name
+            script_name = split_path(script_file.name)[1]
             script_file.write(script)
             script_file.flush()
-            ec2_rsync_upload(script_name, awsfab_settings.SCRIPT_DIR)
+            ec2_rsync_upload(script_file.name, awsfab_settings.SCRIPT_DIR)
         with cd(awsfab_settings.RAFTER_DIR):
-            print 'starting leader'
-            # run('sh ./bin/{script_name}'.format(**locals()))
+            run('sh ./bin/{script_name}'.format(**locals()))
 
 def leader_script(leader, followers):
     follower_names = [follower.tags.get('Name') for follower in followers]
