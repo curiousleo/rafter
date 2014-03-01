@@ -529,7 +529,8 @@ setup_read_request(Id, From, Command, #state{send_clock=Clock,
                               from=From,
                               term=Term,
                               cmd=Command,
-                              timer=Timer},
+                              timer=Timer,
+                              started=now()},
     NewState = save_read_request(ReadRequest, State),
     send_append_entries(NewState).
 
