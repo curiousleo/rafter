@@ -45,11 +45,6 @@ def deploy(branch='benchmark'):
         run('make')
 
 @task
-def start_cluster(leader_name='leader'):
-    start_followers(leader_name=leader_name)
-    start_leader(leader_name=leader_name)
-
-@task
 @parallel
 def stop_cluster():
     with cd(awsfab_settings.RAFTER_DIR):
