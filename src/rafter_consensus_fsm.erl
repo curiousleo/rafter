@@ -456,7 +456,6 @@ leader({read_op, {Id, Command}}, From, State) ->
 
 leader({op, {Id, Command}}, From,
         #state{term=Term}=State) ->
-    % XXX
     Entry = #rafter_entry{type=op, term=Term, cmd=Command},
     NewState = append(Id, From, Entry, State, leader),
     {next_state, leader, NewState}.
@@ -548,9 +547,9 @@ save_read_request(ReadRequest, #state{send_clock=Clock,
 send_client_timeout_reply(#client_req{from=From}) ->
     gen_fsm:reply(From, {error, timeout}).
 
-send_client_reply(#client_req{timer=Timer, started=Started, from=From}, Result) ->
-    % XXX
-    io:format("TTC: ~pms~n", [timer:now_diff(now(), Started) / 1000]),
+send_client_reply(#client_req{timer=Timer, started=Started, cmd=Cmd, from=From}, Result) ->
+    rafter_ttc_log ! {Cmd, timer:now_diff(now(), Started)},
+    % io:format("TTC: ~pms~n", [timer:now_diff(now(), Started) / 1000]),
     {ok, cancel} = timer:cancel(Timer),
     gen_fsm:reply(From, Result).
 
