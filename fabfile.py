@@ -76,11 +76,10 @@ def start_leader(leader_name='leader'):
 
     if instance.tags.get('Name') == leader_name:
         # instance is the leader
-        instancewrappers = env.ec2instances.values()
-        not_leader = lambda instance: \
-                instance.instance.tags.get('Name') != leader_name
-        followers = [follower.instance for follower in
-                filter(not_leader, instancewrappers)]
+        instances = [instancewrapper.instance for instancewrapper
+                in env.ec2instances.values()]
+        followers = [instance for instance in instances
+                if instance.tags.get('Name') != leader_name]
 
         if len(followers) == 0:
             print 'No followers! Quitting ...'
