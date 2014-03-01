@@ -115,7 +115,6 @@ def leader_script(leader, followers):
     script = '''cd /root/Code/rafter.git
 IP=$(curl --silent http://instance-data/latest/meta-data/public-ipv4)
 erl \
--detached \
 -pa deps/*/ebin ebin \
 -setcookie rafter_localhost_test \
 -name leader@$IP \
