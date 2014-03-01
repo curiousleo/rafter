@@ -119,7 +119,7 @@ erl \
 -pa deps/*/ebin ebin \
 -setcookie rafter_localhost_test \
 -name leader@$IP \
--eval "rafter:start_test_node(rafter),{command}" '''.format(**locals())
+-eval "rafter:start_test_node(leader),{command}" '''.format(**locals())
     return script
 
 #####################
