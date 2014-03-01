@@ -58,7 +58,7 @@ def start_followers(leader_name='leader'):
     if name != leader_name:
         # instance is a follower
         with cd(awsfab_settings.RAFTER_DIR):
-            run('./bin/start-ec2-node {name}'.format(**locals()))
+            run('sh bin/start-ec2-node {name}'.format(**locals()))
 
 @task
 def start_leader(leader_name='leader'):
@@ -85,7 +85,7 @@ def start_leader(leader_name='leader'):
             script_file.flush()
             ec2_rsync_upload(script_file.name, awsfab_settings.SCRIPT_DIR)
         with cd(awsfab_settings.RAFTER_DIR):
-            run('sh ./bin/{script_name}'.format(**locals()))
+            run('sh bin/{script_name}'.format(**locals()))
 
 def leader_script(leader, followers):
     follower_names = [follower.tags.get('Name') for follower in followers]
