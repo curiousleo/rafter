@@ -57,7 +57,7 @@ def start_followers(leader_name='leader'):
     if name != leader_name:
         # instance is a follower
         with cd(awsfab_settings.RAFTER_DIR):
-            run('./bin/start-node {name}'.format(**locals()))
+            run('./bin/start-ec2-node {name}'.format(**locals()))
 
 @task
 def start_leader(leader_name='leader'):
