@@ -103,7 +103,8 @@ def leader_script(leader, followers):
     command = '{assign},{create_vstruct},{set_config}.'.format(**locals())
     script = '''cd /root/Code/rafter.git
 IP=$(curl --silent http://instance-data/latest/meta-data/public-ipv4)
-erl -detached \
+erl \
+-detached \
 -pa deps/*/ebin ebin \
 -setcookie rafter_localhost_test \
 -name leader@$IP \
