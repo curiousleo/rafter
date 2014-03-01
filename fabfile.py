@@ -8,6 +8,7 @@ from fabric.api import env
 from fabric.api import parallel
 from fabric.api import run
 from fabric.api import task
+from fabric.context_managers import settings
 
 from awsfabrictasks.decorators import ec2instance
 from awsfabrictasks.ec2.api import Ec2InstanceWrapper
@@ -40,15 +41,22 @@ def deploy(branch='benchmark'):
     with cd(awsfab_settings.RAFTER_DIR):
         run('git fetch {remote}'.format(**locals()))
         run('git reset --hard {remote}/{branch}'.format(**locals()))
-        run('rm -rf data')
         run('rm ebin/*')
         run('make')
-        run('mkdir data')
 
 @task
 def start_cluster(leader_name='leader'):
     start_followers(leader_name=leader_name)
     start_leader(leader_name=leader_name)
+
+@task
+@parallel
+def stop_cluster():
+    with cd(awsfab_settings.RAFTER_DIR):
+        with settings(warn_only=True):
+            run('killall beam')
+        run('rm -rf data')
+        run('mkdir data')
 
 @task
 def start_followers(leader_name='leader'):
