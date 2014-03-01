@@ -1,10 +1,17 @@
 from __future__ import with_statement
 
-from fabric.api import task, local, settings, abort, run, cd, env, parallel
-from fabric.contrib.console import confirm
+from tempfile import NamedTemporaryFile
+
+from fabric.api import cd
+from fabric.api import env
+from fabric.api import parallel
+from fabric.api import run
+from fabric.api import task
 
 from awsfabrictasks.decorators import ec2instance
-from awsfabrictasks.ec2.api import Ec2LaunchInstance, Ec2InstanceWrapper
+from awsfabrictasks.ec2.api import Ec2InstanceWrapper
+from awsfabrictasks.ec2.api import Ec2LaunchInstance
+from awsfabrictasks.ec2.api import ec2_rsync_upload
 
 """
 Call as ``awsfab setup:num=X deploy start``. This will
@@ -39,35 +46,57 @@ def deploy(branch='benchmark'):
 
 @task
 def start_cluster(leader_name='leader'):
+    start_followers(leader_name=leader_name)
+    start_leader(leader_name=leader_name)
+
+@task
+def start_followers(leader_name='leader'):
+    instance = Ec2InstanceWrapper.get_from_host_string().instance
+    name = instance.tags.get('Name')
+
+    if name != leader_name:
+        # instance is a follower
+        with cd(awsfab_settings.RAFTER_DIR):
+            run('./bin/start-node {name}'.format(**locals()))
+
+@task
+def start_leader(leader_name='leader'):
     instance = Ec2InstanceWrapper.get_from_host_string().instance
 
     if instance.tags.get('Name') == leader_name:
         # instance is the leader
+        instancewrappers = env.ec2instances.values()
         not_leader = lambda instance: \
                 instance.instance.tags.get('Name') != leader_name
-        follower_ips = [follower.instance.ip_address
-                for follower in filter(not_leader, env.ec2instances.values())]
+        followers = [follower.instance for follower in
+                filter(not_leader, instancewrappers)]
 
-        if len(follower_ips) == 0:
+        if len(followers) == 0:
             print 'No followers! Quitting ...'
-            return
-        if not all(follower_ips):
-            print 'Some followers do not have an IP address! Quitting ...'
             return
 
         # create startup script for leader
-        script = leader_script(follower_ips)
+        script = leader_script(instance, followers)
+        script_name = None
+        with NamedTemporaryFile() as script_file:
+            script_name = script_file.name
+            script_file.write(script)
+            script_file.flush()
+            ec2_rsync_upload(script_name, awsfab_settings.SCRIPT_DIR)
+        with cd(awsfab_settings.RAFTER_DIR):
+            print 'starting leader'
+            # run('sh ./bin/{script_name}'.format(**locals()))
 
-    # with cd(awsfab_settings.RAFTER_DIR):
-        # print command
-        # run('./bin/start-node rafter')
+def leader_script(leader, followers):
+    follower_names = [follower.tags.get('Name') for follower in followers]
+    follower_ips = [follower.ip_address for follower in followers]
+    follower_tuples = ['{{{name},\'{name}@{ip}\'}}'.format(**locals())
+            for (name, ip) in zip(follower_names, follower_ips)]
 
-def leader_script(follower_ips):
-    follower_tuples = ['{{follower{n},\'rafter@{ip}\'}}'.format(**locals())
-            for (ip, n) in zip(follower_ips, range(len(follower_ips)))]
-
-    leader_tuple = '{{leader,\'rafter@{ip}\'}}'.format(ip=instance.ip_address)
-    assign = 'Peers=[{followers},{leader}]'.format(followers=','.join(follower_tuples), leader=leader_tuple)
+    leader_tuple = '{{leader,\'leader@{ip}\'}}' \
+            .format(ip=leader.ip_address)
+    assign = 'Peers=[{followers},{leader}]' \
+            .format(followers=','.join(follower_tuples), leader=leader_tuple)
     create_vstruct = 'Vstruct=rafter_voting_grid:grid(Peers)'
     set_config = 'rafter:set_config(leader,Vstruct)'
 
@@ -77,8 +106,8 @@ IP=$(curl --silent http://instance-data/latest/meta-data/public-ipv4)
 erl -detached \
 -pa deps/*/ebin ebin \
 -setcookie rafter_localhost_test \
--name rafter@$IP \
--eval "rafter:start_test_node(rafter),{command}"'''.format(**locals())
+-name leader@$IP \
+-eval "rafter:start_test_node(rafter),{command}" '''.format(**locals())
     return script
 
 #####################
