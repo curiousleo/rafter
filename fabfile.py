@@ -13,6 +13,7 @@ from fabric.context_managers import settings
 from awsfabrictasks.decorators import ec2instance
 from awsfabrictasks.ec2.api import Ec2InstanceWrapper
 from awsfabrictasks.ec2.api import Ec2LaunchInstance
+from awsfabrictasks.ec2.api import ec2_rsync_download
 from awsfabrictasks.ec2.api import ec2_rsync_upload
 
 @task
@@ -78,10 +79,11 @@ def start_followers(leader_name='leader'):
             run('sh bin/start-ec2-node {name}; sleep 1'.format(**locals()))
 
 @task
-def start_leader(leader_name='leader'):
+def start_leader(test, leader_name='leader'):
     '''
     Start leader Erlang node.
 
+    :param test_name: The name of this test run (required).
     :param leader_name: The name of the leader node.
     '''
     instance = Ec2InstanceWrapper.get_from_host_string().instance
@@ -109,6 +111,8 @@ def start_leader(leader_name='leader'):
             run('rm -rf data')
             run('mkdir data')
             run('sh bin/{script_name}'.format(**locals()))
+            run('mv /tmp/{{rafter_ttc_log.log,{test}.log}}'.format(**locals()))
+        ec2_rsync_download('/tmp/{test}.log'.format(**locals()), '/home/leo/Temp')
 
 def leader_script(leader, followers):
     follower_names = [follower.tags.get('Name') for follower in followers]
