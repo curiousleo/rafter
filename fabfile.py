@@ -86,9 +86,9 @@ def start_leader(test, leader_name='leader'):
     :param test_name: The name of this test run (required).
     :param leader_name: The name of the leader node.
     '''
-    instance = Ec2InstanceWrapper.get_from_host_string().instance
+    current_instance = Ec2InstanceWrapper.get_from_host_string().instance
 
-    if instance.tags.get('Name') == leader_name:
+    if current_instance.tags.get('Name') == leader_name:
         # instance is the leader
         instances = [instancewrapper.instance for instancewrapper
                 in env.ec2instances.values()]
@@ -100,7 +100,7 @@ def start_leader(test, leader_name='leader'):
             return
 
         # create startup script for leader
-        script = leader_script(instance, followers)
+        script = leader_script(current_instance, followers)
         script_name = None
         with NamedTemporaryFile() as script_file:
             script_name = split_path(script_file.name)[1]
