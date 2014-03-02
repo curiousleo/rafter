@@ -9,7 +9,7 @@ There should be plots for time to consensus (TTC) and Memcached latency on the y
 Interesting (near-optimal) cluster sizes below 20:
 
 - Majority: uneven numbers of nodes
-- Grid: 2 * 3 = 6, 3 * 3 = 9, 3 * 4 = 12, 4 * 4 = 16, 4 * 5 = 20
+- Grid: 3 * 3 = 9, 3 * 4 = 12, 4 * 4 = 16, 4 * 5 = 20
 - Tree (d = 2): 3, 7, 15
 - Tree (d = 3): 4, 13
 
