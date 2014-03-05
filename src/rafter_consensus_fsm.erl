@@ -89,15 +89,43 @@ format_status(_, [_, State]) ->
 
 handle_event(stop, _, State) ->
     {stop, normal, State};
-handle_event({fail, T}, follower, State=#state{me=Me}) ->
-    timer:send_after(T, Me, restart),
+
+handle_event(restart, failed, {StateName, State=#state{failure_tref=undefined}}) ->
+    {next_state, StateName, State};
+handle_event(restart, failed, {StateName, State=#state{failure_tref=Tref}}) ->
+    timer:cancel(Tref),
+    {next_state, StateName, State#state{failure_tref=undefined}};
+handle_event(restart, StateName, State=#state{failure_tref=undefined}) ->
+    {next_state, StateName, State};
+handle_event(restart, StateName, State=#state{failure_tref=Tref}) ->
+    timer:cancel(Tref),
+    {next_state, StateName, State#state{failure_tref=undefined}};
+
+handle_event(correlated_fail, follower, State) ->
     {next_state, failed, {follower, State}};
-handle_event({fail, _}, failed, State) ->
+handle_event(correlated_fail, failed, State) ->
     {next_state, failed, State};
-handle_event({start_correlated_failures, Lambda, T}, leader, State=#state{me=Me, failure_tref=undefined}) ->
-    {ok, Tref} = timer:send_after(exponential(Lambda), Me, {correlated_failure_timeout, Lambda, T}),
+
+handle_event({send_start_individual_failures, Lambda, Up}, leader, State=#state{me=Me, config=Config, failure_tref=undefined}) ->
+    Msg = {start_individual_failures, Lambda, Up},
+    lists:map(fun(Peer) -> gen_fsm:send_all_state_event(Peer, Msg) end,
+              list_servers([Me], Config)),
+    {next_state, leader, State};
+handle_event(send_restart, leader, State=#state{me=Me, config=Config, failure_tref=Tref}) ->
+    case Tref of undefined -> ; _ -> timer:cancel(Tref) end,
+    lists:map(fun(Peer) -> gen_fsm:send_all_state_event(Peer, restart) end,
+              list_servers([Me], Config)),
+    {next_state, leader, State};
+
+handle_event({start_individual_failures, Lambda, Up}, follower, State=#state{me=Me, failure_tref=undefined}) ->
+    RunFor = exponential(Lambda),
+    {ok, Tref} = timer:send_after(RunFor, Me, {individual_failure_timeout, RunFor, Lambda, Up}),
+    {next_state, follower, State#state{failure_tref=Tref}};
+
+handle_event({start_correlated_failures, Lambda}, leader, State=#state{me=Me, failure_tref=undefined}) ->
+    {ok, Tref} = timer:send_after(exponential(Lambda), Me, {correlated_failure_timeout, Lambda, []}),
     {next_state, leader, State#state{failure_tref=Tref}};
-handle_event(stop_failures, leader, State=#state{failure_tref=Tref}) ->
+handle_event(stop_correlated_failures, leader, State=#state{failure_tref=Tref}) ->
     timer:cancel(Tref),
     {next_state, leader, State#state{failure_tref=undefined}};
 handle_event(_Event, _StateName, State) ->
@@ -130,20 +158,29 @@ handle_info({client_timeout, Id}, StateName, #state{client_reqs=Reqs}=State)
         not_found ->
             {next_state, StateName, State}
     end;
-handle_info(restart, failed, {StateName, State}) ->
-    {next_state, StateName, State#state{failure_tref=undefined}};
-handle_info(restart, StateName, State) ->
-    {next_state, StateName, State#state{failure_tref=undefined}};
-handle_info({correlated_failure_timeout, Lambda, T}, leader, State=#state{me=Me, config=Config}) ->
-    case pick_random_server(Me, Config) of
+
+handle_info({individual_failure_timeout, RanFor, Lambda, Up}, follower, State=#state{me=Me}) ->
+    FailFor = trunc((1 - Up) * RanFor / Up + 0.5),
+    {ok, Tref} = timer:send_after(FailFor, Me, {individual_failure_timeout, Lambda, Up}),
+    {next_state, failed, {follower, State#state{failure_tref=Tref}}};
+handle_info({individual_failure_timeout, Lambda, Up}, failed, {StateName, State=#state{me=Me}}) ->
+    RunFor = exponential(Lambda),
+    {ok, Tref} = timer:send_after(RunFor, Me, {individual_failure_timeout, RunFor, Lambda, Up}),
+    {next_state, StateName, State#state{failure_tref=Tref}};
+
+handle_info({correlated_failure_timeout, Lambda, Failed}, leader, State=#state{me=Me, config=Config}) ->
+    case pick_random(list_servers([Me|Failed], Config)) of
         undefined ->
-            {ok, Tref} = timer:send_after(exponential(Lambda), Me, {correlated_failure_timeout, Lambda, T}),
-            {next_state, leader, State#state{failure_tref=Tref}};
+            io:format("~nFailed all followers!~n", []),
+            {next_state, leader, State#state{failure_tref=undefined}};
         Victim ->
-            gen_fsm:send_all_state_event(Victim, {fail, T}),
-            {ok, Tref} = timer:send_after(exponential(Lambda), Me, {correlated_failure_timeout, Lambda, T}),
+            Msg = {correlated_failure_timeout, Lambda, [Victim|Failed]},
+            gen_fsm:send_all_state_event(Victim, correlated_fail),
+            io:format("~nFailed ~p~n", [Victim]),
+            {ok, Tref} = timer:send_after(exponential(Lambda), Me, Msg),
             {next_state, leader, State#state{failure_tref=Tref}}
     end;
+
 handle_info(_Event, _StateName, State) ->
     {stop, badmsg, State}.
 
@@ -1003,14 +1040,13 @@ pick_random(List) ->
     Pos = 1 + trunc(U * length(List)),
     lists:nth(Pos, List).
 
--spec pick_random_server(peer(), #config{}) -> peer() | undefined.
-pick_random_server(Me, #config{state=stable, oldservers=Old}) ->
-    pick_random(Old -- [Me]);
-pick_random_server(Me, #config{state=staging, oldservers=Old}) ->
-    pick_random(Old -- [Me]);
-pick_random_server(Me, #config{state=transitional, newservers=New, oldservers=Old}) ->
-    List = lists:merge(lists:sort(Old), lists:sort(New)),
-    pick_random(List -- [Me]).
+-spec list_servers([peer()], #config{}) -> [peer()].
+list_servers(Exclude, #config{state=stable, oldservers=Old}) ->
+    Old -- Exclude;
+list_servers(Exclude, #config{state=staging, oldservers=Old}) ->
+    Old -- Exclude;
+list_servers(Exclude, #config{state=transitional, newservers=New, oldservers=Old}) ->
+    lists:merge(lists:sort(Old), lists:sort(New)) -- Exclude.
 
 %%=============================================================================
 %% Tests
