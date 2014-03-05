@@ -94,8 +94,8 @@ handle_event({fail, T}, follower, State=#state{me=Me}) ->
     {next_state, failed, {follower, State}};
 handle_event({fail, _}, failed, State) ->
     {next_state, failed, State};
-handle_event({start_failures, Lambda, T}, leader, State=#state{me=Me, failure_tref=undefined}) ->
-    {ok, Tref} = timer:send_after(exponential(Lambda), Me, {failure_timeout, Lambda, T}),
+handle_event({start_correlated_failures, Lambda, T}, leader, State=#state{me=Me, failure_tref=undefined}) ->
+    {ok, Tref} = timer:send_after(exponential(Lambda), Me, {correlated_failure_timeout, Lambda, T}),
     {next_state, leader, State#state{failure_tref=Tref}};
 handle_event(stop_failures, leader, State=#state{failure_tref=Tref}) ->
     timer:cancel(Tref),
@@ -134,14 +134,14 @@ handle_info(restart, failed, {StateName, State}) ->
     {next_state, StateName, State#state{failure_tref=undefined}};
 handle_info(restart, StateName, State) ->
     {next_state, StateName, State#state{failure_tref=undefined}};
-handle_info({failure_timeout, Lambda, T}, leader, State=#state{me=Me, config=Config}) ->
+handle_info({correlated_failure_timeout, Lambda, T}, leader, State=#state{me=Me, config=Config}) ->
     case pick_random_server(Me, Config) of
         undefined ->
-            {ok, Tref} = timer:send_after(exponential(Lambda), Me, {failure_timeout, Lambda, T}),
+            {ok, Tref} = timer:send_after(exponential(Lambda), Me, {correlated_failure_timeout, Lambda, T}),
             {next_state, leader, State#state{failure_tref=Tref}};
         Victim ->
             gen_fsm:send_all_state_event(Victim, {fail, T}),
-            {ok, Tref} = timer:send_after(exponential(Lambda), Me, {failure_timeout, Lambda, T}),
+            {ok, Tref} = timer:send_after(exponential(Lambda), Me, {correlated_failure_timeout, Lambda, T}),
             {next_state, leader, State#state{failure_tref=Tref}}
     end;
 handle_info(_Event, _StateName, State) ->
