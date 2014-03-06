@@ -163,7 +163,7 @@ def start_leader(test, leader_name='leader'):
 
 def leader_script(leader, followers, protocol, failure_mode):
     generator_call = generator_code(protocol)
-    failure_command = failure_code(failure_mode)
+    failure_command = failure_mode_code(failure_mode)
     follower_names = [follower.tags.get('Name') for follower in followers]
     follower_ips = [follower.ip_address for follower in followers]
     follower_tuples = ['{{{name},\'{name}@{ip}\'}}'.format(**locals())
@@ -196,7 +196,7 @@ def generator_code(protocol, peers_var):
         return 'rafter_voting_{protocol}:{protocol}({peers_var})' \
                 .format(**locals())
 
-def failure_code(failure_mode):
+def failure_mode_code(failure_mode):
     failures_modes = ['no_failures',
             ('repeated', 0.8), ('repeated', 0.6), ('repeated', 0.4)]
     lambda = 10
