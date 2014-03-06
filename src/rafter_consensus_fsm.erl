@@ -599,7 +599,8 @@ append(Id, From, Entry,
                                 from=From,
                                 index=Index,
                                 term=Term,
-                                timer=Timer},
+                                timer=Timer,
+                                started=now()},
     State#state{client_reqs=[ClientRequest | Reqs]}.
 
 setup_read_request(Id, From, Command, #state{send_clock=Clock,
@@ -611,7 +612,8 @@ setup_read_request(Id, From, Command, #state{send_clock=Clock,
                               from=From,
                               term=Term,
                               cmd=Command,
-                              timer=Timer},
+                              timer=Timer,
+                              started=now()},
     NewState = save_read_request(ReadRequest, State),
     send_append_entries(NewState).
 
@@ -629,7 +631,9 @@ save_read_request(ReadRequest, #state{send_clock=Clock,
 send_client_timeout_reply(#client_req{from=From}) ->
     gen_fsm:reply(From, {error, timeout}).
 
-send_client_reply(#client_req{timer=Timer, from=From}, Result) ->
+send_client_reply(#client_req{timer=Timer, started=Started, cmd=Cmd, from=From}, Result) ->
+    rafter_ttc_log ! {Cmd, timer:now_diff(now(), Started)},
+    % io:format("TTC: ~pms~n", [timer:now_diff(now(), Started) / 1000]),
     {ok, cancel} = timer:cancel(Timer),
     gen_fsm:reply(From, Result).
 
