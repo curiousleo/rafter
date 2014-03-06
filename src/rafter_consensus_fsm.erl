@@ -130,6 +130,12 @@ handle_event({start_oneoff_failures, Lambda, T}, leader, State=#state{me=Me, fai
 handle_event(stop_oneoff_failures, leader, State=#state{failure_tref=Tref}) ->
     timer:cancel(Tref),
     {next_state, leader, State#state{failure_tref=undefined}};
+
+handle_event({start_benchmark, Followers, Protocol, _FailureMode}, leader, State=#state{me=Me}) ->
+    Vstruct = generate([Me|Followers], Protocol),
+    rafter:set_config(leader, Vstruct),
+    {next_state, leader, State};
+
 handle_event(_Event, _StateName, State) ->
     {stop, {error, badmsg}, State}.
 
@@ -1063,6 +1069,13 @@ list_servers(Exclude, #config{state=staging, oldservers=Old}) ->
     Old -- Exclude;
 list_servers(Exclude, #config{state=transitional, newservers=New, oldservers=Old}) ->
     lists:merge(lists:sort(Old), lists:sort(New)) -- Exclude.
+
+generate(Peers, majority) ->
+    rafter_voting_majority:majority(Peers);
+generate(Peers, grid) ->
+    rafter_voting_grid:grid(Peers);
+generate(Peers, {tree, D}) ->
+    rafter_voting_tree:tree(Peers, D).
 
 %%=============================================================================
 %% Tests
