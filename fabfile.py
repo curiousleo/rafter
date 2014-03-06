@@ -1,7 +1,8 @@
 from __future__ import with_statement
 
-from tempfile import NamedTemporaryFile
 from os.path import split as split_path
+from tempfile import NamedTemporaryFile
+from uuid import uuid4
 
 from fabric.api import cd
 from fabric.api import env
@@ -17,20 +18,66 @@ from awsfabrictasks.ec2.api import ec2_rsync_download
 from awsfabrictasks.ec2.api import ec2_rsync_upload
 
 @task
-def setup(num, config='arch-configured-micro', environment='benchmark'):
+def benchmark():
     '''
-    Launch a number of instances.
+    Start benchmarks.
+
+    Sweeps over the configuration space, starting and stopping instances as
+    appropriate.
+    '''
+    cluster_sizes = [3, 5, 7, 9, 11, 12, 13, 15, 16, 17, 19, 20]
+    protocols = ['majority', 'grid', ('tree', 2), ('tree', 3)]
+    failures_modes = ['no_failures',
+            ('repeated', 0.8), ('repeated', 0.6), ('repeated', 0.4)]
+    followers = []
+    for (prev_cluster_size, cluster_size) in \
+            zip([0] + cluster_sizes[:-1], cluster_sizes):
+        followers += start(cluster_size - prev_cluster_size)
+        for protocol in protocols:
+            for failure_mode in failures_modes:
+                configure(followers, protocol, failure_mode)
+                memaslap()
+                collect_results()
+    stop(followers)
+
+@task
+def start(num, config='arch-configured-micro', environment='benchmark'):
+    '''
+    Start a number of instances and set them up for benchmarking.
 
     :param num: The number of instances to launch.
     :param config: The configuration to use for the new instances.
     :param environment: The value of the 'Environment' tag for the new instances.
     '''
-    launch = lambda: \
+    launch = lambda name: \
         Ec2LaunchInstance(
-            configname=config, extra_tags={'Environment':environment})
-    instances = [launch() for _ in range(int(num))]
+            configname=config,
+            extra_tags={'Environment': environment, 'Name': name})
+    names = ['follower-' + uuid4() for _ in range(int(num))]
+    instances = map(launch, names)
     Ec2LaunchInstance.run_many_instances(instances)
     Ec2LaunchInstance.wait_for_running_state_many(instances)
+    # dns_names = [instance['public_dns_name'] for instance in instances]
+    # return zip(names, dns_names)
+    return instances
+
+@task
+def configure(followers, protocol, failure_mode):
+    current_instance = Ec2InstanceWrapper.get_from_host_string().instance
+
+    script = leader_script(current_instance, followers)
+    script_name = None
+    with NamedTemporaryFile() as script_file:
+        script_name = split_path(script_file.name)[1]
+        script_file.write(script)
+        script_file.flush()
+        ec2_rsync_upload(script_file.name, awsfab_settings.SCRIPT_DIR)
+    with cd(awsfab_settings.RAFTER_DIR):
+        run('rm -rf data')
+        run('mkdir data')
+        run('sh bin/{script_name}'.format(**locals()))
+        run('mv /tmp/{{rafter_ttc_log.log,{test}.log}}'.format(**locals()))
+    ec2_rsync_download('/tmp/{test}.log'.format(**locals()), '/home/leo/Temp')
 
 @task
 @parallel
@@ -114,7 +161,9 @@ def start_leader(test, leader_name='leader'):
             run('mv /tmp/{{rafter_ttc_log.log,{test}.log}}'.format(**locals()))
         ec2_rsync_download('/tmp/{test}.log'.format(**locals()), '/home/leo/Temp')
 
-def leader_script(leader, followers):
+def leader_script(leader, followers, protocol, failure_mode):
+    generator_call = generator_code(protocol)
+    failure_command = failure_code(failure_mode)
     follower_names = [follower.tags.get('Name') for follower in followers]
     follower_ips = [follower.ip_address for follower in followers]
     follower_tuples = ['{{{name},\'{name}@{ip}\'}}'.format(**locals())
@@ -124,18 +173,43 @@ def leader_script(leader, followers):
             .format(ip=leader.ip_address)
     assign = 'Peers=[{followers},{leader}]' \
             .format(followers=','.join(follower_tuples), leader=leader_tuple)
-    create_vstruct = 'Vstruct=rafter_voting_grid:grid(Peers)'
+    create_vstruct = 'Vstruct={generator_call}'.format(**locals())
     set_config = 'rafter:set_config(leader,Vstruct)'
 
-    command = '{assign},{create_vstruct},{set_config}.'.format(**locals())
-    script = '''cd /root/Code/rafter.git
+    config = '{assign},{create_vstruct},{set_config}'.format(**locals())
+    return '''
+cd /root/Code/rafter.git
 IP=$(curl --silent http://instance-data/latest/meta-data/public-ipv4)
 erl \
 -pa deps/*/ebin ebin \
 -setcookie rafter_localhost_test \
 -name leader@$IP \
--eval "rafter:start_test_node(leader),{command}" '''.format(**locals())
-    return script
+-eval "rafter:start_test_node(leader),{config},{failure_command}."
+'''.format(**locals())
+
+def generator_code(protocol, peers_var):
+    if isinstance(protocol, tuple):
+        (protocol, param) = protocol
+        return 'rafter_voting_{protocol}:{protocol}({peers_var}, {param})' \
+                .format(**locals())
+    else:
+        return 'rafter_voting_{protocol}:{protocol}({peers_var})' \
+                .format(**locals())
+
+def failure_code(failure_mode):
+    failures_modes = ['no_failures',
+            ('repeated', 0.8), ('repeated', 0.6), ('repeated', 0.4)]
+    lambda = 10
+    if isinstance(failure_mode, tuple):
+        (failure_mode, param) = failure_mode
+        if failure_mode == 'repeated':
+            message = 'send_start_repeated_failures, {lambda}, {param}' \
+                    .format(**locals())
+            return 'gen_fsm:send_all_state_event(leader, {{{message}}})' \
+                    .format(**locals())
+    else:
+        if failure_mode == 'no_failures':
+            return 'ok'
 
 #####################
 # Import awsfab tasks
