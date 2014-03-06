@@ -117,7 +117,7 @@ handle_event(send_restart, leader, State=#state{me=Me, config=Config, failure_tr
     case Tref of undefined -> ok; _ -> timer:cancel(Tref) end,
     lists:map(fun(Peer) -> gen_fsm:send_all_state_event(Peer, restart) end,
               list_servers([Me], Config)),
-    {next_state, leader, State};
+    {next_state, leader, State#state{failure_tref=undefined}};
 
 handle_event({start_repeated_failures, Lambda, Up}, follower, State=#state{me=Me, failure_tref=undefined}) ->
     RunFor = exponential(Lambda),
