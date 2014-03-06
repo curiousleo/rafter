@@ -125,7 +125,7 @@ handle_event({start_repeated_failures, Lambda, Up}, follower, State=#state{me=Me
     {next_state, follower, State#state{failure_tref=Tref}};
 
 handle_event({start_oneoff_failures, Lambda, T}, leader, State=#state{me=Me, failure_tref=undefined}) ->
-    {ok, Tref} = timer:send_after(exponential(Lambda), Me, {oneoff_failure_timeout, Lambda, T, []}),
+    {ok, Tref} = timer:send_after(exponential(Lambda), Me, {oneoff_failure_timeout, Lambda, T}),
     {next_state, leader, State#state{failure_tref=Tref}};
 handle_event(stop_oneoff_failures, leader, State=#state{failure_tref=Tref}) ->
     timer:cancel(Tref),
@@ -170,15 +170,12 @@ handle_info({repeated_failure_timeout, Lambda, Up}, failed, {StateName, State=#s
     {ok, Tref} = timer:send_after(RunFor, Me, {repeated_failure_timeout, RunFor, Lambda, Up}),
     {next_state, StateName, State#state{failure_tref=Tref}};
 
-handle_info({oneoff_failure_timeout, Lambda, T, Failed}, leader, State=#state{me=Me, config=Config}) ->
-    case pick_random(list_servers([Me|Failed], Config)) of
-        undefined ->
-            io:format("~nFailed all followers!~n", []),
-            {next_state, leader, State#state{failure_tref=undefined}};
+handle_info({oneoff_failure_timeout, Lambda, T}, leader, State=#state{me=Me, config=Config}) ->
+    case pick_random(list_servers([Me], Config)) of
         Victim ->
-            Msg = {oneoff_failure_timeout, Lambda, T, [Victim|Failed]},
+            Msg = {oneoff_failure_timeout, Lambda, T},
             gen_fsm:send_all_state_event(Victim, {fail_once, T}),
-            io:format("Failed ~p for ~p ms.~n", [Victim, T]),
+            io:format("Potentially failed ~p for ~p ms.~n", [Victim, T]),
             {ok, Tref} = timer:send_after(exponential(Lambda), Me, Msg),
             {next_state, leader, State#state{failure_tref=Tref}}
     end;
