@@ -106,8 +106,8 @@ handle_event(correlated_fail, follower, State) ->
 handle_event(correlated_fail, failed, State) ->
     {next_state, failed, State};
 
-handle_event({send_start_individual_failures, Lambda, Up}, leader, State=#state{me=Me, config=Config, failure_tref=undefined}) ->
-    Msg = {start_individual_failures, Lambda, Up},
+handle_event({send_start_repeated_failures, Lambda, Up}, leader, State=#state{me=Me, config=Config, failure_tref=undefined}) ->
+    Msg = {start_repeated_failures, Lambda, Up},
     lists:map(fun(Peer) -> gen_fsm:send_all_state_event(Peer, Msg) end,
               list_servers([Me], Config)),
     {next_state, leader, State};
@@ -117,9 +117,9 @@ handle_event(send_restart, leader, State=#state{me=Me, config=Config, failure_tr
               list_servers([Me], Config)),
     {next_state, leader, State};
 
-handle_event({start_individual_failures, Lambda, Up}, follower, State=#state{me=Me, failure_tref=undefined}) ->
+handle_event({start_repeated_failures, Lambda, Up}, follower, State=#state{me=Me, failure_tref=undefined}) ->
     RunFor = exponential(Lambda),
-    {ok, Tref} = timer:send_after(RunFor, Me, {individual_failure_timeout, RunFor, Lambda, Up}),
+    {ok, Tref} = timer:send_after(RunFor, Me, {repeated_failure_timeout, RunFor, Lambda, Up}),
     {next_state, follower, State#state{failure_tref=Tref}};
 
 handle_event({start_correlated_failures, Lambda}, leader, State=#state{me=Me, failure_tref=undefined}) ->
@@ -159,13 +159,13 @@ handle_info({client_timeout, Id}, StateName, #state{client_reqs=Reqs}=State)
             {next_state, StateName, State}
     end;
 
-handle_info({individual_failure_timeout, RanFor, Lambda, Up}, follower, State=#state{me=Me}) ->
+handle_info({repeated_failure_timeout, RanFor, Lambda, Up}, follower, State=#state{me=Me}) ->
     FailFor = trunc((1 - Up) * RanFor / Up + 0.5),
-    {ok, Tref} = timer:send_after(FailFor, Me, {individual_failure_timeout, Lambda, Up}),
+    {ok, Tref} = timer:send_after(FailFor, Me, {repeated_failure_timeout, Lambda, Up}),
     {next_state, failed, {follower, State#state{failure_tref=Tref}}};
-handle_info({individual_failure_timeout, Lambda, Up}, failed, {StateName, State=#state{me=Me}}) ->
+handle_info({repeated_failure_timeout, Lambda, Up}, failed, {StateName, State=#state{me=Me}}) ->
     RunFor = exponential(Lambda),
-    {ok, Tref} = timer:send_after(RunFor, Me, {individual_failure_timeout, RunFor, Lambda, Up}),
+    {ok, Tref} = timer:send_after(RunFor, Me, {repeated_failure_timeout, RunFor, Lambda, Up}),
     {next_state, StateName, State#state{failure_tref=Tref}};
 
 handle_info({correlated_failure_timeout, Lambda, Failed}, leader, State=#state{me=Me, config=Config}) ->
