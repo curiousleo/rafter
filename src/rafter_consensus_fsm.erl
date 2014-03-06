@@ -112,7 +112,7 @@ handle_event({send_start_repeated_failures, Lambda, Up}, leader, State=#state{me
               list_servers([Me], Config)),
     {next_state, leader, State};
 handle_event(send_restart, leader, State=#state{me=Me, config=Config, failure_tref=Tref}) ->
-    case Tref of undefined -> ; _ -> timer:cancel(Tref) end,
+    case Tref of undefined -> ok; _ -> timer:cancel(Tref) end,
     lists:map(fun(Peer) -> gen_fsm:send_all_state_event(Peer, restart) end,
               list_servers([Me], Config)),
     {next_state, leader, State};
