@@ -175,7 +175,6 @@ handle_info({oneoff_failure_timeout, Lambda, T}, leader, State=#state{me=Me, con
         Victim ->
             Msg = {oneoff_failure_timeout, Lambda, T},
             gen_fsm:send_all_state_event(Victim, {fail_once, T}),
-            io:format("Potentially failed ~p for ~p ms.~n", [Victim, T]),
             {ok, Tref} = timer:send_after(exponential(Lambda), Me, Msg),
             {next_state, leader, State#state{failure_tref=Tref}}
     end;
