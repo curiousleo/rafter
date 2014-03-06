@@ -18,8 +18,9 @@ start_link() ->
     gen_server:start_link({local, rafter_ttc_log}, ?MODULE, [], []).
 
 init(_) ->
-    {ok, Logfile} = file:open("/tmp/rafter_ttc_log.log", [write]),
-    {ok, #state{logfile = Logfile}}.
+    {ok, F} = file:open("/tmp/rafter_ttc_log.log", [write]),
+    io:format(F, "Experiment,Cluster,Operation,TTC", []),
+    {ok, #state{logfile = F}}.
 
 handle_info({log_write, T},
             S = #state{logfile = F, experiment = E, cluster_size = C}) ->
