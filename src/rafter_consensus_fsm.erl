@@ -632,7 +632,10 @@ send_client_timeout_reply(#client_req{from=From}) ->
     gen_fsm:reply(From, {error, timeout}).
 
 send_client_reply(#client_req{timer=Timer, started=Started, cmd=Cmd, from=From}, Result) ->
-    rafter_ttc_log ! {Cmd, timer:now_diff(now(), Started)},
+    case Cmd of
+        undefined -> rafter_ttc_log ! {log_write, timer:now_diff(now(), Started)};
+        _ -> rafter_ttc_log ! {log_read, timer:now_diff(now(), Started)}
+    end,
     % io:format("TTC: ~pms~n", [timer:now_diff(now(), Started) / 1000]),
     {ok, cancel} = timer:cancel(Timer),
     gen_fsm:reply(From, Result).
