@@ -183,6 +183,17 @@ handle_info({oneoff_failure_timeout, Lambda, T, Failed}, leader, State=#state{me
             {next_state, leader, State#state{failure_tref=Tref}}
     end;
 
+handle_info(restart, failed, {StateName, State=#state{failure_tref=undefined}}) ->
+    {next_state, StateName, State};
+handle_info(restart, failed, {StateName, State=#state{failure_tref=Tref}}) ->
+    timer:cancel(Tref),
+    {next_state, StateName, State#state{failure_tref=undefined}};
+handle_info(restart, StateName, State=#state{failure_tref=undefined}) ->
+    {next_state, StateName, State};
+handle_info(restart, StateName, State=#state{failure_tref=Tref}) ->
+    timer:cancel(Tref),
+    {next_state, StateName, State#state{failure_tref=undefined}};
+
 handle_info(_Event, _StateName, State) ->
     {stop, badmsg, State}.
 
