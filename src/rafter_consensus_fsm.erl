@@ -101,9 +101,11 @@ handle_event(restart, StateName, State=#state{failure_tref=Tref}) ->
     timer:cancel(Tref),
     {next_state, StateName, State#state{failure_tref=undefined}};
 
-handle_event(correlated_fail, follower, State) ->
-    {next_state, failed, {follower, State}};
-handle_event(correlated_fail, failed, State) ->
+handle_event({fail_once, T}, follower, State=#state{me=Me}) ->
+    {ok, Tref} = timer:send_after(T, Me, restart),
+    {next_state, failed, {follower, State#state{failure_tref=Tref}}};
+handle_event({fail_once, _T}, failed, State) ->
+    % this should not happen ..
     {next_state, failed, State};
 
 handle_event({send_start_repeated_failures, Lambda, Up}, leader, State=#state{me=Me, config=Config, failure_tref=undefined}) ->
@@ -122,10 +124,10 @@ handle_event({start_repeated_failures, Lambda, Up}, follower, State=#state{me=Me
     {ok, Tref} = timer:send_after(RunFor, Me, {repeated_failure_timeout, RunFor, Lambda, Up}),
     {next_state, follower, State#state{failure_tref=Tref}};
 
-handle_event({start_correlated_failures, Lambda}, leader, State=#state{me=Me, failure_tref=undefined}) ->
-    {ok, Tref} = timer:send_after(exponential(Lambda), Me, {correlated_failure_timeout, Lambda, []}),
+handle_event({start_oneoff_failures, Lambda, T}, leader, State=#state{me=Me, failure_tref=undefined}) ->
+    {ok, Tref} = timer:send_after(exponential(Lambda), Me, {oneoff_failure_timeout, Lambda, T, []}),
     {next_state, leader, State#state{failure_tref=Tref}};
-handle_event(stop_correlated_failures, leader, State=#state{failure_tref=Tref}) ->
+handle_event(stop_oneoff_failures, leader, State=#state{failure_tref=Tref}) ->
     timer:cancel(Tref),
     {next_state, leader, State#state{failure_tref=undefined}};
 handle_event(_Event, _StateName, State) ->
@@ -168,14 +170,14 @@ handle_info({repeated_failure_timeout, Lambda, Up}, failed, {StateName, State=#s
     {ok, Tref} = timer:send_after(RunFor, Me, {repeated_failure_timeout, RunFor, Lambda, Up}),
     {next_state, StateName, State#state{failure_tref=Tref}};
 
-handle_info({correlated_failure_timeout, Lambda, Failed}, leader, State=#state{me=Me, config=Config}) ->
+handle_info({oneoff_failure_timeout, Lambda, T, Failed}, leader, State=#state{me=Me, config=Config}) ->
     case pick_random(list_servers([Me|Failed], Config)) of
         undefined ->
             io:format("~nFailed all followers!~n", []),
             {next_state, leader, State#state{failure_tref=undefined}};
         Victim ->
-            Msg = {correlated_failure_timeout, Lambda, [Victim|Failed]},
-            gen_fsm:send_all_state_event(Victim, correlated_fail),
+            Msg = {oneoff_failure_timeout, Lambda, T, [Victim|Failed]},
+            gen_fsm:send_all_state_event(Victim, {fail_once, T}),
             io:format("~nFailed ~p~n", [Victim]),
             {ok, Tref} = timer:send_after(exponential(Lambda), Me, Msg),
             {next_state, leader, State#state{failure_tref=Tref}}
