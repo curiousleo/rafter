@@ -61,23 +61,9 @@ def start(num, config='arch-configured-micro', environment='benchmark'):
     # return zip(names, dns_names)
     return instances
 
-@task
 def configure(followers, protocol, failure_mode):
     current_instance = Ec2InstanceWrapper.get_from_host_string().instance
-
-    script = leader_script(current_instance, followers)
-    script_name = None
-    with NamedTemporaryFile() as script_file:
-        script_name = split_path(script_file.name)[1]
-        script_file.write(script)
-        script_file.flush()
-        ec2_rsync_upload(script_file.name, awsfab_settings.SCRIPT_DIR)
-    with cd(awsfab_settings.RAFTER_DIR):
-        run('rm -rf data')
-        run('mkdir data')
-        run('sh bin/{script_name}'.format(**locals()))
-        run('mv /tmp/{{rafter_ttc_log.log,{test}.log}}'.format(**locals()))
-    ec2_rsync_download('/tmp/{test}.log'.format(**locals()), '/home/leo/Temp')
+    run(configure_script(followers, protocol, failure_mode))
 
 @task
 @parallel
@@ -161,6 +147,24 @@ def start_leader(test, leader_name='leader'):
             run('mv /tmp/{{rafter_ttc_log.log,{test}.log}}'.format(**locals()))
         ec2_rsync_download('/tmp/{test}.log'.format(**locals()), '/home/leo/Temp')
 
+def configure_script(followers, protocol, failure_mode):
+    follower_names = [follower.tags.get('Name') for follower in followers]
+    follower_ips = [follower.ip_address for follower in followers]
+    follower_tuples = ['{{{name},\'{name}@{ip}\'}}'.format(**locals())
+            for (name, ip) in zip(follower_names, follower_ips)]
+
+    followers = '[{followers}]'.format(followers=','.join(follower_tuples))
+    protocol = to_erlang_tuple('{protocol}'.format(**locals()))
+    message = 'start_benchmark, {followers}, {protocol}' \
+            .format(**locals())
+    start_benchmark = 'gen_fsm:send_all_state_event(leader, {{{message}}})' \
+            .format(**locals())
+    set_failure_mode = failure_mode_code('{failure_mode}'.format(**locals()))
+
+    command = '{start_benchmark},{set_failure_mode}'.format(**locals())
+    return 'erl -setcookie rafter_localhost_test -eval "{command}."' \
+            .format(**locals())
+
 def leader_script(leader, followers, protocol, failure_mode):
     generator_call = generator_code(protocol)
     failure_command = failure_mode_code(failure_mode)
@@ -210,6 +214,10 @@ def failure_mode_code(failure_mode):
     else:
         if failure_mode == 'no_failures':
             return 'ok'
+
+def to_erlang_tuple(tup):
+    return '{tup}'.format(**locals()) \
+            .replace("'", '').replace('(', '{').replace(')', '}')
 
 #####################
 # Import awsfab tasks
