@@ -27,14 +27,14 @@ def benchmark():
     '''
     cluster_sizes = [3, 5, 7, 9, 11, 12, 13, 15, 16, 17, 19, 20]
     protocols = ['majority', 'grid', ('tree', 2), ('tree', 3)]
-    failures_modes = ['no_failures',
+    failure_modes = ['no_failures',
             ('repeated', 0.8), ('repeated', 0.6), ('repeated', 0.4)]
     followers = []
     for (prev_cluster_size, cluster_size) in \
             zip([0] + cluster_sizes[:-1], cluster_sizes):
         followers += start(cluster_size - prev_cluster_size)
         for protocol in protocols:
-            for failure_mode in failures_modes:
+            for failure_mode in failure_modes:
                 configure(followers, protocol, failure_mode)
                 memaslap()
                 collect_results()
