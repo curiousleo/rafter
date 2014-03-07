@@ -16,6 +16,7 @@ from awsfabrictasks.ec2.api import Ec2InstanceWrapper
 from awsfabrictasks.ec2.api import Ec2LaunchInstance
 from awsfabrictasks.ec2.api import ec2_rsync_download
 from awsfabrictasks.ec2.api import ec2_rsync_upload
+from awsfabrictasks.ec2.api import wait_for_running_state
 
 @task
 def benchmark():
@@ -25,25 +26,30 @@ def benchmark():
     Sweeps over the configuration space, starting and stopping instances as
     appropriate.
     '''
-    leader = Ec2InstanceWrapper.get_by_nametag('leader').instance
+    leader_wrapper = Ec2InstanceWrapper.get_by_nametag('leader')
+    leader_wrapper.instance.start()
+    wait_for_running_state(leader_wrapper['id'])
+    leader = leader_wrapper.instance
 
     cluster_sizes = [3, 5, 7, 9, 11, 12, 13, 15, 16, 17, 19, 20]
     protocols = ['majority', 'grid', ('tree', 2), ('tree', 3)]
     failure_modes = ['no_failures',
             ('repeated', 0.8), ('repeated', 0.6), ('repeated', 0.4)]
+
     followers = []
     for (prev_cluster_size, cluster_size) in \
             zip([0] + cluster_sizes[:-1], cluster_sizes):
-        followers += start(cluster_size - prev_cluster_size)
+        followers += start_followers(cluster_size - prev_cluster_size)
         for protocol in protocols:
             for failure_mode in failure_modes:
                 configure(followers, protocol, failure_mode)
                 memaslap(leader['public_dns_name'])
                 collect_results()
-    stop(followers)
+    hosts = [node['public_dns_name'] for node in [leader] ++ followers])
+    execute(parallel(ec2_stop_instance), hosts=hosts)
 
 @task
-def start(num, config='arch-configured-micro', environment='benchmark'):
+def start_followers(num, config='arch-configured-micro', environment='benchmark'):
     '''
     Start a number of instances and set them up for benchmarking.
 
@@ -55,31 +61,34 @@ def start(num, config='arch-configured-micro', environment='benchmark'):
         Ec2LaunchInstance(
             configname=config,
             extra_tags={'Environment': environment, 'Name': name})
+
     names = ['follower-' + uuid4() for _ in range(int(num))]
     instances = map(launch, names)
+
     Ec2LaunchInstance.run_many_instances(instances)
     Ec2LaunchInstance.wait_for_running_state_many(instances)
+
     dns_names = [instance['public_dns_name'] for instance in instances]
-    # return zip(names, dns_names)
     execute(deploy, hosts=dns_names)
+    execute(start_node, hosts=dns_names)
+
     return instances
 
 @task
 def configure(followers, protocol, failure_mode):
-    current_instance = Ec2InstanceWrapper.get_from_host_string().instance
-    script = configure_script(followers, protocol, failure_mode)
-    run('{script}; sleep 1'.format(**locals()))
+    command = configure_command(followers, protocol, failure_mode)
+    run('{command}; sleep 1'.format(**locals()))
 
 @task
-def memaslap(leader_address, runtime=60):
+def memaslap(leader_address, runtime=60, conf='memaslap.conf'):
     run('memaslap \
             --servers={leader_address}:11211 --binary \
-            --stat_freq={runtime}s --time={runtime}s' \
+            --stat_freq={runtime}s --time={runtime}s \
+            --cfg_cmd={conf}' \
             .format(**locals()))
 
 @task
 @parallel
-# @ec2instance(tags={'Environment':'benchmark'})
 def deploy(branch='benchmark'):
     '''
     Update an existing deployment Git repository.
@@ -92,14 +101,12 @@ def deploy(branch='benchmark'):
         run('git reset --hard {remote}/{branch}'.format(**locals()))
         run('rm ebin/*')
         run('make')
-        run('rm -rf data')
-        run('mkdir data')
 
 @task
 @parallel
-def stop_cluster():
+def stop_node():
     '''
-    Stop and clean up a cluster.
+    Stop and clean up a node.
     '''
     with cd(awsfab_settings.RAFTER_DIR):
         with settings(warn_only=True):
@@ -109,59 +116,19 @@ def stop_cluster():
 
 @task
 @parallel
-def start_followers(leader_name='leader'):
+def start_node(name):
     '''
     Start follower Erlang nodes.
 
-    :param leader_name: The name of the leader node (which is handled by start_leader).
+    :param name: The name of this node.
     '''
-    instance = Ec2InstanceWrapper.get_from_host_string().instance
-    name = instance.tags.get('Name')
+    with cd(awsfab_settings.RAFTER_DIR):
+        run('rm -rf data')
+        run('mkdir data')
+        run('sh bin/start-ec2-node {name}; sleep 1'.format(**locals()))
+    return Ec2InstanceWrapper.get_from_host_string().instance
 
-    if name != leader_name:
-        # instance is a follower
-        with cd(awsfab_settings.RAFTER_DIR):
-            run('rm -rf data')
-            run('mkdir data')
-            run('sh bin/start-ec2-node {name}; sleep 1'.format(**locals()))
-
-@task
-def start_leader(test, leader_name='leader'):
-    '''
-    Start leader Erlang node.
-
-    :param test_name: The name of this test run (required).
-    :param leader_name: The name of the leader node.
-    '''
-    current_instance = Ec2InstanceWrapper.get_from_host_string().instance
-
-    if current_instance.tags.get('Name') == leader_name:
-        # instance is the leader
-        instances = [instancewrapper.instance for instancewrapper
-                in env.ec2instances.values()]
-        followers = [instance for instance in instances
-                if instance.tags.get('Name') != leader_name]
-
-        if len(followers) == 0:
-            print 'No followers! Quitting ...'
-            return
-
-        # create startup script for leader
-        script = leader_script(current_instance, followers)
-        script_name = None
-        with NamedTemporaryFile() as script_file:
-            script_name = split_path(script_file.name)[1]
-            script_file.write(script)
-            script_file.flush()
-            ec2_rsync_upload(script_file.name, awsfab_settings.SCRIPT_DIR)
-        with cd(awsfab_settings.RAFTER_DIR):
-            run('rm -rf data')
-            run('mkdir data')
-            run('sh bin/{script_name}'.format(**locals()))
-            run('mv /tmp/{{rafter_ttc_log.log,{test}.log}}'.format(**locals()))
-        ec2_rsync_download('/tmp/{test}.log'.format(**locals()), '/home/leo/Temp')
-
-def configure_script(followers, protocol, failure_mode):
+def configure_command(followers, protocol, failure_mode):
     follower_names = [follower.tags.get('Name') for follower in followers]
     follower_ips = [follower.ip_address for follower in followers]
     follower_tuples = ['{{{name},\'{name}@{ip}\'}}'.format(**locals())
@@ -178,41 +145,6 @@ def configure_script(followers, protocol, failure_mode):
     command = '{start_benchmark},{set_failure_mode}'.format(**locals())
     return 'erl -setcookie rafter_localhost_test -eval "{command}."' \
             .format(**locals())
-
-def leader_script(leader, followers, protocol, failure_mode):
-    generator_call = generator_code(protocol)
-    failure_command = failure_mode_code(failure_mode)
-    follower_names = [follower.tags.get('Name') for follower in followers]
-    follower_ips = [follower.ip_address for follower in followers]
-    follower_tuples = ['{{{name},\'{name}@{ip}\'}}'.format(**locals())
-            for (name, ip) in zip(follower_names, follower_ips)]
-
-    leader_tuple = '{{leader,\'leader@{ip}\'}}' \
-            .format(ip=leader.ip_address)
-    assign = 'Peers=[{followers},{leader}]' \
-            .format(followers=','.join(follower_tuples), leader=leader_tuple)
-    create_vstruct = 'Vstruct={generator_call}'.format(**locals())
-    set_config = 'rafter:set_config(leader,Vstruct)'
-
-    config = '{assign},{create_vstruct},{set_config}'.format(**locals())
-    return '''
-cd /root/Code/rafter.git
-IP=$(curl --silent http://instance-data/latest/meta-data/public-ipv4)
-erl \
--pa deps/*/ebin ebin \
--setcookie rafter_localhost_test \
--name leader@$IP \
--eval "rafter:start_test_node(leader),{config},{failure_command}."
-'''.format(**locals())
-
-def generator_code(protocol, peers_var):
-    if isinstance(protocol, tuple):
-        (protocol, param) = protocol
-        return 'rafter_voting_{protocol}:{protocol}({peers_var}, {param})' \
-                .format(**locals())
-    else:
-        return 'rafter_voting_{protocol}:{protocol}({peers_var})' \
-                .format(**locals())
 
 def failure_mode_code(failure_mode):
     failures_modes = ['no_failures',
