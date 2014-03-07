@@ -9,24 +9,36 @@
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2,
          code_change/3]).
 
+-record(state, {
+          logfile :: file:io_device(),
+          experiment :: string(),
+          cluster_size :: pos_integer()}).
+
 start_link() ->
     gen_server:start_link({local, rafter_ttc_log}, ?MODULE, [], []).
 
 init(_) ->
-    file:open("/tmp/rafter_ttc_log.log", [write]).
+    {ok, F} = file:open("/tmp/rafter_ttc_log.log", [write]),
+    io:format(F, "Experiment,Cluster,Operation,TTC", []),
+    {ok, #state{logfile = F}}.
+
+handle_info({log_write, T},
+            S = #state{logfile = F, experiment = E, cluster_size = C}) ->
+    io:format(F, "~p,~p,Write,~p~n", [E, C, T]),
+    {noreply, S};
+handle_info({log_read, T},
+            S = #state{logfile = F, experiment = E, cluster_size = C}) ->
+    io:format(F, "~p,~p,Read,~p~n", [E, C, T]),
+    {noreply, S};
+handle_info({set_experiment, E}, S) ->
+    {noreply, S#state{experiment = E}};
+handle_info({set_cluster_size, C}, S) ->
+    {noreply, S#state{cluster_size = C}}.
 
 handle_call(_Request, _From, State) ->
     {stop, handle_call_called, State}.
 handle_cast(_Request, State) ->
     {stop, handle_cast_called, State}.
-handle_info(Info, F) ->
-    case Info of
-        {undefined, T} ->
-            io:format(F, "W ~p~n", [T]);
-        {_, T} ->
-            io:format(F, "R ~p~n", [T])
-    end,
-    {noreply, F}.
 terminate(_Reason, F) ->
     file:close(F).
 code_change(_OldVsn, State, _Extra) ->

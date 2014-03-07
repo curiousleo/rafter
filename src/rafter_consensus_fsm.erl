@@ -131,6 +131,12 @@ handle_event({start_oneoff_failures, Lambda, T}, leader, State=#state{me=Me, fai
 handle_event(stop_oneoff_failures, leader, State=#state{failure_tref=Tref}) ->
     timer:cancel(Tref),
     {next_state, leader, State#state{failure_tref=undefined}};
+
+handle_event({start_benchmark, Followers, Protocol, _FailureMode}, leader, State=#state{me=Me}) ->
+    Vstruct = generate([Me|Followers], Protocol),
+    rafter:set_config(leader, Vstruct),
+    {next_state, leader, State};
+
 handle_event(_Event, _StateName, State) ->
     {stop, {error, badmsg}, State}.
 
@@ -636,7 +642,10 @@ send_client_timeout_reply(#client_req{from=From}) ->
     gen_fsm:reply(From, {error, timeout}).
 
 send_client_reply(#client_req{timer=Timer, started=Started, cmd=Cmd, from=From}, Result) ->
-    rafter_ttc_log ! {Cmd, timer:now_diff(now(), Started)},
+    case Cmd of
+        undefined -> rafter_ttc_log ! {log_write, timer:now_diff(now(), Started)};
+        _ -> rafter_ttc_log ! {log_read, timer:now_diff(now(), Started)}
+    end,
     % io:format("TTC: ~pms~n", [timer:now_diff(now(), Started) / 1000]),
     {ok, cancel} = timer:cancel(Timer),
     gen_fsm:reply(From, Result).
@@ -1069,6 +1078,13 @@ list_servers(Exclude, #config{state=staging, oldservers=Old}) ->
     Old -- Exclude;
 list_servers(Exclude, #config{state=transitional, newservers=New, oldservers=Old}) ->
     lists:merge(lists:sort(Old), lists:sort(New)) -- Exclude.
+
+generate(Peers, majority) ->
+    rafter_voting_majority:majority(Peers);
+generate(Peers, grid) ->
+    rafter_voting_grid:grid(Peers);
+generate(Peers, {tree, D}) ->
+    rafter_voting_tree:tree(Peers, D).
 
 %%=============================================================================
 %% Tests
