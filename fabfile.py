@@ -123,7 +123,7 @@ def start_follower():
         run('sh bin/start-ec2-node {name}; sleep 1'.format(**locals()))
 
 @task
-def start_leader(test, leader_name='leader'):
+def start_leader():
     '''
     Start leader Erlang node.
 
@@ -132,31 +132,17 @@ def start_leader(test, leader_name='leader'):
     '''
     current_instance = Ec2InstanceWrapper.get_from_host_string().instance
 
-    if current_instance.tags.get('Name') == leader_name:
-        # instance is the leader
-        instances = [instancewrapper.instance for instancewrapper
-                in env.ec2instances.values()]
-        followers = [instance for instance in instances
-                if instance.tags.get('Name') != leader_name]
-
-        if len(followers) == 0:
-            print 'No followers! Quitting ...'
-            return
-
-        # create startup script for leader
-        script = leader_script(current_instance, followers)
-        script_name = None
-        with NamedTemporaryFile() as script_file:
-            script_name = split_path(script_file.name)[1]
-            script_file.write(script)
-            script_file.flush()
-            ec2_rsync_upload(script_file.name, awsfab_settings.SCRIPT_DIR)
-        with cd(awsfab_settings.RAFTER_DIR):
-            run('rm -rf data')
-            run('mkdir data')
-            run('sh bin/{script_name}'.format(**locals()))
-            run('mv /tmp/{{rafter_ttc_log.log,{test}.log}}'.format(**locals()))
-        ec2_rsync_download('/tmp/{test}.log'.format(**locals()), '/home/leo/Temp')
+    script = start_script(current_instance)
+    script_name = None
+    with NamedTemporaryFile() as script_file:
+        script_name = split_path(script_file.name)[1]
+        script_file.write(script)
+        script_file.flush()
+        ec2_rsync_upload(script_file.name, awsfab_settings.SCRIPT_DIR)
+    with cd(awsfab_settings.RAFTER_DIR):
+        run('rm -rf data')
+        run('mkdir data')
+        run('sh bin/{script_name}'.format(**locals()))
 
 def configure_script(followers, protocol, failure_mode):
     follower_names = [follower.tags.get('Name') for follower in followers]
@@ -176,30 +162,14 @@ def configure_script(followers, protocol, failure_mode):
     return 'erl -setcookie rafter_localhost_test -eval "{command}."' \
             .format(**locals())
 
-def leader_script(leader, followers, protocol, failure_mode):
-    generator_call = generator_code(protocol)
-    failure_command = failure_mode_code(failure_mode)
-    follower_names = [follower.tags.get('Name') for follower in followers]
-    follower_ips = [follower.ip_address for follower in followers]
-    follower_tuples = ['{{{name},\'{name}@{ip}\'}}'.format(**locals())
-            for (name, ip) in zip(follower_names, follower_ips)]
-
-    leader_tuple = '{{leader,\'leader@{ip}\'}}' \
-            .format(ip=leader.ip_address)
-    assign = 'Peers=[{followers},{leader}]' \
-            .format(followers=','.join(follower_tuples), leader=leader_tuple)
-    create_vstruct = 'Vstruct={generator_call}'.format(**locals())
-    set_config = 'rafter:set_config(leader,Vstruct)'
-
-    config = '{assign},{create_vstruct},{set_config}'.format(**locals())
+def start_script(leader)
     return '''
 cd /root/Code/rafter.git
 IP=$(curl --silent http://instance-data/latest/meta-data/public-ipv4)
-erl \
--pa deps/*/ebin ebin \
--setcookie rafter_localhost_test \
--name leader@$IP \
--eval "rafter:start_test_node(leader),{config},{failure_command}."
+erl -pa deps/*/ebin ebin \
+    -setcookie rafter_localhost_test \
+    -name leader@$IP \
+    -eval "rafter:start_test_node(leader)."
 '''.format(**locals())
 
 def generator_code(protocol, peers_var):
