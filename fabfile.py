@@ -111,7 +111,7 @@ def stop_cluster():
 
 @task
 @parallel
-def start_node(node):
+def start_node(name):
     '''
     Start follower Erlang nodes.
 
