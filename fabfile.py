@@ -65,7 +65,7 @@ def start_followers(num, config='arch-configured-micro', environment='benchmark'
 
     dns_names = [instance['public_dns_name'] for instance in instances]
     execute(deploy, hosts=dns_names)
-    execute(start_follower, hosts=dns_names)
+    execute(start_node, hosts=dns_names)
 
     return instances
 
@@ -111,11 +111,11 @@ def stop_cluster():
 
 @task
 @parallel
-def start_follower():
+def start_node(node):
     '''
     Start follower Erlang nodes.
 
-    :param leader_name: The name of the leader node (which is handled by start_leader).
+    :param name: The name of this node.
     '''
     with cd(awsfab_settings.RAFTER_DIR):
         run('rm -rf data')
