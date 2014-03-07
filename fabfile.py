@@ -54,6 +54,7 @@ def benchmark():
                 configure(followers, protocol, failure_mode)
                 memaslap(leader['public_dns_name'])
                 collect_results(cluster_size, protocol, failure_mode)
+
     hosts = [node['public_dns_name'] for node in [leader] ++ followers]
     execute(parallel(ec2_stop_instance), hosts=hosts)
 
