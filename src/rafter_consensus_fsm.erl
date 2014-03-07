@@ -1072,12 +1072,13 @@ pick_random(List) ->
     lists:nth(Pos, List).
 
 -spec list_servers([peer()], #config{}) -> [peer()].
-list_servers(Exclude, #config{state=stable, oldservers=Old}) ->
-    Old -- Exclude;
-list_servers(Exclude, #config{state=staging, oldservers=Old}) ->
-    Old -- Exclude;
-list_servers(Exclude, #config{state=transitional, newservers=New, oldservers=Old}) ->
-    lists:merge(lists:sort(Old), lists:sort(New)) -- Exclude.
+list_servers(Exclude, #config{state=stable, oldvstruct=Old}) ->
+    rafter_voting:to_list(Old) -- Exclude;
+list_servers(Exclude, #config{state=staging, oldvstruct=Old}) ->
+    rafter_voting:to_list(Old) -- Exclude;
+list_servers(Exclude, #config{state=transitional, newvstruct=New, oldvstruct=Old}) ->
+    lists:merge(lists:sort(rafter_voting:to_list(Old)),
+                lists:sort(rafter_voting:to_list(New))) -- Exclude.
 
 generate(Peers, majority) ->
     rafter_voting_majority:majority(Peers);
