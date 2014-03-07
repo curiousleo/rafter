@@ -61,7 +61,7 @@ def benchmark():
 
         for protocol in protocols:
             for failure_mode in failure_modes:
-                configure(followers, protocol, failure_mode)
+                configure(leader, followers, protocol, failure_mode)
                 memaslap(leader['public_dns_name'])
                 collect_results(cluster_size, protocol, failure_mode)
 
@@ -115,7 +115,7 @@ def collect_results(cluster_size, protocol, failure_mode):
             rsync_args='-avz')
 
 @task
-def configure(followers, protocol, failure_mode):
+def configure(leader, followers, protocol, failure_mode):
     '''
     Configure the current instance (the leader).
 
@@ -123,7 +123,7 @@ def configure(followers, protocol, failure_mode):
     :param protocol: The structured voting protocol to use.
     :param failure_mode: The failure mode to run the experiment with.
     '''
-    command = configure_command(followers, protocol, failure_mode)
+    command = configure_command(leader, followers, protocol, failure_mode)
     run('{command}; sleep 1'.format(**locals()))
 
 @task
@@ -182,9 +182,9 @@ def start_erlang_node(name):
         run('sh bin/start-ec2-node {name}; sleep 1'.format(**locals()))
     return Ec2InstanceWrapper.get_from_host_string().instance
 
-def configure_command(followers, protocol, failure_mode):
-    follower_names = [follower.tags.get('Name') for follower in followers]
-    follower_ips = [follower.ip_address for follower in followers]
+def configure_command(leader, followers, protocol, failure_mode):
+    follower_names = [follower['tags'].get('Name') for follower in followers]
+    follower_ips = [follower.instance.ip_address for follower in followers]
     follower_tuples = ['{{{name},\'{name}@{ip}\'}}'.format(**locals())
             for (name, ip) in zip(follower_names, follower_ips)]
 
