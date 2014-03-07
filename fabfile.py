@@ -16,6 +16,7 @@ from awsfabrictasks.ec2.api import Ec2InstanceWrapper
 from awsfabrictasks.ec2.api import Ec2LaunchInstance
 from awsfabrictasks.ec2.api import ec2_rsync_download
 from awsfabrictasks.ec2.api import ec2_rsync_upload
+from awsfabrictasks.ec2.api import wait_for_running_state
 
 @task
 def benchmark():
@@ -25,7 +26,10 @@ def benchmark():
     Sweeps over the configuration space, starting and stopping instances as
     appropriate.
     '''
-    leader = Ec2InstanceWrapper.get_by_nametag('leader').instance
+    leader_wrapper = Ec2InstanceWrapper.get_by_nametag('leader')
+    leader_wrapper.instance.start()
+    wait_for_running_state(leader_wrapper['id'])
+    leader = leader_wrapper.instance
 
     cluster_sizes = [3, 5, 7, 9, 11, 12, 13, 15, 16, 17, 19, 20]
     protocols = ['majority', 'grid', ('tree', 2), ('tree', 3)]
@@ -41,7 +45,8 @@ def benchmark():
                 configure(followers, protocol, failure_mode)
                 memaslap(leader['public_dns_name'])
                 collect_results()
-    stop(followers)
+    hosts = [node['public_dns_name'] for node in [leader] ++ followers])
+    execute(parallel(ec2_stop_instance), hosts=hosts)
 
 @task
 def start_followers(num, config='arch-configured-micro', environment='benchmark'):
@@ -99,9 +104,9 @@ def deploy(branch='benchmark'):
 
 @task
 @parallel
-def stop_cluster():
+def stop_node():
     '''
-    Stop and clean up a cluster.
+    Stop and clean up a node.
     '''
     with cd(awsfab_settings.RAFTER_DIR):
         with settings(warn_only=True):
