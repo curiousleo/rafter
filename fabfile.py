@@ -141,15 +141,6 @@ def configure_script(followers, protocol, failure_mode):
     return 'erl -setcookie rafter_localhost_test -eval "{command}."' \
             .format(**locals())
 
-def generator_code(protocol, peers_var):
-    if isinstance(protocol, tuple):
-        (protocol, param) = protocol
-        return 'rafter_voting_{protocol}:{protocol}({peers_var}, {param})' \
-                .format(**locals())
-    else:
-        return 'rafter_voting_{protocol}:{protocol}({peers_var})' \
-                .format(**locals())
-
 def failure_mode_code(failure_mode):
     failures_modes = ['no_failures',
             ('repeated', 0.8), ('repeated', 0.6), ('repeated', 0.4)]
