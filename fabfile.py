@@ -6,6 +6,7 @@ from uuid import uuid4
 
 from fabric.api import cd
 from fabric.api import env
+from fabric.api import execute
 from fabric.api import parallel
 from fabric.api import run
 from fabric.api import task
@@ -15,7 +16,6 @@ from awsfabrictasks.decorators import ec2instance
 from awsfabrictasks.ec2.api import Ec2InstanceWrapper
 from awsfabrictasks.ec2.api import Ec2LaunchInstance
 from awsfabrictasks.ec2.api import ec2_rsync_download
-from awsfabrictasks.ec2.api import ec2_rsync_upload
 from awsfabrictasks.ec2.api import wait_for_running_state
 
 @task
