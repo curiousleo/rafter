@@ -71,10 +71,11 @@ def configure(followers, protocol, failure_mode):
     run('{script}; sleep 1'.format(**locals()))
 
 @task
-def memaslap(leader_address, runtime=60):
+def memaslap(leader_address, runtime=60, conf='memaslap.conf'):
     run('memaslap \
             --servers={leader_address}:11211 --binary \
-            --stat_freq={runtime}s --time={runtime}s' \
+            --stat_freq={runtime}s --time={runtime}s \
+            --cfg_cmd={conf}' \
             .format(**locals()))
 
 @task
