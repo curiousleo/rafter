@@ -96,11 +96,25 @@ def collect_results(cluster_size, protocol, failure_mode):
 
 @task
 def configure(followers, protocol, failure_mode):
+    '''
+    Configure the current instance (the leader).
+
+    :param followers: The list of follower instances.
+    :param protocol: The structured voting protocol to use.
+    :param failure_mode: The failure mode to run the experiment with.
+    '''
     command = configure_command(followers, protocol, failure_mode)
     run('{command}; sleep 1'.format(**locals()))
 
 @task
 def memaslap(leader_address, runtime=60, conf='memaslap.conf'):
+    '''
+    Run memaslap on the local host, targeting the leader.
+
+    :param leader_address: The IP address of the leader.
+    :param runtime: How many seconds to run the benchmark for.
+    :param conf: The configuration file to use with memaslap.
+    '''
     run('memaslap \
             --servers={leader_address}:11211 --binary \
             --stat_freq={runtime}s --time={runtime}s \
@@ -138,7 +152,7 @@ def stop_node():
 @parallel
 def start_node(name):
     '''
-    Start follower Erlang nodes.
+    Start an Erlang node.
 
     :param name: The name of this node.
     '''
@@ -169,7 +183,6 @@ def configure_command(followers, protocol, failure_mode):
 def failure_mode_code(failure_mode):
     failures_modes = ['no_failures',
             ('repeated', 0.8), ('repeated', 0.6), ('repeated', 0.4)]
-    lambda = 10
     if isinstance(failure_mode, tuple):
         (failure_mode, param) = failure_mode
         if failure_mode == 'repeated':
