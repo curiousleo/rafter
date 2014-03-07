@@ -71,8 +71,8 @@ def start_followers(num, config='arch-configured-micro', environment='benchmark'
 
 @task
 def configure(followers, protocol, failure_mode):
-    script = configure_script(followers, protocol, failure_mode)
-    run('{script}; sleep 1'.format(**locals()))
+    command = configure_command(followers, protocol, failure_mode)
+    run('{command}; sleep 1'.format(**locals()))
 
 @task
 def memaslap(leader_address, runtime=60, conf='memaslap.conf'):
@@ -123,7 +123,7 @@ def start_node(name):
         run('sh bin/start-ec2-node {name}; sleep 1'.format(**locals()))
     return Ec2InstanceWrapper.get_from_host_string().instance
 
-def configure_script(followers, protocol, failure_mode):
+def configure_command(followers, protocol, failure_mode):
     follower_names = [follower.tags.get('Name') for follower in followers]
     follower_ips = [follower.ip_address for follower in followers]
     follower_tuples = ['{{{name},\'{name}@{ip}\'}}'.format(**locals())
