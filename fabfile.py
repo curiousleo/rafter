@@ -35,7 +35,7 @@ def benchmark():
     followers = []
     for (prev_cluster_size, cluster_size) in \
             zip([0] + cluster_sizes[:-1], cluster_sizes):
-        followers += start(cluster_size - prev_cluster_size)
+        followers += start_followers(cluster_size - prev_cluster_size)
         for protocol in protocols:
             for failure_mode in failure_modes:
                 configure(followers, protocol, failure_mode)
@@ -44,7 +44,7 @@ def benchmark():
     stop(followers)
 
 @task
-def start(num, config='arch-configured-micro', environment='benchmark'):
+def start_followers(num, config='arch-configured-micro', environment='benchmark'):
     '''
     Start a number of instances and set them up for benchmarking.
 
@@ -65,6 +65,7 @@ def start(num, config='arch-configured-micro', environment='benchmark'):
 
     dns_names = [instance['public_dns_name'] for instance in instances]
     execute(deploy, hosts=dns_names)
+    execute(start_follower, hosts=dns_names)
 
     return instances
 
@@ -95,8 +96,6 @@ def deploy(branch='benchmark'):
         run('git reset --hard {remote}/{branch}'.format(**locals()))
         run('rm ebin/*')
         run('make')
-        run('rm -rf data')
-        run('mkdir data')
 
 @task
 @parallel
@@ -112,21 +111,16 @@ def stop_cluster():
 
 @task
 @parallel
-def start_followers(leader_name='leader'):
+def start_follower():
     '''
     Start follower Erlang nodes.
 
     :param leader_name: The name of the leader node (which is handled by start_leader).
     '''
-    instance = Ec2InstanceWrapper.get_from_host_string().instance
-    name = instance.tags.get('Name')
-
-    if name != leader_name:
-        # instance is a follower
-        with cd(awsfab_settings.RAFTER_DIR):
-            run('rm -rf data')
-            run('mkdir data')
-            run('sh bin/start-ec2-node {name}; sleep 1'.format(**locals()))
+    with cd(awsfab_settings.RAFTER_DIR):
+        run('rm -rf data')
+        run('mkdir data')
+        run('sh bin/start-ec2-node {name}; sleep 1'.format(**locals()))
 
 @task
 def start_leader(test, leader_name='leader'):
