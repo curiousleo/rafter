@@ -180,7 +180,6 @@ def start_erlang_node(name):
         run('rm -rf data')
         run('mkdir data')
         run('sh bin/start-ec2-node {name}; sleep 1'.format(**locals()))
-    return Ec2InstanceWrapper.get_from_host_string().instance
 
 def configure_command(leader, followers, protocol, failure_mode):
     follower_names = [follower['tags'].get('Name') for follower in followers]
