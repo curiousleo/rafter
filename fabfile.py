@@ -38,7 +38,7 @@ def benchmark():
 
     followers = []
     for (prev_cluster_size, cluster_size) in \
-            zip([0] + cluster_sizes[:-1], cluster_sizes):
+            zip([1] + cluster_sizes[:-1], cluster_sizes):
         followers += start_followers(cluster_size - prev_cluster_size)
         for protocol in protocols:
             for failure_mode in failure_modes:
