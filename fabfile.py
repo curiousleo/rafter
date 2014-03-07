@@ -39,7 +39,16 @@ def benchmark():
     followers = []
     for (prev_cluster_size, cluster_size) in \
             zip([1] + cluster_sizes[:-1], cluster_sizes):
-        followers += start_followers(cluster_size - prev_cluster_size)
+        new_followers = cluster_size - prev_cluster_size
+        new_followers = [
+                Ec2InstanceWrapper.get_by_nametag('follower{n}'.format(n=n))
+                for n in range(len(followers) + 1, new_followers]
+        execute(parallel(ec2_start_instance), hosts=new_followers)
+        execute(deploy, hosts=new_followers)
+        execute(start_erlang_node, hosts=new_followers)
+
+        followers += new_followers
+
         for protocol in protocols:
             for failure_mode in failure_modes:
                 configure(followers, protocol, failure_mode)
