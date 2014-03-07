@@ -25,6 +25,8 @@ def benchmark():
     Sweeps over the configuration space, starting and stopping instances as
     appropriate.
     '''
+    leader = Ec2InstanceWrapper.get_by_nametag('leader').instance
+
     cluster_sizes = [3, 5, 7, 9, 11, 12, 13, 15, 16, 17, 19, 20]
     protocols = ['majority', 'grid', ('tree', 2), ('tree', 3)]
     failure_modes = ['no_failures',
@@ -36,7 +38,7 @@ def benchmark():
         for protocol in protocols:
             for failure_mode in failure_modes:
                 configure(followers, protocol, failure_mode)
-                memaslap()
+                memaslap(leader['public_dns_name'])
                 collect_results()
     stop(followers)
 
@@ -57,13 +59,23 @@ def start(num, config='arch-configured-micro', environment='benchmark'):
     instances = map(launch, names)
     Ec2LaunchInstance.run_many_instances(instances)
     Ec2LaunchInstance.wait_for_running_state_many(instances)
-    # dns_names = [instance['public_dns_name'] for instance in instances]
+    dns_names = [instance['public_dns_name'] for instance in instances]
     # return zip(names, dns_names)
+    execute(deploy, hosts=dns_names)
     return instances
 
+@task
 def configure(followers, protocol, failure_mode):
     current_instance = Ec2InstanceWrapper.get_from_host_string().instance
-    run(configure_script(followers, protocol, failure_mode))
+    script = configure_script(followers, protocol, failure_mode)
+    run('{script}; sleep 1'.format(**locals()))
+
+@task
+def memaslap(leader_address, runtime=60):
+    run('memaslap \
+            --servers={leader_address}:11211 --binary \
+            --stat_freq={runtime}s --time={runtime}s' \
+            .format(**locals()))
 
 @task
 @parallel
@@ -80,6 +92,8 @@ def deploy(branch='benchmark'):
         run('git reset --hard {remote}/{branch}'.format(**locals()))
         run('rm ebin/*')
         run('make')
+        run('rm -rf data')
+        run('mkdir data')
 
 @task
 @parallel
