@@ -121,28 +121,7 @@ def start_node(node):
         run('rm -rf data')
         run('mkdir data')
         run('sh bin/start-ec2-node {name}; sleep 1'.format(**locals()))
-
-@task
-def start_leader():
-    '''
-    Start leader Erlang node.
-
-    :param test_name: The name of this test run (required).
-    :param leader_name: The name of the leader node.
-    '''
-    current_instance = Ec2InstanceWrapper.get_from_host_string().instance
-
-    script = start_script(current_instance)
-    script_name = None
-    with NamedTemporaryFile() as script_file:
-        script_name = split_path(script_file.name)[1]
-        script_file.write(script)
-        script_file.flush()
-        ec2_rsync_upload(script_file.name, awsfab_settings.SCRIPT_DIR)
-    with cd(awsfab_settings.RAFTER_DIR):
-        run('rm -rf data')
-        run('mkdir data')
-        run('sh bin/{script_name}'.format(**locals()))
+    return Ec2InstanceWrapper.get_from_host_string().instance
 
 def configure_script(followers, protocol, failure_mode):
     follower_names = [follower.tags.get('Name') for follower in followers]
@@ -161,16 +140,6 @@ def configure_script(followers, protocol, failure_mode):
     command = '{start_benchmark},{set_failure_mode}'.format(**locals())
     return 'erl -setcookie rafter_localhost_test -eval "{command}."' \
             .format(**locals())
-
-def start_script(leader)
-    return '''
-cd /root/Code/rafter.git
-IP=$(curl --silent http://instance-data/latest/meta-data/public-ipv4)
-erl -pa deps/*/ebin ebin \
-    -setcookie rafter_localhost_test \
-    -name leader@$IP \
-    -eval "rafter:start_test_node(leader)."
-'''.format(**locals())
 
 def generator_code(protocol, peers_var):
     if isinstance(protocol, tuple):
