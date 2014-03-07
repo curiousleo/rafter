@@ -31,6 +31,7 @@ def benchmark():
     protocols = ['majority', 'grid', ('tree', 2), ('tree', 3)]
     failure_modes = ['no_failures',
             ('repeated', 0.8), ('repeated', 0.6), ('repeated', 0.4)]
+
     followers = []
     for (prev_cluster_size, cluster_size) in \
             zip([0] + cluster_sizes[:-1], cluster_sizes):
@@ -55,18 +56,20 @@ def start(num, config='arch-configured-micro', environment='benchmark'):
         Ec2LaunchInstance(
             configname=config,
             extra_tags={'Environment': environment, 'Name': name})
+
     names = ['follower-' + uuid4() for _ in range(int(num))]
     instances = map(launch, names)
+
     Ec2LaunchInstance.run_many_instances(instances)
     Ec2LaunchInstance.wait_for_running_state_many(instances)
+
     dns_names = [instance['public_dns_name'] for instance in instances]
-    # return zip(names, dns_names)
     execute(deploy, hosts=dns_names)
+
     return instances
 
 @task
 def configure(followers, protocol, failure_mode):
-    current_instance = Ec2InstanceWrapper.get_from_host_string().instance
     script = configure_script(followers, protocol, failure_mode)
     run('{script}; sleep 1'.format(**locals()))
 
@@ -80,7 +83,6 @@ def memaslap(leader_address, runtime=60, conf='memaslap.conf'):
 
 @task
 @parallel
-# @ec2instance(tags={'Environment':'benchmark'})
 def deploy(branch='benchmark'):
     '''
     Update an existing deployment Git repository.
