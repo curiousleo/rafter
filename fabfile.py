@@ -66,7 +66,7 @@ def benchmark():
                 collect_results(cluster_size, protocol, failure_mode)
 
     hosts = [node['public_dns_name'] for node in [leader] ++ followers]
-    execute(parallel(ec2_stop_instance), hosts=hosts)
+    execute(ec2_stop_instance, hosts=hosts)
 
 @task
 def start_followers(num, config='arch-configured-micro', environment='benchmark'):
