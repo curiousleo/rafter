@@ -39,13 +39,23 @@ def benchmark():
     followers = []
     for (prev_cluster_size, cluster_size) in \
             zip([1] + cluster_sizes[:-1], cluster_sizes):
-        new_followers = cluster_size - prev_cluster_size
-        new_followers = [
-                Ec2InstanceWrapper.get_by_nametag('follower{n}'.format(n=n))
-                for n in range(len(followers) + 1, new_followers]
-        execute(parallel(ec2_start_instance), hosts=new_followers)
-        execute(deploy, hosts=new_followers)
-        execute(start_erlang_node, hosts=new_followers)
+        new_followers_num = cluster_size - prev_cluster_size
+        new_followers_names = ['follower{n}'.format(n=n)
+                for n in range(len(followers), new_followers_num)]
+        new_followers = [Ec2InstanceWrapper.get_by_nametag(name)
+                for name in new_followers_names]
+
+        for follower in new_followers: follower.instance.start()
+        for follower in new_followers: wait_for_running_state(follower['id'])
+
+        new_followers = [Ec2InstanceWrapper.get_by_nametag(name)
+                for name in new_followers_names]
+        new_followers_addresses = [follower['public_dns_name']
+                for follower in new_followers]
+
+        execute(deploy, hosts=new_followers_addresses)
+        for (name, address) in zip(new_followers_names, new_followers_addresses):
+            execute(start_erlang_node, host=address, name=name)
 
         followers += new_followers
 
