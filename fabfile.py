@@ -44,8 +44,8 @@ def benchmark():
             for failure_mode in failure_modes:
                 configure(followers, protocol, failure_mode)
                 memaslap(leader['public_dns_name'])
-                collect_results()
-    hosts = [node['public_dns_name'] for node in [leader] ++ followers])
+                collect_results(cluster_size, protocol, failure_mode)
+    hosts = [node['public_dns_name'] for node in [leader] ++ followers]
     execute(parallel(ec2_stop_instance), hosts=hosts)
 
 @task
@@ -73,6 +73,26 @@ def start_followers(num, config='arch-configured-micro', environment='benchmark'
     execute(start_node, hosts=dns_names)
 
     return instances
+
+@task
+def collect_results(cluster_size, protocol, failure_mode):
+    '''
+    Copy rafter_ttc_log from leader to local host.
+
+    The parameters are used to construct a file name for the TTC measurements.
+    '''
+    if isinstance(protocol, tuple):
+        (protocol, param) = protocol
+        protocol = '{protocol}_{param}'.format(**locals())
+    if isinstance(failure_mode, tuple):
+        (failure_mode, param) = failure_mode
+        failure_mode = '{failure_mode}_{param}'.format(**locals())
+
+    test = '{cluster_size}-{protocol}-{failure_mode}'.format(**locals())
+    ec2_rsync_download(
+            '/tmp/rafter_ttc_log.log',
+            '/home/leo/Temp/{test}'.format(**locals()),
+            rsync_args='-avz')
 
 @task
 def configure(followers, protocol, failure_mode):
