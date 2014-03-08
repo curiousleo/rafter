@@ -11,7 +11,7 @@
 
 -record(state, {
           logfile :: file:io_device(),
-          experiment :: string(),
+          experiment :: term(),
           cluster_size :: pos_integer()}).
 
 start_link() ->
@@ -30,10 +30,8 @@ handle_info({log_read, T},
             S = #state{logfile = F, experiment = E, cluster_size = C}) ->
     io:format(F, "~p,~p,Read,~p~n", [E, C, T]),
     {noreply, S};
-handle_info({set_experiment, E}, S) ->
-    {noreply, S#state{experiment = E}};
-handle_info({set_cluster_size, C}, S) ->
-    {noreply, S#state{cluster_size = C}}.
+handle_info({set_experiment, C, E}, S) ->
+    {noreply, S#state{cluster_size = C, experiment = E}}.
 
 handle_call(_Request, _From, State) ->
     {stop, handle_call_called, State}.

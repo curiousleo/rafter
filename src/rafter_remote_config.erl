@@ -4,7 +4,8 @@
 
 remote_config(Leader, Followers, Protocol) ->
     Vstruct = generate([Leader|Followers], Protocol),
-    rafter:set_config(Leader, Vstruct).
+    rafter:set_config(Leader, Vstruct),
+    rafter_ttc_log ! {set_experiment, {length(Followers) + 1, Protocol}}.
 
 generate(Peers, majority) ->
     rafter_voting_majority:majority(Peers);
