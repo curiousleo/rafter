@@ -205,7 +205,7 @@ def configure_command(leader, followers, protocol, failure_mode):
             .format(**locals())
     set_config = 'rpc:call(Leader, rafter_remote_config, remote_config, \
             [{message}])'.format(**locals())
-    set_failure_mode = failure_mode_code('{failure_mode}'.format(**locals()))
+    set_failure_mode = failure_mode_code(failure_mode)
 
     command = '{connect},{set_config},{set_failure_mode}'.format(**locals())
     return 'erl -setcookie rafter_localhost_test \
@@ -215,12 +215,11 @@ def configure_command(leader, followers, protocol, failure_mode):
             .format(**locals())
 
 def failure_mode_code(failure_mode):
-    failures_modes = ['no_failures',
-            ('repeated', 0.8), ('repeated', 0.6), ('repeated', 0.4)]
+    Lambda = 5.0
     if isinstance(failure_mode, tuple):
         (failure_mode, param) = failure_mode
         if failure_mode == 'repeated':
-            message = 'send_start_repeated_failures, {lambda}, {param}' \
+            message = 'send_start_repeated_failures, {Lambda}, {param}' \
                     .format(**locals())
             return 'gen_fsm:send_all_state_event(leader, {{{message}}})' \
                     .format(**locals())
