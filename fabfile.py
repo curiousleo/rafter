@@ -215,12 +215,15 @@ def configure_command(leader, followers, protocol, failure_mode):
             .format(**locals())
     set_config = 'rpc:call(Leader, rafter_remote_config, remote_config, \
             [{message}])'.format(**locals())
+    restart = 'gen_fsm:send_all_state_event(leader, send_restart)'
     set_failure_mode = failure_mode_code(failure_mode)
 
-    command = '{connect},{set_config},{set_failure_mode}'.format(**locals())
+    uuid = uuid4()
+    command = '{connect},{set_config},{restart},{set_failure_mode}' \
+            .format(**locals())
     return 'erl -setcookie rafter_localhost_test \
                 -detached \
-                -name runner@127.0.0.1 \
+                -name {uuid}@127.0.0.1 \
                 -eval "{command}."' \
             .format(**locals())
 
