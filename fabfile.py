@@ -116,6 +116,7 @@ def collect_results(cluster_size, protocol, failure_mode):
             '/tmp/rafter_ttc_log.log',
             '/home/leo/Temp/{test}'.format(**locals()),
             rsync_args='-avz')
+    run('echo "Experiment,Cluster,Operation,TTC" > /tmp/rafter_ttc_log.log')
 
 @task
 def configure(leader, followers, protocol, failure_mode):
