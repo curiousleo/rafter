@@ -108,6 +108,12 @@ def collect_results(cluster_size, protocol, failure_mode):
 
     The parameters are used to construct a file name for the TTC measurements.
     '''
+
+    # XXX <hack>
+    if Ec2InstanceWrapper.get_from_host_string()['tags'].get('Name') != 'leader':
+        return
+    # XXX </hack>
+
     if isinstance(protocol, tuple):
         (protocol, param) = protocol
         protocol = '{protocol}_{param}'.format(**locals())
