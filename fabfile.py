@@ -10,6 +10,7 @@ from fabric.api import execute
 from fabric.api import parallel
 from fabric.api import run
 from fabric.api import task
+from fabric.context_managers import hide
 from fabric.context_managers import settings
 
 from awsfabrictasks.decorators import ec2instance
@@ -154,7 +155,7 @@ def deploy(branch='benchmark'):
     '''
     remote = 'origin'
     with cd(awsfab_settings.RAFTER_DIR):
-        with settings(hide('stdout')):
+        with hide('stdout'):
             run('git fetch {remote}'.format(**locals()))
             run('git reset --hard {remote}/{branch}'.format(**locals()))
             run('rm ebin/*')
