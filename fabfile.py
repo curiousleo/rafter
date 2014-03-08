@@ -66,7 +66,9 @@ def benchmark():
             for failure_mode in failure_modes:
                 configure(leader, followers, protocol, failure_mode)
                 memaslap(leader['public_dns_name'])
-                collect_results(cluster_size, protocol, failure_mode)
+                execute(collect_results, host=leader['public_dns_name'],
+                            cluster_size=cluster_size, protocol=protocol,
+                            failure_mode=failure_mode)
 
     hosts = [node['public_dns_name'] for node in [leader] ++ followers]
     execute(ec2_stop_instance, hosts=hosts)
