@@ -131,7 +131,7 @@ handle_event(stop_oneoff_failures, leader, State=#state{failure_tref=Tref}) ->
     timer:cancel(Tref),
     {next_state, leader, State#state{failure_tref=undefined}};
 
-handle_event({start_benchmark, Followers, Protocol, _FailureMode}, leader, State=#state{me=Me}) ->
+handle_event({start_benchmark, Followers, Protocol}, leader, State=#state{me=Me}) ->
     Vstruct = generate([Me|Followers], Protocol),
     rafter:set_config(leader, Vstruct),
     {next_state, leader, State};
