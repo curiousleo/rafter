@@ -154,10 +154,11 @@ def deploy(branch='benchmark'):
     '''
     remote = 'origin'
     with cd(awsfab_settings.RAFTER_DIR):
-        run('git fetch {remote}'.format(**locals()))
-        run('git reset --hard {remote}/{branch}'.format(**locals()))
-        run('rm ebin/*')
-        run('make')
+        with settings(hide('stdout')):
+            run('git fetch {remote}'.format(**locals()))
+            run('git reset --hard {remote}/{branch}'.format(**locals()))
+            run('rm ebin/*')
+            run('make')
 
 @task
 @parallel
