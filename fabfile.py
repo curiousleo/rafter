@@ -52,14 +52,14 @@ def benchmark():
 
         new_followers = [Ec2InstanceWrapper.get_by_nametag(name)
                 for name in new_followers_names]
-        new_followers_addresses = [follower['public_dns_name']
+        new_followers_uris = [follower.get_ssh_uri()
                 for follower in new_followers]
 
         for follower in new_followers: follower.add_instance_to_env()
 
-        execute(deploy, hosts=new_followers_addresses)
-        for (name, address) in zip(new_followers_names, new_followers_addresses):
-            execute(start_erlang_node, host=address, name=name)
+        execute(deploy, hosts=new_followers_uris)
+        for (name, uri) in zip(new_followers_names, new_followers_uris):
+            execute(start_erlang_node, host=uri, name=name)
 
         followers += new_followers
 
@@ -67,12 +67,12 @@ def benchmark():
             for failure_mode in failure_modes:
                 configure(leader, followers, protocol, failure_mode)
                 memaslap(leader['public_dns_name'])
-                execute(collect_results, host=leader['public_dns_name'],
+                execute(collect_results, host=leader.get_ssh_uri(),
                             cluster_size=cluster_size, protocol=protocol,
                             failure_mode=failure_mode)
 
-    hosts = [node['public_dns_name'] for node in [leader] ++ followers]
-    execute(ec2_stop_instance, hosts=hosts)
+    uris = [node.get_ssh_uri() for node in [leader] ++ followers]
+    execute(ec2_stop_instance, hosts=uris)
 
 @task
 def start_followers(num, config='arch-configured-micro', environment='benchmark'):
