@@ -129,7 +129,7 @@ def configure(leader, followers, protocol, failure_mode):
     run('{command}; sleep 10'.format(**locals()))
 
 @task
-def memaslap(leader_address, runtime=60, conf='memaslap.conf'):
+def memaslap(leader_address, runtime=60):
     '''
     Run memaslap on the local host, targeting the leader.
 
@@ -137,6 +137,7 @@ def memaslap(leader_address, runtime=60, conf='memaslap.conf'):
     :param runtime: How many seconds to run the benchmark for.
     :param conf: The configuration file to use with memaslap.
     '''
+    conf = awsfab_settings.RAFTER_DIR + '/memaslap.conf'
     run('memaslap \
             --servers={leader_address}:11211 --binary \
             --stat_freq={runtime}s --time={runtime}s \
@@ -153,10 +154,11 @@ def deploy(branch='benchmark'):
     '''
     remote = 'origin'
     with cd(awsfab_settings.RAFTER_DIR):
-        run('git fetch {remote}'.format(**locals()))
-        run('git reset --hard {remote}/{branch}'.format(**locals()))
-        run('rm ebin/*')
-        run('make')
+        with settings(hide('stdout')):
+            run('git fetch {remote}'.format(**locals()))
+            run('git reset --hard {remote}/{branch}'.format(**locals()))
+            run('rm ebin/*')
+            run('make')
 
 @task
 @parallel
@@ -205,7 +207,7 @@ def configure_command(leader, followers, protocol, failure_mode):
 
     command = '{connect},{start_benchmark},{set_failure_mode}'.format(**locals())
     return 'erl -setcookie rafter_localhost_test \
-                -detached
+                -detached \
                 -name runner@127.0.0.1 \
                 -eval "{command}."' \
             .format(**locals())
