@@ -200,13 +200,13 @@ def configure_command(leader, followers, protocol, failure_mode):
     ping = 'pong = net_adm:ping(Leader)'
     connect = '{set_leader},{ping}'.format(**locals())
 
-    message = 'start_benchmark, {followers}, {protocol}' \
+    message = '{{leader, Leader}}, {followers}, {protocol}' \
             .format(**locals())
-    start_benchmark = 'gen_fsm:send_all_state_event({{leader, Leader}}, \
-            {{{message}}})'.format(**locals())
+    set_config = 'rpc:call(Leader, rafter_remote_config, remote_config, \
+            [{message}])'.format(**locals())
     set_failure_mode = failure_mode_code('{failure_mode}'.format(**locals()))
 
-    command = '{connect},{start_benchmark},{set_failure_mode}'.format(**locals())
+    command = '{connect},{set_config},{set_failure_mode}'.format(**locals())
     return 'erl -setcookie rafter_localhost_test \
                 -detached \
                 -name runner@127.0.0.1 \
