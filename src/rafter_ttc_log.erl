@@ -30,7 +30,7 @@ handle_info({log_read, T},
             S = #state{logfile = F, experiment = E, cluster_size = C}) ->
     io:format(F, "~p,~p,Read,~p~n", [E, C, T]),
     {noreply, S};
-handle_info({set_experiment, C, E}, S) ->
+handle_info({set_experiment, {C, E}}, S) ->
     {noreply, S#state{cluster_size = C, experiment = E}}.
 
 handle_call(_Request, _From, State) ->
