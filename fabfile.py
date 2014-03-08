@@ -7,6 +7,7 @@ from uuid import uuid4
 from fabric.api import cd
 from fabric.api import env
 from fabric.api import execute
+from fabric.api import local
 from fabric.api import parallel
 from fabric.api import run
 from fabric.api import task
@@ -131,7 +132,7 @@ def configure(leader, followers, protocol, failure_mode):
     :param failure_mode: The failure mode to run the experiment with.
     '''
     command = configure_command(leader, followers, protocol, failure_mode)
-    run('sleep 10; {command}; sleep 10'.format(**locals()))
+    local('sleep 10; {command}; sleep 10'.format(**locals()))
 
 @task
 def memaslap(leader_address, runtime=60):
