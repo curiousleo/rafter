@@ -129,7 +129,7 @@ def configure(leader, followers, protocol, failure_mode):
     run('{command}; sleep 10'.format(**locals()))
 
 @task
-def memaslap(leader_address, runtime=60, conf='memaslap.conf'):
+def memaslap(leader_address, runtime=60):
     '''
     Run memaslap on the local host, targeting the leader.
 
@@ -137,6 +137,7 @@ def memaslap(leader_address, runtime=60, conf='memaslap.conf'):
     :param runtime: How many seconds to run the benchmark for.
     :param conf: The configuration file to use with memaslap.
     '''
+    conf = awsfab_settings.RAFTER_DIR + '/memaslap.conf'
     run('memaslap \
             --servers={leader_address}:11211 --binary \
             --stat_freq={runtime}s --time={runtime}s \
