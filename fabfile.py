@@ -160,7 +160,7 @@ def deploy(branch='benchmark'):
 
 @task
 @parallel
-def stop_node():
+def stop_erlang_node():
     '''
     Stop and clean up a node.
     '''
