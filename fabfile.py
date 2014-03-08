@@ -26,10 +26,10 @@ def benchmark():
     Sweeps over the configuration space, starting and stopping instances as
     appropriate.
     '''
-    leader_wrapper = Ec2InstanceWrapper.get_by_nametag('leader')
-    leader_wrapper.instance.start()
-    wait_for_running_state(leader_wrapper['id'])
-    leader = leader_wrapper.instance
+    leader = Ec2InstanceWrapper.get_by_nametag('leader')
+    leader.instance.start()
+    wait_for_running_state(leader['id'])
+    leader = Ec2InstanceWrapper.get_by_nametag('leader')
 
     cluster_sizes = [3, 5, 7, 9, 11, 12, 13, 15, 16, 17, 19, 20]
     protocols = ['majority', 'grid', ('tree', 2), ('tree', 3)]
@@ -189,14 +189,23 @@ def configure_command(leader, followers, protocol, failure_mode):
 
     followers = '[{followers}]'.format(followers=','.join(follower_tuples))
     protocol = to_erlang_tuple('{protocol}'.format(**locals()))
+
+    leader_ip = leader['ip_address']
+    set_leader = 'Leader = \'leader@{leader_ip}\''.format(**locals())
+    ping = 'pong = net_adm:ping(Leader)'
+    connect = '{set_leader},{ping}'.format(**locals())
+
     message = 'start_benchmark, {followers}, {protocol}' \
             .format(**locals())
-    start_benchmark = 'gen_fsm:send_all_state_event(leader, {{{message}}})' \
-            .format(**locals())
+    start_benchmark = 'gen_fsm:send_all_state_event({{leader, Leader}}, \
+            {{{message}}})'.format(**locals())
     set_failure_mode = failure_mode_code('{failure_mode}'.format(**locals()))
 
-    command = '{start_benchmark},{set_failure_mode}'.format(**locals())
-    return 'erl -setcookie rafter_localhost_test -eval "{command}."' \
+    command = '{connect},{start_benchmark},{set_failure_mode}'.format(**locals())
+    return 'erl -setcookie rafter_localhost_test \
+                -detached
+                -name runner@127.0.0.1 \
+                -eval "{command}."' \
             .format(**locals())
 
 def failure_mode_code(failure_mode):
