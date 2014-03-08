@@ -31,6 +31,7 @@ def benchmark():
     leader.instance.start()
     wait_for_running_state(leader['id'])
     leader = Ec2InstanceWrapper.get_by_nametag('leader')
+    leader.add_instance_to_env()
 
     cluster_sizes = [3, 5, 7, 9, 11, 12, 13, 15, 16, 17, 19, 20]
     protocols = ['majority', 'grid', ('tree', 2), ('tree', 3)]
