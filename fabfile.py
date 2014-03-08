@@ -53,6 +53,8 @@ def benchmark():
         new_followers_addresses = [follower['public_dns_name']
                 for follower in new_followers]
 
+        for follower in new_followers: follower.add_instance_to_env()
+
         execute(deploy, hosts=new_followers_addresses)
         for (name, address) in zip(new_followers_names, new_followers_addresses):
             execute(start_erlang_node, host=address, name=name)
