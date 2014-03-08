@@ -31,6 +31,7 @@ def benchmark():
     leader.instance.start()
     wait_for_running_state(leader['id'])
     leader = Ec2InstanceWrapper.get_by_nametag('leader')
+    leader.add_instance_to_env()
 
     cluster_sizes = [3, 5, 7, 9, 11, 12, 13, 15, 16, 17, 19, 20]
     protocols = ['majority', 'grid', ('tree', 2), ('tree', 3)]
@@ -66,7 +67,9 @@ def benchmark():
             for failure_mode in failure_modes:
                 configure(leader, followers, protocol, failure_mode)
                 memaslap(leader['public_dns_name'])
-                collect_results(cluster_size, protocol, failure_mode)
+                execute(collect_results, host=leader['public_dns_name'],
+                            cluster_size=cluster_size, protocol=protocol,
+                            failure_mode=failure_mode)
 
     hosts = [node['public_dns_name'] for node in [leader] ++ followers]
     execute(ec2_stop_instance, hosts=hosts)
@@ -205,7 +208,7 @@ def configure_command(leader, followers, protocol, failure_mode):
             .format(**locals())
     set_config = 'rpc:call(Leader, rafter_remote_config, remote_config, \
             [{message}])'.format(**locals())
-    set_failure_mode = failure_mode_code('{failure_mode}'.format(**locals()))
+    set_failure_mode = failure_mode_code(failure_mode)
 
     command = '{connect},{set_config},{set_failure_mode}'.format(**locals())
     return 'erl -setcookie rafter_localhost_test \
@@ -215,12 +218,11 @@ def configure_command(leader, followers, protocol, failure_mode):
             .format(**locals())
 
 def failure_mode_code(failure_mode):
-    failures_modes = ['no_failures',
-            ('repeated', 0.8), ('repeated', 0.6), ('repeated', 0.4)]
+    Lambda = 5.0
     if isinstance(failure_mode, tuple):
         (failure_mode, param) = failure_mode
         if failure_mode == 'repeated':
-            message = 'send_start_repeated_failures, {lambda}, {param}' \
+            message = 'send_start_repeated_failures, {Lambda}, {param}' \
                     .format(**locals())
             return 'gen_fsm:send_all_state_event(leader, {{{message}}})' \
                     .format(**locals())
