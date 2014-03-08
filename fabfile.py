@@ -205,7 +205,7 @@ def configure_command(leader, followers, protocol, failure_mode):
 
     command = '{connect},{start_benchmark},{set_failure_mode}'.format(**locals())
     return 'erl -setcookie rafter_localhost_test \
-                -detached
+                -detached \
                 -name runner@127.0.0.1 \
                 -eval "{command}."' \
             .format(**locals())
