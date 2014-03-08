@@ -127,7 +127,7 @@ def configure(leader, followers, protocol, failure_mode):
     :param failure_mode: The failure mode to run the experiment with.
     '''
     command = configure_command(leader, followers, protocol, failure_mode)
-    run('{command}; sleep 10'.format(**locals()))
+    run('sleep 10; {command}; sleep 10'.format(**locals()))
 
 @task
 def memaslap(leader_address, runtime=60):
