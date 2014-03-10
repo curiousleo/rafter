@@ -151,7 +151,7 @@ def configure(leader, followers, protocol, failure_mode):
     local('sleep 5; {command}; sleep 5'.format(**locals()))
 
 @task
-def memaslap(leader_address, runtime=60):
+def memaslap(leader_address, runtime=180):
     '''
     Run memaslap on the local host, targeting the leader.
 
@@ -163,6 +163,8 @@ def memaslap(leader_address, runtime=60):
     run('memaslap \
             --servers={leader_address}:11211 --binary \
             --stat_freq={runtime}s --time={runtime}s \
+            --execute_number=10000
+            --verify=0.01 --exp_verify=0.01 \
             --cfg_cmd={conf}' \
             .format(**locals()))
 
