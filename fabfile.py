@@ -33,6 +33,13 @@ def benchmark():
     wait_for_running_state(leader['id'])
     leader = Ec2InstanceWrapper.get_by_nametag('leader')
     leader.add_instance_to_env()
+
+    runner = Ec2InstanceWrapper.get_by_nametag('runner')
+    runner.instance.start()
+    wait_for_running_state(runner['id'])
+    runner = Ec2InstanceWrapper.get_by_nametag('runner')
+    runner.add_instance_to_env()
+
     execute(deploy, host=leader.get_ssh_uri())
     execute(start_erlang_node, host=leader.get_ssh_uri(), name='leader')
 
