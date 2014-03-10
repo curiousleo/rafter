@@ -67,6 +67,7 @@ def benchmark():
 
         for follower in new_followers: follower.add_instance_to_env()
 
+        execute(stop_erlang_node, hosts=new_followers_uris)
         execute(deploy, hosts=new_followers_uris)
         for (name, uri) in zip(new_followers_names, new_followers_uris):
             execute(start_erlang_node, host=uri, name=name)
