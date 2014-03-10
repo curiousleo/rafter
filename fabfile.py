@@ -162,7 +162,7 @@ def memaslap(leader_address, runtime=180):
     run('memaslap \
             --servers={leader_address}:11211 --binary \
             --stat_freq={runtime}s --time={runtime}s \
-            --execute_number=10000
+            --execute_number=10000 \
             --verify=0.01 --exp_verify=0.01 \
             --cfg_cmd={conf}' \
             .format(**locals()))
