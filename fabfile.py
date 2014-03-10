@@ -67,7 +67,6 @@ def benchmark():
 
         for follower in new_followers: follower.add_instance_to_env()
 
-        execute(stop_erlang_node, hosts=new_followers_uris)
         execute(deploy, hosts=new_followers_uris)
         for (name, uri) in zip(new_followers_names, new_followers_uris):
             execute(start_erlang_node, host=uri, name=name)
@@ -205,6 +204,9 @@ def start_erlang_node(name):
     :param name: The name of this node.
     '''
     with cd(awsfab_settings.RAFTER_DIR):
+        # kill it first
+        with settings(warn_only=True):
+            run('killall beam')
         run('rm -rf data')
         run('mkdir data')
         run('sh bin/start-ec2-node {name}; sleep 1'.format(**locals()))
