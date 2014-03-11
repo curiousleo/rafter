@@ -53,7 +53,7 @@ def benchmark():
             zip([1] + cluster_sizes[:-1], cluster_sizes):
         new_followers_num = cluster_size - prev_cluster_size
         new_followers_names = ['follower{n}'.format(n=n)
-                for n in range(len(followers), new_followers_num)]
+                for n in range(len(followers), len(followers) + new_followers_num)]
         new_followers = [Ec2InstanceWrapper.get_by_nametag(name)
                 for name in new_followers_names]
 
