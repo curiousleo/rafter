@@ -203,6 +203,12 @@ def start_erlang_node(name):
 
     :param name: The name of this node.
     '''
+
+    # XXX <hack>
+    if Ec2InstanceWrapper.get_from_host_string()['tags'].get('Name') != 'runner':
+        return
+    # XXX </hack>
+
     with cd(awsfab_settings.RAFTER_DIR):
         # kill it first
         with settings(warn_only=True):
