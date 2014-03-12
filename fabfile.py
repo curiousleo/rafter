@@ -70,7 +70,7 @@ def benchmark():
         for protocol in protocols:
             for failure_mode in failure_modes:
                 configure(leader, followers, protocol, failure_mode)
-                memaslap(leader['public_dns_name'])
+                memaslap(leader['private_ip_address'])
                 execute(collect_results, host=leader.get_ssh_uri(),
                             cluster_size=cluster_size, protocol=protocol,
                             failure_mode=failure_mode)
@@ -213,7 +213,7 @@ def start_erlang_node(name):
 
 def configure_command(leader, followers, protocol, failure_mode):
     follower_names = [follower['tags'].get('Name') for follower in followers]
-    follower_ips = [follower.instance.ip_address for follower in followers]
+    follower_ips = [follower['ip_address'] for follower in followers]
     follower_tuples = ['{{{name},\'{name}@{ip}\'}}'.format(**locals())
             for (name, ip) in zip(follower_names, follower_ips)]
 
