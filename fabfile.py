@@ -98,9 +98,9 @@ def start_followers(num, config='arch-configured-micro', environment='benchmark'
     Ec2LaunchInstance.run_many_instances(instances)
     Ec2LaunchInstance.wait_for_running_state_many(instances)
 
-    dns_names = [instance['public_dns_name'] for instance in instances]
-    execute(deploy, hosts=dns_names)
-    execute(start_erlang_node, hosts=dns_names)
+    uris = [instance.get_ssh_uri() for instance in instances]
+    execute(deploy, hosts=uris)
+    execute(start_erlang_node, hosts=uris)
 
     return instances
 
