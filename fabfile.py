@@ -144,7 +144,7 @@ def configure(leader, followers, protocol, failure_mode):
     local('sleep 5; {command}; sleep 5'.format(**locals()))
 
 @task
-def memaslap(leader_address, runtime=180):
+def memaslap(leader_address, runtime=120):
     '''
     Run memaslap on the local host, targeting the leader.
 
@@ -169,6 +169,12 @@ def deploy(branch='benchmark'):
 
     :param branch: The branch to reset to.
     '''
+
+    # XXX <hack>
+    if Ec2InstanceWrapper.get_from_host_string()['tags'].get('Name') == 'runner':
+        return
+    # XXX </hack>
+
     remote = 'origin'
     with cd(awsfab_settings.RAFTER_DIR):
         with hide('stdout'):
@@ -199,7 +205,7 @@ def start_erlang_node(name):
     '''
 
     # XXX <hack>
-    if Ec2InstanceWrapper.get_from_host_string()['tags'].get('Name') != 'runner':
+    if Ec2InstanceWrapper.get_from_host_string()['tags'].get('Name') == 'runner':
         return
     # XXX </hack>
 
