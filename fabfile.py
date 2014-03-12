@@ -7,6 +7,7 @@ from uuid import uuid4
 from fabric.api import cd
 from fabric.api import env
 from fabric.api import execute
+from fabric.api import local
 from fabric.api import parallel
 from fabric.api import run
 from fabric.api import task
@@ -33,6 +34,9 @@ def benchmark():
     leader = Ec2InstanceWrapper.get_by_nametag('leader')
     leader.add_instance_to_env()
 
+    execute(deploy, host=leader.get_ssh_uri())
+    execute(start_erlang_node, host=leader.get_ssh_uri(), name='leader')
+
     cluster_sizes = [3, 5, 7, 9, 11, 12, 13, 15, 16, 17, 19, 20]
     protocols = ['majority', 'grid', ('tree', 2), ('tree', 3)]
     failure_modes = ['no_failures',
@@ -43,7 +47,7 @@ def benchmark():
             zip([1] + cluster_sizes[:-1], cluster_sizes):
         new_followers_num = cluster_size - prev_cluster_size
         new_followers_names = ['follower{n}'.format(n=n)
-                for n in range(len(followers), new_followers_num)]
+                for n in range(len(followers), len(followers) + new_followers_num)]
         new_followers = [Ec2InstanceWrapper.get_by_nametag(name)
                 for name in new_followers_names]
 
@@ -52,27 +56,27 @@ def benchmark():
 
         new_followers = [Ec2InstanceWrapper.get_by_nametag(name)
                 for name in new_followers_names]
-        new_followers_addresses = [follower['public_dns_name']
+        new_followers_uris = [follower.get_ssh_uri()
                 for follower in new_followers]
 
         for follower in new_followers: follower.add_instance_to_env()
 
-        execute(deploy, hosts=new_followers_addresses)
-        for (name, address) in zip(new_followers_names, new_followers_addresses):
-            execute(start_erlang_node, host=address, name=name)
+        execute(deploy, hosts=new_followers_uris)
+        for (name, uri) in zip(new_followers_names, new_followers_uris):
+            execute(start_erlang_node, host=uri, name=name)
 
         followers += new_followers
 
         for protocol in protocols:
             for failure_mode in failure_modes:
                 configure(leader, followers, protocol, failure_mode)
-                memaslap(leader['public_dns_name'])
-                execute(collect_results, host=leader['public_dns_name'],
+                memaslap(leader['private_ip_address'])
+                execute(collect_results, host=leader.get_ssh_uri(),
                             cluster_size=cluster_size, protocol=protocol,
                             failure_mode=failure_mode)
 
-    hosts = [node['public_dns_name'] for node in [leader] ++ followers]
-    execute(ec2_stop_instance, hosts=hosts)
+    uris = [node.get_ssh_uri() for node in [leader] ++ followers]
+    execute(ec2_stop_instance, hosts=uris)
 
 @task
 def start_followers(num, config='arch-configured-micro', environment='benchmark'):
@@ -94,9 +98,9 @@ def start_followers(num, config='arch-configured-micro', environment='benchmark'
     Ec2LaunchInstance.run_many_instances(instances)
     Ec2LaunchInstance.wait_for_running_state_many(instances)
 
-    dns_names = [instance['public_dns_name'] for instance in instances]
-    execute(deploy, hosts=dns_names)
-    execute(start_erlang_node, hosts=dns_names)
+    uris = [instance.get_ssh_uri() for instance in instances]
+    execute(deploy, hosts=uris)
+    execute(start_erlang_node, hosts=uris)
 
     return instances
 
@@ -107,6 +111,12 @@ def collect_results(cluster_size, protocol, failure_mode):
 
     The parameters are used to construct a file name for the TTC measurements.
     '''
+
+    # XXX <hack>
+    if Ec2InstanceWrapper.get_from_host_string()['tags'].get('Name') != 'leader':
+        return
+    # XXX </hack>
+
     if isinstance(protocol, tuple):
         (protocol, param) = protocol
         protocol = '{protocol}_{param}'.format(**locals())
@@ -131,10 +141,10 @@ def configure(leader, followers, protocol, failure_mode):
     :param failure_mode: The failure mode to run the experiment with.
     '''
     command = configure_command(leader, followers, protocol, failure_mode)
-    run('sleep 10; {command}; sleep 10'.format(**locals()))
+    local('sleep 5; {command}; sleep 5'.format(**locals()))
 
 @task
-def memaslap(leader_address, runtime=60):
+def memaslap(leader_address, runtime=120):
     '''
     Run memaslap on the local host, targeting the leader.
 
@@ -146,6 +156,8 @@ def memaslap(leader_address, runtime=60):
     run('memaslap \
             --servers={leader_address}:11211 --binary \
             --stat_freq={runtime}s --time={runtime}s \
+            --execute_number=10000 \
+            --verify=0.01 --exp_verify=0.01 \
             --cfg_cmd={conf}' \
             .format(**locals()))
 
@@ -157,6 +169,12 @@ def deploy(branch='benchmark'):
 
     :param branch: The branch to reset to.
     '''
+
+    # XXX <hack>
+    if Ec2InstanceWrapper.get_from_host_string()['tags'].get('Name') == 'runner':
+        return
+    # XXX </hack>
+
     remote = 'origin'
     with cd(awsfab_settings.RAFTER_DIR):
         with hide('stdout'):
@@ -185,14 +203,23 @@ def start_erlang_node(name):
 
     :param name: The name of this node.
     '''
+
+    # XXX <hack>
+    if Ec2InstanceWrapper.get_from_host_string()['tags'].get('Name') == 'runner':
+        return
+    # XXX </hack>
+
     with cd(awsfab_settings.RAFTER_DIR):
+        # kill it first
+        with settings(warn_only=True):
+            run('killall beam')
         run('rm -rf data')
         run('mkdir data')
         run('sh bin/start-ec2-node {name}; sleep 1'.format(**locals()))
 
 def configure_command(leader, followers, protocol, failure_mode):
     follower_names = [follower['tags'].get('Name') for follower in followers]
-    follower_ips = [follower.instance.ip_address for follower in followers]
+    follower_ips = [follower['ip_address'] for follower in followers]
     follower_tuples = ['{{{name},\'{name}@{ip}\'}}'.format(**locals())
             for (name, ip) in zip(follower_names, follower_ips)]
 
@@ -208,12 +235,15 @@ def configure_command(leader, followers, protocol, failure_mode):
             .format(**locals())
     set_config = 'rpc:call(Leader, rafter_remote_config, remote_config, \
             [{message}])'.format(**locals())
+    restart = 'gen_fsm:send_all_state_event(leader, send_restart)'
     set_failure_mode = failure_mode_code(failure_mode)
 
-    command = '{connect},{set_config},{set_failure_mode}'.format(**locals())
+    uuid = uuid4()
+    command = '{connect},{set_config},{restart},{set_failure_mode}' \
+            .format(**locals())
     return 'erl -setcookie rafter_localhost_test \
                 -detached \
-                -name runner@127.0.0.1 \
+                -name {uuid}@127.0.0.1 \
                 -eval "{command}."' \
             .format(**locals())
 
