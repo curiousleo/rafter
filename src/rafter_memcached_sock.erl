@@ -91,6 +91,7 @@ execute_get(Peer, Key) ->
 execute_set(Peer, {Key, Value, Flags, Expiry}) ->
     rafter:op(Peer, {set, Key, Value, Flags, Expiry}).
 
+% https://code.google.com/p/memcached/wiki/BinaryProtocolRevamped
 reply(Socket, get, Opaque, {ok, [{_Key, Value, Flags}]}) ->
     ValueLen = byte_size(Value),
     ExtrasLen = byte_size(Flags),
@@ -116,8 +117,13 @@ reply(Socket, set, Opaque, stored) ->
              0:32,
              Opaque:4/binary, 0:64>>,
     send(Socket, Resp, []);
-reply(_Socket, Cmd, _Opaque, Result) ->
-    io:format("reply: ~p :: ~p~n", [Cmd, Result]).
+reply(Socket, Cmd, Opaque, _Result) ->
+    Opcode = case Cmd of get -> 0; set -> 1 end,
+    Resp = <<16#81:8, Opcode:8, 0:16,
+             0:8, 0:8, 16#84:16,    % 0x84: internal error
+             0:32,
+             Opaque:4/binary, 0:64>>,
+    send(Socket, Resp, []).
 
 send(Socket, Str, Args) ->
     gen_tcp:send(Socket, [io_lib:format(Str, Args), <<"\r\n">>]),
