@@ -6,9 +6,9 @@
 -include("rafter_consensus_fsm.hrl").
 -include("rafter_opts.hrl").
 
--define(CLIENT_TIMEOUT, 10000).
--define(ELECTION_TIMEOUT_MIN, 1000).
--define(ELECTION_TIMEOUT_MAX, 5000).
+-define(CLIENT_TIMEOUT, 50000).
+-define(ELECTION_TIMEOUT_MIN, 5000).
+-define(ELECTION_TIMEOUT_MAX, 25000).
 -define(HEARTBEAT_TIMEOUT, 125).
 
 %% API
