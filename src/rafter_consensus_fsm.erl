@@ -10,6 +10,7 @@
 -define(ELECTION_TIMEOUT_MIN, 5000).
 -define(ELECTION_TIMEOUT_MAX, 25000).
 -define(HEARTBEAT_TIMEOUT, 125).
+-define(SEND_EVENT_TIMEOUT, 20000).
 
 %% API
 -export([start_link/3, stop/1, get_leader/1, read_op/2, op/2,
@@ -35,13 +36,13 @@ start_link(NameAtom, Me, Opts) ->
     gen_fsm:start_link({local, NameAtom}, ?MODULE, [Me, Opts], []).
 
 op(Peer, Command) ->
-    gen_fsm:sync_send_event(Peer, {op, Command}).
+    gen_fsm:sync_send_event(Peer, {op, Command}, ?SEND_EVENT_TIMEOUT).
 
 read_op(Peer, Command) ->
-    gen_fsm:sync_send_event(Peer, {read_op, Command}).
+    gen_fsm:sync_send_event(Peer, {read_op, Command}, ?SEND_EVENT_TIMEOUT).
 
 set_config(Peer, Config) ->
-    gen_fsm:sync_send_event(Peer, {set_config, Config}).
+    gen_fsm:sync_send_event(Peer, {set_config, Config}, ?SEND_EVENT_TIMEOUT).
 
 get_leader(Pid) ->
     gen_fsm:sync_send_all_state_event(Pid, get_leader).
@@ -54,7 +55,7 @@ send(To, Msg) ->
 -spec send_sync(atom(), #request_vote{} | #append_entries{}) ->
     #vote{} | #append_entries_rpy{} | timeout.
 send_sync(To, Msg) ->
-    Timeout=100,
+    Timeout=?SEND_EVENT_TIMEOUT,
     gen_fsm:sync_send_event(To, Msg, Timeout).
 
 %%=============================================================================
