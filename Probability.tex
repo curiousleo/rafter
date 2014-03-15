@@ -40,34 +40,40 @@
   \label{quorum-probability-model}%
 }
 
-Our grid has \(r\) rows and \(c\) columns (let \(n = r c\) for convenience), therefore a complete column cover (\textsc{cc}-cover) consists of \(r\) nodes and a column cover (\textsc{c}-cover) consists of \(c\) nodes.
+Given \(k \in \{0, 1, \dots, n\}\) votes, what is the probability \(\mathbb{P}(Q^{c,r}\;|\;V=k) = \mathbb{P}(Q^{c,r}_k)\) that the set of votes forms a quorum?
 
-Given \(k \in \{0, 1, \dots, n\}\) votes, what is the probability \(\mathbb{P}(Q\;|\;V=k) = \mathbb{P}(Q_k)\) that the set of votes forms a quorum?
+We assume here that the grid we are considering has \(r\) rows and \(c\) columns (let \(n = r c\) for convenience), therefore a complete column cover (\textsc{cc}-cover) consists of \(r\) nodes and a column cover (\textsc{c}-cover) consists of \(c\) nodes.
 
-Let \(\mathbb{P}(CC\;|\;V=k)\ = \mathbb{P}(CC_k)\) and \(\mathbb{P}(C\;|\;V=k)\ = \mathbb{P}(C_k)\) be the probability of getting a \textsc{cc}-cover and a \textsc{c}-cover, respectively. Then \(\mathbb{P}(Q_k) = \mathbb{P}(CC_k\,\cap\,C_k) = \mathbb{P}(CC_k\;|\;C_k)\;\mathbb{P}(C_k)\).
+Let \(\mathbb{P}(CC^{c,r}\;|\;V=k)\ = \mathbb{P}(CC^{c,r}_k)\) and \(\mathbb{P}(C^{c,r}\;|\;V=k)\ = \mathbb{P}(C^{c,r}_k)\) be the probability of getting a \textsc{cc}-cover and a \textsc{c}-cover, respectively. Then \(\mathbb{P}(Q^{c,r}_k) = \mathbb{P}(CC^{c,r}_k\,\cap\,C^{c,r}_k) = \mathbb{P}(C^{c,r}_k\;|\;CC^{c,r}_k)\;\mathbb{P}(CC^{c,r}_k)\).
 
 \subsection{\textsc{c}-cover probability}
 
-In this section and the next, I will assume that all the binomials we're using are defined, which is not necessarily the case. This issue will be taken care of when we put everything together.
+In this section and the next, I will assume that all the binomials that occur are defined, which is not necessarily the case. This issue will be taken care of when we put everything together.
 
-The probability of getting a \textsc{c}-cover with \(k\) nodes is simply the number of ways in which the \(k-c\) nodes that are not part of the \textsc{c}-cover can distribute over the \(n-c\) elements of the grid not taken up by the \textsc{c}-cover, divided by the number of ways in which any \(k\) nodes can distribute over a grid with \(n\) spaces: \[\mathbb{P}(C_k) = {\begin{pmatrix}n-c \\ k-c\end{pmatrix}} \div {\begin{pmatrix}n \\ k\end{pmatrix}}\]
+The number of ways in which we can get a \textsc{c}-cover equals the number of ways in which \(c\) columns can be covered by \(k\) nodes. We divide by the total number of ways in which \(k\) nodes can be distributed over \(n\) slots to get \[\mathbb{P}(C^{c,r}_k) = \dbinom{k}{c} \div \dbinom{n}{k}\]
+
+Conditioning on the existence of a \textsc{cc}-cover, we find that there are \(c\) ways in which a \textsc{cc}-cover can come about, and so \(\mathbb{P}(C^{c,r}_k\;|\;CC^{c,r}_k) = c \, \mathbb{P}(C^{c-1,r}_{k-r}) \).
 
 \subsection{\textsc{cc}-cover probability}
 
-Given that we have a \textsc{c}-cover, there are \[\binom{n-c}{k-c}\] different ways are there in which the \(k - c \) nodes that are not part of the \textsc{c}-cover can be distributed over the grid.
+Consider how a \textsc{cc}-cover could be built. The first node could go anywhere in the grid. The second node would have to go into the same column, an event with probability \(\frac{r-1}{n-1}\). By similar reasoning, the third node would go into the same column with probability \(\frac{r-2}{n-2}\), and so forth. There are \(\binom{k}{r}\) different ways in which the \(k\) nodes at our disposal could cover those \(r\) slots. This gives
 
-Again given that there is a \textsc{c}-cover, in how many different ways could there be a \textsc{cc}-cover? Firstly, the \textsc{cc}-cover could cover any of the \(c\) columns. Now taking the \(r+c-1\) nodes in the \textsc{c}-cover and those in the \textsc{cc}-cover as fixed, there are \[\binom{n-(r+c-1)}{k-(r+c-1)}\] ways in which the remaining nodes can distribute over the grid.
-
-Thus the probability of a \textsc{cc}-cover given a \textsc{c}-cover is \[\mathbb{P}(CC_k\;|\;C_k) = {c \cdot \begin{pmatrix}n-(r+c-1) \\ k-(r+c-1)\end{pmatrix}} \div {\begin{pmatrix}n-c \\ k-c\end{pmatrix}}\].
+\begin{align*}
+    \mathbb{P}(CC^{c,r}_k) &= \frac{r c}{n} \cdot \frac{r-1}{n-1} \cdot \frac{r-2}{n-2} \cdot \; \cdots \; \cdot \frac{r-(r-1)}{n-(r-1)} \cdot \dbinom{k}{r} \\
+    &= c \cdot \frac{r!}{n! \div (n-r)!} \cdot \dbinom{k}{r} \\
+    &= c \cdot \dbinom{k}{r} \div \dbinom{n}{r}
+\end{align*}
 
 \subsection{Quorum probability}
 
 Putting everything so far together, we have
 
 \begin{align*}
-\mathbb{P}(Q_k) &= \mathbb{P}(CC_k\;|\;C_k)\;\mathbb{P}(C_k) \\
-                &= \left\{{c \cdot \begin{pmatrix}n-(r+c-1) \\ k-(r+c-1)\end{pmatrix}} \div {\begin{pmatrix}n-c \\ k-c\end{pmatrix}}\right\} \cdot \left\{{\begin{pmatrix}n-c \\ k-c\end{pmatrix}} \div {\begin{pmatrix}n \\ k\end{pmatrix}}\right\} \\
-                &= {c \cdot \begin{pmatrix}n-(r+c-1) \\ k-(r+c-1)\end{pmatrix}} \div {\begin{pmatrix}n \\ k\end{pmatrix}}
+    \mathbb{P}(Q^{c,r}_k)
+    &= \mathbb{P}(C^{c,r}_k\;|\;CC^{c,r}_k) \; \mathbb{P}(CC^{c,r}_k) \\
+    &= c \, \mathbb{P}(C^{c-1,r}_{k-r}) \; \mathbb{P}(CC^{c,r}_k) \\
+    &= c \, \left\{\dbinom{k-r}{c-1} \div \dbinom{n-r}{k-r}\right\} \, \left\{c \, \dbinom{k}{r} \div \dbinom{n}{r}\right\} \\
+    &= c^2 \, \frac{\dbinom{k-r}{c-1} \dbinom{k}{r}}{\dbinom{n-r}{k-r} \dbinom{n}{r}}
 \end{align*}
 
 By the definition of the binomial, this is only defined if \(n \geq k\) (which is true by assumption), \(k \geq r+c-1\) and \(n \geq r+c-1\) (which is implied by transitivity). We know that \(r+c-1\) nodes are needed in order to get a \textsc{c}-cover as well as a \textsc{cc}-cover, so if \(k < r+c-1\) there can be no quorum.
@@ -77,7 +83,7 @@ The second special case is when we are sure to get a quorum. Starting from a ful
 This gives us the final expression for the probability of finding a quorum given \(k\) out of \(n\) possible votes,
 
 \[
-\mathbb{P}(Q_k) =
+\mathbb{P}(Q^{c,r}_k) =
     \begin{cases}
         0 & \text{if}\;k < r+c-1 \\
         1 & \text{if}\;k > n - \min(r,c) \\
