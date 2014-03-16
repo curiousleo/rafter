@@ -14,16 +14,17 @@
 \usepackage{algorithm}
 \usepackage{listings}
 \usepackage[pdftex,table,hyperref,dvipsnames]{xcolor}
-\usepackage[colorlinks=true,linkcolor=blue,urlcolor=blue,citecolor=blue]{hyperref}
+\usepackage[hidelinks]{hyperref}
 \usepackage{nag}
 
 %%% Custom LaTeX preamble
 % serif, non-bold headings:
-\addtokomafont{disposition}{\rmfamily\mdseries}
+\addtokomafont{chapter}{\mdseries}
+\addtokomafont{disposition}{\rmfamily}
 \addtokomafont{descriptionlabel}{\rmfamily}
 \addtokomafont{pageheadfoot}{\itshape}
 % no section numbering
-\setcounter{secnumdepth}{0}
+\setcounter{secnumdepth}{1}
 % hyperlinks
 \urlstyle{same} % normal text font (alternatives: tt, rm, sf)
 \hypersetup{
