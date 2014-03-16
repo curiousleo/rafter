@@ -23,8 +23,8 @@
 \addtokomafont{disposition}{\rmfamily}
 \addtokomafont{descriptionlabel}{\rmfamily}
 \addtokomafont{pageheadfoot}{\itshape}
-% no section numbering
-\setcounter{secnumdepth}{1}
+% section numbering up to subsection
+\setcounter{secnumdepth}{2}
 % hyperlinks
 \urlstyle{same} % normal text font (alternatives: tt, rm, sf)
 \hypersetup{
@@ -61,9 +61,7 @@
 
 \end{titlepage}
 
-\chapter*{Proforma%
-   \label{proforma}%
-}
+\chapter*{Proforma\label{ch:proforma}}
 
 \begin{center}
 {\renewcommand{\arraystretch}{1.5}%
@@ -77,27 +75,19 @@
 \end{tabularx}}
 \end{center}
 
-\section*{Original Aims of the Project%
-      \label{original-aims}%
-}
+\section*{Original Aims of the Project\label{sc:original-aims}}
 
 XXX
 
-\section*{Work Completed%
-      \label{work-completed}%
-}
+\section*{Work Completed\label{sc:work-completed}}
 
 XXX
 
-\section*{Special Difficulties%
-      \label{special-difficulties}%
-}
+\section*{Special Difficulties\label{sc:special-difficulties}}
 
 None.
 
-\section*{Declaration of Originality%
-   \label{declaration-of-originality}%
-}
+\section*{Declaration of Originality\label{sc:declaration-of-originality}}
 
 I, Leonhard Markert of Emmanuel College, being a candidate for Part~\textsc{ii} of the Computer Science Tripos, hereby declare that this dissertation and the work described in it are my own work, unaided except as may be specified below, and that the dissertation does not contain material that has already been used to any substantial extent for a comparable purpose.
 
@@ -107,9 +97,7 @@ Signed
 \vspace{0.2in}
 Date \hspace{0.4in} \today
 
-\chapter*{Acknowledgements%
-   \label{acknowledgements}%
-}
+\chapter*{Acknowledgements\label{ch:acknowledgements}}
 
 \begin{itemize}
     \item Malte Schwarzkopf and Ionel Gog
@@ -119,9 +107,7 @@ Date \hspace{0.4in} \today
 
 \tableofcontents
 
-\chapter{Introduction%
-  \label{introduction}%
-}
+\chapter{Introduction\label{ch:introduction}}
 
 \begin{itemize}
     \item Principal motivation for the project
@@ -140,9 +126,7 @@ Date \hspace{0.4in} \today
     \item PLs and systems which had to be learnt, theories and algorithms which required understanding
 \end{itemize}
 
-\chapter{Implementation%
-  \label{implementation}%
-}
+\chapter{Implementation\label{ch:implementation}}
 
 \begin{itemize}
     \item Describe what was actually produced
@@ -151,9 +135,7 @@ Date \hspace{0.4in} \today
     \item Mention major milestones
 \end{itemize}
 
-\chapter{Evaluation%
-  \label{evaluation}%
-}
+\chapter{Evaluation\label{ch:evaluation}}
 
 \begin{itemize}
     \item Signs of success, evidence of thorough and systematic testing
@@ -161,9 +143,11 @@ Date \hspace{0.4in} \today
     \item Original goals achieved? Proof? Did stuff work?
 \end{itemize}
 
-\chapter{Conclusions%
-  \label{conclusions}%
-}
+\begin{itemize}
+    \item Failure modes presentation: most frequent failure modes are individual, then rack failures
+\end{itemize}
+
+\chapter{Conclusions\label{ch:conclusions}}
 
 \begin{itemize}
     \item Refer to Introduction
@@ -175,8 +159,6 @@ Date \hspace{0.4in} \today
 
 \appendix
 
-\chapter{Code samples%
-  \label{code-samples}%
-}
+\chapter{Code Samples\label{ch:code-samples}}
 
 \end{document}
