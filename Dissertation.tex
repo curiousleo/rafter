@@ -16,6 +16,7 @@
 \usepackage[pdftex,table,hyperref,dvipsnames]{xcolor}
 \usepackage[hidelinks]{hyperref}
 \usepackage{nag}
+\usepackage[autocite=footnote,citestyle=authoryear-comp,bibstyle=authoryear,isbn=false,doi=false]{biblatex}
 
 %%% Custom LaTeX preamble
 % serif, non-bold headings:
@@ -31,6 +32,7 @@
   pdftitle={Extending Raft with Structured Voting},
   pdfauthor={Leonhard Markert (lm510), Emmanuel College}
 }
+\addbibresource{Bibliography.bib}
 \pagestyle{headings}
 
 %%% Body
@@ -154,8 +156,7 @@ Date \hspace{0.4in} \today
     \item Lessons learnt
 \end{itemize}
 
-\bibliographystyle{amsplain}
-\bibliography{Bibliography}
+\printbibliography
 
 \appendix
 
