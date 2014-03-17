@@ -3,10 +3,11 @@
 \usepackage{microtype}
 \usepackage{cmap} % fix search and cut-and-paste in Acrobat
 \usepackage{ifthen}
-\usepackage[oldstylenums,light,largesmallcaps]{kpfonts}
-\usepackage{beramono}
+\usepackage[oldstylenums,largesmallcaps]{kpfonts}
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
+\usepackage[british]{babel}
+\usepackage{csquotes}
 \usepackage{tabularx}
 \usepackage{booktabs}
 \usepackage{algorithmicx}
@@ -14,9 +15,10 @@
 \usepackage{algorithm}
 \usepackage{listings}
 \usepackage[pdftex,table,hyperref,dvipsnames]{xcolor}
-\usepackage[hidelinks]{hyperref}
+\usepackage[hidelinks,pdftex]{hyperref}
+\usepackage[autocite=footnote,citestyle=authoryear-comp,bibstyle=authoryear,
+            isbn=false,doi=false,backend=biber]{biblatex}
 \usepackage{nag}
-\usepackage[autocite=footnote,citestyle=authoryear-comp,bibstyle=authoryear,isbn=false,doi=false]{biblatex}
 
 %%% Custom LaTeX preamble
 % serif, non-bold headings:
