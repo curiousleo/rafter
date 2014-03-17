@@ -121,9 +121,46 @@ Date \hspace{0.4in} \today
     \item Survey of related work
 \end{itemize}
 
-\chapter{Preparation%
-  \label{preparation}%
-}
+\begin{itemize}
+    \item Raft: consensus protocol, asymmetric: leader, follower, candidate -- elections, majority voting by default; state machine, backend, ``understandable'' Paxos replacement -- strongly consistent (all operations are seen in the same order by all nodes); correctness proof \parencite{raft} \parencite{proof}
+    \item Structured voting: more efficient / available (less cost), example: Grid protocol, key insight: don't need majority to guarantee mutual exclusion; tree-shaped voting structures: generalised framework; logical structure on nodes; smaller quorums
+    \item Motivation: combine Raft and structured voting (\textit{write} quorums specifically)
+    \item Failure model: no Byzantine failures -- servers either work or not; fail-stop, permanent/volatile memory, lost/delayed messages but not corrupted
+\end{itemize}
+
+\section{Motivation\label{sc:motivation}}
+
+As ever-increasing amounts of data are being handled in commercial settings as well as in research, distributed systems for processing and storage are becoming more and more ubiquitous. There are two main motivations for this: (1) to speed up large computations, and (2) to increase fault tolerance. Distributed consensus protocols aim to satisfy the second objective: increasing tolerance against failure at the cost of communication overheads and some redundancy, usually in terms of memory.
+
+Eric Brewer's famous \textsc{cap} theorem states that any distributed system can provide at most two out of the three desirable properties consistency (\textsc{c}), availability (\textsc{a}), and partition tolerance (\textsc{p}).\autocite{cap} The following definitions are adapted from \textcite{capproof}:
+
+\begin{description}
+    \item[Consistency] There must exist a total order on all operations such that each operation looks as if it were completed at a single instant. An important consequence of this \emph{linearisable} (or \emph{atomic}) consistency guarantee is that any read operation that begins after a write operation completes must return that value, or the result of a later write operation.\footnote{As \textcite{capproof} point out, the term \emph{consistency} is highly overloaded. Note that the above notion of atomic consistency subsumes what is called atomicity and consistency in the context of \textsc{acid} (atomic, consistent, isolated, and durable) databases.}
+    \item[Availability] Every request received by a non-failing node in the system must result in a response.
+    \item[Partition tolerance] The system continues to operate despite arbitrary message loss. This includes network partitions, where all messages sent from nodes in one component of the partition to nodes in another component are lost.
+\end{description}
+
+Out of those three, partition tolerance is required in almost all cases. As \citeauthor{needp} puts it in his article \citetitle{needp}: \begin{quote}For a distributed \dots{} system to \emph{not} require partition tolerance it would have to run on a network which is guaranteed to never drop messages \dots{} and whose nodes are guaranteed to never [fail]. [These] types of systems \dots{} don't exist.\end{quote}
+
+This leaves designers of distributed systems with With the rise of commercial databases of unprecedented scale over the last decade,  have tried to find the right trade-off between .
+
+\begin{quote}
+    For systems prone to server and network failures, availability can be increased by using optimistic replication techniques, where changes are allowed to propagate to replicas in the background, and concurrent, disconnected work is tolerated. The challenge with this approach is that it can lead to conflicting changes which must be detected and resolved. This process of conflict resolution introduces two problems: when to resolve them and who resolves them. Dynamo is designed to be an \emph{eventually consistent} data store; that is all updates reach all replicas eventually.
+\end{quote}
+
+(emphasis by me)
+
+CAP theorem: C, A, P, pick two -- not really, CAP Twelve Years Later: continuous, lots of flexibility to mix and match \parencite{cap12} \parencite{cap}
+
+Amazon Dynamo (adjustable consistency), Facebook / Apache (Rackspace) Cassandra (can adjust consistency), (Microsoft / Bing) HBase; Riak (Basho)
+
+\section{Challenges\label{sc:challenges}}
+
+\section{Related Work\label{sc:related-work}}
+
+\section{Overview of Structured Rafter\label{sc:overview-of-structured-rafter}}
+
+\chapter{Preparation\label{ch:preparation}}
 
 \begin{itemize}
     \item Work undertaken before code was written
