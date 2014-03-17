@@ -38,6 +38,8 @@
 %%% Body
 \begin{document}
 
+\pagenumbering{roman} % or scrbook + \frontmatter
+
 \begin{titlepage}
 
 \rightline{\large\textit{Leonhard Markert}} \medskip
@@ -111,6 +113,8 @@ Date \hspace{0.4in} \today
 
 \chapter{Introduction\label{ch:introduction}}
 
+\pagenumbering{arabic} % or scrbook + \mainmatter before \chapter
+
 \begin{itemize}
     \item Principal motivation for the project
     \item How the work fits into the broad area of surrounding CS
@@ -157,6 +161,8 @@ Date \hspace{0.4in} \today
 \end{itemize}
 
 \printbibliography
+
+% \backmatter
 
 \appendix
 
