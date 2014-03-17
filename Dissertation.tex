@@ -125,7 +125,7 @@ Date \hspace{0.4in} \today
 \end{itemize}
 
 \begin{itemize}
-    \item Raft: consensus protocol, asymmetric: leader, follower, candidate -- elections, majority voting by default; state machine, backend, ``understandable'' Paxos replacement -- strongly consistent (all operations are seen in the same order by all nodes); correctness proof \parencite{raft} \parencite{proof}
+    \item Raft: consensus protocol, asymmetric: leader, follower, candidate -- elections, majority voting by default; state machine, backend, ``understandable'' Paxos replacement -- strongly consistent (all operations are seen in the same order by all nodes); correctness proof \parencite{raft} \parencite{raftproof}
     \item Structured voting: more efficient / available (less cost), example: Grid protocol, key insight: don't need majority to guarantee mutual exclusion; tree-shaped voting structures: generalised framework; logical structure on nodes; smaller quorums
     \item Motivation: combine Raft and structured voting (\textit{write} quorums specifically)
     \item Failure model: no Byzantine failures -- servers either work or not; fail-stop, permanent/volatile memory, lost/delayed messages but not corrupted
@@ -135,27 +135,34 @@ Date \hspace{0.4in} \today
 
 As ever-increasing amounts of data are being handled in commercial settings as well as in research, distributed systems for processing and storage are becoming more and more ubiquitous. There are two main motivations for this: (1) to speed up large computations, and (2) to increase fault tolerance. Distributed consensus protocols aim to satisfy the second objective: increasing tolerance against failure at the cost of communication overheads and some redundancy, usually in terms of memory.
 
+\section{\textsc{cap}, \textsc{acid} and \textsc{base}\label{sc:cap-acid-and-base}}
+
 Eric Brewer's famous \textsc{cap} theorem states that any distributed system can provide at most two out of the three desirable properties consistency (\textsc{c}), availability (\textsc{a}), and partition tolerance (\textsc{p}).\autocite{cap} The following definitions are adapted from \textcite{capproof}:
 
 \begin{description}
-    \item[Consistency] There must exist a total order on all operations such that each operation looks as if it were completed at a single instant. An important consequence of this \emph{linearisable} (or \emph{atomic}) consistency guarantee is that any read operation that begins after a write operation completes must return that value, or the result of a later write operation.\footnote{As \textcite{capproof} point out, the term \emph{consistency} is highly overloaded. Note that the above notion of atomic consistency subsumes what is called atomicity and consistency in the context of \textsc{acid} (atomic, consistent, isolated, and durable) databases.}
+    \item[Consistency] There must exist a total order on all operations such that each operation looks as if it were completed at a single instant. An important consequence of this \emph{linearisable} (or \emph{atomic}) consistency guarantee is that any read operation that begins after a write operation completes must return that value, or the result of a later write operation.\footnote{As \textcite{capproof} point out, the term \emph{consistency} is highly overloaded. Note that the above notion of atomic consistency subsumes what is called atomicity and consistency in the context of \textsc{acid} (\enquote{atomic, consistent, isolated, durable}) databases.}
     \item[Availability] Every request received by a non-failing node in the system must result in a response.
     \item[Partition tolerance] The system continues to operate despite arbitrary message loss. This includes network partitions, where all messages sent from nodes in one component of the partition to nodes in another component are lost.
 \end{description}
 
-Out of those three, partition tolerance is required in almost all cases. As \citeauthor{needp} puts it in his article \citetitle{needp}: \begin{quote}For a distributed \dots{} system to \emph{not} require partition tolerance it would have to run on a network which is guaranteed to never drop messages \dots{} and whose nodes are guaranteed to never [fail]. [These] types of systems \dots{} don't exist.\end{quote}
-
-This leaves designers of distributed systems with With the rise of commercial databases of unprecedented scale over the last decade,  have tried to find the right trade-off between .
+Out of those three, partition tolerance is required in almost all cases. As \citeauthor{needp} puts it in his article \citetitle{needp}:
 
 \begin{quote}
-    For systems prone to server and network failures, availability can be increased by using optimistic replication techniques, where changes are allowed to propagate to replicas in the background, and concurrent, disconnected work is tolerated. The challenge with this approach is that it can lead to conflicting changes which must be detected and resolved. This process of conflict resolution introduces two problems: when to resolve them and who resolves them. Dynamo is designed to be an \emph{eventually consistent} data store; that is all updates reach all replicas eventually.
+    For a distributed \dots{} system to \emph{not} require partition tolerance it would have to run on a network which is guaranteed to never drop messages \dots{} and whose nodes are guaranteed to never [fail]. [These] types of systems \dots{} don't exist.
 \end{quote}
 
-(emphasis by me)
+This leaves designers of distributed systems with the task of finding the right trade-off between consistency and availability, both of which should be considered as continuous rather than binary properties \autocite{cap12}. With the rise of commercial databases of unprecedented scale over the last decade, consistency (in its strict form as defined above) is in many cases sacrificed for increased availability.%
+\footnote{This has been heralded as a paradigm shift from the \textsc{acid} to the \textsc{base} (\enquote{basically available, soft state, eventually consistent}) model \parencite{base}.} %
+The authors of \citetitle{dynamo} describe this as follows:%
+\footnote{Notable other eventually consistent systems include Cassandra \parentext{\citeurl{cassandra}}, Riak \parentext{\citeurl{riak}} and HBase \parentext{\citeurl{hbase}}.}
 
-CAP theorem: C, A, P, pick two -- not really, CAP Twelve Years Later: continuous, lots of flexibility to mix and match \parencite{cap12} \parencite{cap}
+\begin{quote}
+    For systems prone to server and network failures, availability can be increased by using optimistic replication techniques, where changes are allowed to propagate to replicas in the background, and concurrent, disconnected work is tolerated. The challenge with this approach is that it can lead to \emph{conflicting changes which must be detected and resolved} \dots{} Dynamo is designed to be an eventually consistent data store; that is all updates reach all replicas eventually.
+\end{quote}
 
-Amazon Dynamo (adjustable consistency), Facebook / Apache (Rackspace) Cassandra (can adjust consistency), (Microsoft / Bing) HBase; Riak (Basho)
+The conflict detection and resolution mechanisms required by eventually consistent systems increase their complexity compared to consistent systems, which do not need them. This begs the question: are there techniques that could be used to improve availability without giving up on consistency, allowing for simpler systems? The \textsc{cap} theorem tells us that we can never build strictly consistent and maximally available systems, but a different trade-off might be possible. \emph{Structured voting schemes} are designed for precisely this purpose.
+
+\section{Structured Voting Schemes\label{sc:structured-voting-schemes}}
 
 \section{Challenges\label{sc:challenges}}
 
