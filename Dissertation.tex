@@ -32,7 +32,7 @@
 % hyperlinks
 \urlstyle{same} % normal text font (alternatives: tt, rm, sf)
 \hypersetup{
-  pdftitle={Extending Raft with Structured Voting},
+  pdftitle={Extending Raft with structured voting},
   pdfauthor={Leonhard Markert (lm510), Emmanuel College}
 }
 \addbibresource{Bibliography.bib}
@@ -52,7 +52,7 @@
 \vfil
 
 \centerline{\large Computer Science Part \textsc{ii} Project} \vspace{0.4in}
-\centerline{\Large\textbf{Extending Raft with Structured Voting}} \vspace{0.3in}
+\centerline{\Large\textbf{Extending Raft with structured voting}} \vspace{0.3in}
 \centerline{\large\textit{\today}}
 
 \vfil
@@ -74,7 +74,7 @@
 {\renewcommand{\arraystretch}{1.5}%
 \begin{tabularx}{330pt}{rX}
 \textbf{Name and College} & Leonhard Markert, Emmanuel College \\
-\textbf{Project Title} & Extending Raft with Structured Voting \\
+\textbf{Project Title} & Extending Raft with structured voting \\
 \textbf{Examination} & Computer Science Tripos, Part \textsc{ii}, June 2014 \\
 \textbf{Word Count} & XXX words \\
 \textbf{Project Originator} & Leonhard Markert \\
@@ -82,11 +82,11 @@
 \end{tabularx}}
 \end{center}
 
-\section*{Original Aims of the Project\label{sc:original-aims}}
+\section*{Original aims of the project\label{sc:original-aims}}
 
 XXX
 
-\section*{Work Completed\label{sc:work-completed}}
+\section*{Work completed\label{sc:work-completed}}
 
 XXX
 
@@ -135,7 +135,11 @@ Date \hspace{0.4in} \today
 
 As ever-increasing amounts of data are being handled in commercial settings as well as in research, distributed systems for processing and storage are becoming more and more ubiquitous. There are two main motivations for this: (1) to speed up large computations, and (2) to increase fault tolerance. Distributed consensus protocols aim to satisfy the second objective: increasing tolerance against failure at the cost of communication overheads and some redundancy, usually in terms of memory.
 
-\section{\textsc{cap}, \textsc{acid} and \textsc{base}\label{sc:cap-acid-and-base}}
+\section{Challenges\label{sc:challenges}}
+
+\section{Related work\label{sc:related-work}}
+
+\subsection{Distributed systems: \textsc{cap}, \textsc{acid} and \textsc{base}\label{ssc:cap-acid-and-base}}
 
 Eric Brewer's famous \textsc{cap} theorem states that any distributed system can provide at most two out of the three desirable properties consistency (\textsc{c}), availability (\textsc{a}), and partition tolerance (\textsc{p}).\autocite{cap} The following definitions are adapted from \textcite{capproof}:
 
@@ -162,11 +166,9 @@ The authors of \citetitle{dynamo} describe this as follows:%
 
 The conflict detection and resolution mechanisms required by eventually consistent systems increase their complexity compared to consistent systems, which do not need them. This begs the question: are there techniques that could be used to improve availability without giving up on consistency, allowing for simpler systems? The \textsc{cap} theorem tells us that we can never build strictly consistent and maximally available systems, but a different trade-off might be possible. \emph{Structured voting schemes} are designed for precisely this purpose.
 
-\section{Structured Voting Schemes\label{sc:structured-voting-schemes}}
+\subsection{The Raft consensus algorithm\label{ssc:raft-consensus-algorithm}}
 
-\section{Challenges\label{sc:challenges}}
-
-\section{Related Work\label{sc:related-work}}
+\subsection{Structured voting schemes\label{ssc:structured-voting-schemes}}
 
 \section{Overview of Structured Rafter\label{sc:overview-of-structured-rafter}}
 
@@ -213,6 +215,6 @@ The conflict detection and resolution mechanisms required by eventually consiste
 
 \appendix
 
-\chapter{Code Samples\label{ch:code-samples}}
+\chapter{Code samples\label{ch:code-samples}}
 
 \end{document}
