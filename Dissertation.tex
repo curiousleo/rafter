@@ -118,18 +118,18 @@ Date \hspace{0.4in} \today
 
 \chapter{Introduction\label{ch:introduction}}
 
-\begin{itemize}
-    \item Principal motivation for the project
-    \item How the work fits into the broad area of surrounding CS
-    \item Survey of related work
-\end{itemize}
+% \begin{itemize}
+    % \item Principal motivation for the project
+    % \item How the work fits into the broad area of surrounding CS
+    % \item Survey of related work
+% \end{itemize}
 
-\begin{itemize}
-    \item Raft: consensus protocol, asymmetric: leader, follower, candidate -- elections, majority voting by default; state machine, backend, ``understandable'' Paxos replacement -- strongly consistent (all operations are seen in the same order by all nodes); correctness proof \parencite{raft} \parencite{raftproof}
-    \item Structured voting: more efficient / available (less cost), example: Grid protocol, key insight: don't need majority to guarantee mutual exclusion; tree-shaped voting structures: generalised framework; logical structure on nodes; smaller quorums
-    \item Motivation: combine Raft and structured voting (\textit{write} quorums specifically)
-    \item Failure model: no Byzantine failures -- servers either work or not; fail-stop, permanent/volatile memory, lost/delayed messages but not corrupted
-\end{itemize}
+% \begin{itemize}
+    % \item Raft: consensus protocol, asymmetric: leader, follower, candidate -- elections, majority voting by default; state machine, backend, ``understandable'' Paxos replacement -- strongly consistent (all operations are seen in the same order by all nodes); correctness proof \parencite{raft} \parencite{raftproof}
+    % \item Structured voting: more efficient / available (less cost), example: Grid protocol, key insight: don't need majority to guarantee mutual exclusion; tree-shaped voting structures: generalised framework; logical structure on nodes; smaller quorums
+    % \item Motivation: combine Raft and structured voting (\textit{write} quorums specifically)
+    % \item Failure model: no Byzantine failures -- servers either work or not; fail-stop, permanent/volatile memory, lost/delayed messages but not corrupted
+% \end{itemize}
 
 \section{Motivation\label{sc:motivation}}
 
@@ -174,40 +174,40 @@ The conflict detection and resolution mechanisms required by eventually consiste
 
 \chapter{Preparation\label{ch:preparation}}
 
-\begin{itemize}
-    \item Work undertaken before code was written
-    \item Refinement of project proposal
-    \item Professional approach: Requirements analysis!, reference Software Engineering techniques
-    \item PLs and systems which had to be learnt, theories and algorithms which required understanding
-\end{itemize}
+% \begin{itemize}
+    % \item Work undertaken before code was written
+    % \item Refinement of project proposal
+    % \item Professional approach: Requirements analysis!, reference Software Engineering techniques
+    % \item PLs and systems which had to be learnt, theories and algorithms which required understanding
+% \end{itemize}
 
 \chapter{Implementation\label{ch:implementation}}
 
-\begin{itemize}
-    \item Describe what was actually produced
-    \item Design strategies (looking ahead to the testing stage)
-    \item Draw attention to the parts of the work which are not your own
-    \item Mention major milestones
-\end{itemize}
+% \begin{itemize}
+    % \item Describe what was actually produced
+    % \item Design strategies (looking ahead to the testing stage)
+    % \item Draw attention to the parts of the work which are not your own
+    % \item Mention major milestones
+% \end{itemize}
 
 \chapter{Evaluation\label{ch:evaluation}}
 
-\begin{itemize}
-    \item Signs of success, evidence of thorough and systematic testing
-    \item Sample output, graphs, diagrams
-    \item Original goals achieved? Proof? Did stuff work?
-\end{itemize}
+% \begin{itemize}
+    % \item Signs of success, evidence of thorough and systematic testing
+    % \item Sample output, graphs, diagrams
+    % \item Original goals achieved? Proof? Did stuff work?
+% \end{itemize}
 
-\begin{itemize}
-    \item Failure modes presentation: most frequent failure modes are individual, then rack failures
+% \begin{itemize}
+    % \item Failure modes presentation: most frequent failure modes are individual, then rack failures
 \end{itemize}
 
 \chapter{Conclusions\label{ch:conclusions}}
 
-\begin{itemize}
-    \item Refer to Introduction
-    \item Lessons learnt
-\end{itemize}
+% \begin{itemize}
+    % \item Refer to Introduction
+    % \item Lessons learnt
+% \end{itemize}
 
 \printbibliography
 
