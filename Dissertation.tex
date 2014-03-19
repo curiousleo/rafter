@@ -133,7 +133,18 @@ Date \hspace{0.4in} \today
 
 \section{Motivation\label{sc:motivation}}
 
-As ever-increasing amounts of data are being handled in commercial settings as well as in research, distributed systems for processing and storage are becoming more and more ubiquitous. There are two main motivations for this: (1) to speed up large computations, and (2) to increase fault tolerance. Distributed consensus protocols aim to satisfy the second objective: increasing tolerance against failure at the cost of communication overheads and some redundancy, usually in terms of memory.
+As ever-increasing amounts of data are being handled in commercial settings as well as in research, distributed systems for processing and storage are becoming more and more ubiquitous. One main driver of this development is the need to increase fault tolerance.
+
+According to Eric Brewer's famous \textsc{cap} theorem \autocite{cap}, a partition tolerant system cannot be both strictly consistent and maximally available.\footnote{The terms consistency, availability and partition tolerance are defined in \autoref{ssc:cap-acid-and-base}.} Many recent distributed data stores sacrifice consistency for availability. Some applications, however, require strong consistency guarantees -- data backup and configuration management systems, for example. Consensus protocols like Paxos \autocite{paxos} and Raft \autocite{raft} guarantee consistency at the cost of decreased availability.
+
+In this project, I added support for structured voting schemes to an existing implementation of Raft. My aim was increase the availability and scalability of data storage systems built on top of this implementation while still providing the same consistency guarantees as the original Raft algorithm.
+
+Increasing the availability of a consistent distributed system would have two effects:
+
+\begin{itemize}
+    \item Applications that require consistency and already use a consensus algorithm that provides consistency could have their availability increased by migrating to this new implementation;
+    \item Applications that require high availability and currently run an algorithm that does not guarantee consistency, might switch to this new implementation too.
+\end{itemize}
 
 \section{Challenges\label{sc:challenges}}
 
@@ -164,7 +175,7 @@ The authors of \citetitle{dynamo} describe this as follows:%
     For systems prone to server and network failures, availability can be increased by using optimistic replication techniques, where changes are allowed to propagate to replicas in the background, and concurrent, disconnected work is tolerated. The challenge with this approach is that it can lead to \emph{conflicting changes which must be detected and resolved} \dots{} Dynamo is designed to be an eventually consistent data store; that is all updates reach all replicas eventually.
 \end{quote}
 
-The conflict detection and resolution mechanisms required by eventually consistent systems increase their complexity compared to consistent systems, which do not need them. This begs the question: are there techniques that could be used to improve availability without giving up on consistency, allowing for simpler systems? The \textsc{cap} theorem tells us that we can never build strictly consistent and maximally available systems, but a different trade-off might be possible. \emph{Structured voting schemes} are designed for precisely this purpose.
+The conflict detection and resolution mechanisms required by eventually consistent systems increase their complexity compared to consistent systems, which do not need them. This begs the question: are there techniques that could be used to improve availability without giving up on consistency, allowing for simpler systems? The \textsc{cap} theorem tells us that we can never build strictly consistent and maximally available systems, but a different trade-off might be possible.
 
 \subsection{The Raft consensus algorithm\label{ssc:raft-consensus-algorithm}}
 
