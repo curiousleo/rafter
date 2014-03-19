@@ -1,4 +1,4 @@
-\documentclass[11pt,chapterprefix=true,toc=bibliography,numbers=noendperiod]{scrreprt}
+\documentclass[11pt,chapterprefix=true,toc=bibliography,numbers=noendperiod]{scrbook}
 \usepackage{fixltx2e} % LaTeX patches, \textsubscript
 \usepackage{microtype}
 \usepackage{cmap} % fix search and cut-and-paste in Acrobat
@@ -41,7 +41,7 @@
 %%% Body
 \begin{document}
 
-\pagenumbering{roman} % or scrbook + \frontmatter
+\frontmatter
 
 \begin{titlepage}
 
@@ -114,9 +114,9 @@ Date \hspace{0.4in} \today
 
 \tableofcontents
 
-\chapter{Introduction\label{ch:introduction}}
+\mainmatter
 
-\pagenumbering{arabic} % or scrbook + \mainmatter before \chapter
+\chapter{Introduction\label{ch:introduction}}
 
 \begin{itemize}
     \item Principal motivation for the project
@@ -211,7 +211,7 @@ The conflict detection and resolution mechanisms required by eventually consiste
 
 \printbibliography
 
-% \backmatter
+\backmatter
 
 \appendix
 
