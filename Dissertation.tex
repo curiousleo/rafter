@@ -183,6 +183,44 @@ The conflict detection and resolution mechanisms required by eventually consiste
 
 \subsection{The Raft consensus algorithm\label{ssc:raft-consensus-algorithm}}
 
+Although still a draft, the paper describing the new Raft consensus algorithm \autocite{raft} has created a lot of buzz; dozens of implementations in various languages and stages of development exist.\footnote{For an up-to-date list of Raft implementations, see \url{http://raftconsensus.github.io/\#implementations}.}
+
+In the following, I will give a short overview of the Raft consensus algorithm. It is meant to introduce the terminology required for the Implementation and Evaluation chapters.
+
+At its core, Raft uses a replicated state machine architecture, implemented using a replicated log (see \autoref{fig:replicated-state-machine}): each log contains the same commands in the same order, so each state machine processes the same sequence of commands. Since the state machines are assumed to be deterministic, each computes the same state and the same sequence of outputs.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth, keepaspectratio]{Images/Replicated_state_machine.pdf}
+    \caption{Replicated state machine architecture}
+    \label{fig:replicated-state-machine}
+\end{figure}
+
+Raft implements this replicated log architecture using a collections of servers (a cluster) communicating via remote procedure calls (\textsc{rpc}s), of which there are two: \texttt{appendEntries} and \texttt{requestVote}. At any given time each server is either a \emph{leader}, \emph{follower}, or \emph{candidate} (see \autoref{fig:consensus-fsm}). In normal operation, there is exactly one leader and all other servers are followers.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth, keepaspectratio]{Images/Consensus_FSM.pdf}
+    \caption{Server states and the transitions between them}
+    \label{fig:consensus-fsm}
+\end{figure}
+
+\minisec{Leader election}
+
+A server remains in follower state as long as it receives valid heartbeats (\appendEntriesRPC s that carry no entries) from a leader or candidate. If a follower receives no communication over a period of time, it assumes that there is no viable leader and begins an election to choose a new one. To do so, it transitions to candidate state and issues \requestVoteRPC s in parallel to all other servers in the cluster. Then one of three things happens: (a) the candidate wins the election, (b) another server establishes itself as leader, or (c) a period of time goes by without a winner, in which case a new election is started.
+
+Each server receiving a \requestVoteRPC{} will vote for at most one candidate, on a first-come-first-served basis. Once a candidate wins an election, it becomes the new leader and sends heartbeat messages to every other server to establish its authority.
+
+\minisec{Log replication}
+
+Each client request to a leader contains a command to be executed by the replicated state machines. The leader appends the command to its log as a new entry, then issues \appendEntriesRPC s in parallel to all other servers to replicate the entry. When the entry has been safely replicated, the leader applies the entry to its state machine and returns the result of that execution to the client (for a complete description of what it means for an entry to be \enquote{safely replicated}, see subsection 5.3 of the Raft paper.)
+
+\minisec{Safety guarantees}
+
+In order to guarantee overall correctness, different components of Raft are designed to make sure certain well-defined safety properties are true at all times. These properties are shown to hold and then used to prove correctness in the separate correctness proof \autocite{raftproof}.
+
+Since my project involved changing the way in which quorums\footnote{A \emph{quorum} is a minimal subset of the cluster that an operation has to obtain votes from in order to be performed. Majority voting, for example, specificies that any set of servers containing at least half the servers in the entire cluster constitutes a quorum.} are constructed, I had to pay special attention to the Election Safety property (stating that there can be at most one leader at any given time) and all the steps in the proof to do with quorums, in order to make sure all the desired properties still hold.
+
 \subsection{Structured voting schemes\label{ssc:structured-voting-schemes}}
 
 \section{Overview of Structured Rafter\label{sc:overview-of-structured-rafter}}
