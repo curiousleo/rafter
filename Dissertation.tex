@@ -231,7 +231,7 @@ By taking into account the identity of nodes, as opposed to just counting them a
 
 \minisec{Quorum systems}
 
-A quorum system is defined as a tuple of a read and a write quorum set whose elements are called read quorums and write quorums, respectively. These are constructed such that every write quorum intersects with every other write quorum and with every read quorum in at least one process while read quorums need not intersect \autocite{voting}.
+A quorum system is defined as a tuple of a read and a write quorum set whose elements are called read quorums and write quorums, respectively. These are constructed such that every write quorum intersects with every other write quorum and with every read quorum in at least one process; read quorums need not intersect \autocite{voting}.
 
 The key realisation that lead to this project was that write quorums have precisely the property required for Raft's leader election, namely that any two write quorums intersect. From this point on, \emph{quorum} will mean \emph{write quorum} unless specifically noted otherwise.
 
@@ -260,9 +260,9 @@ Structured voting schemes impose a logical structure on the set of processes and
 
 \citeauthor{generators} present \emph{tree-shaped voting structures} as a universal quorum system representation in the form of semantics-enriched tree graphs. They are produced by voting structure specific \emph{voting structure generators} \autocite{generators}.
 
-In a tree-shaped voting structure, each node without children (a \enquote{physical node}) represents a process. Nodes with children (called \enquote{virtual nodes}) do not stand for processes. Instead, they represent the structure of the voting scheme. The tree is to be interpreted such that votes flow upwards, from the physical nodes (the leaves of the tree) up to the virtual node at its root.
+In a tree-shaped voting structure, each node without children (a \enquote{physical node}) represents a process. Nodes with children (called \enquote{virtual nodes}) represent the structure of the voting scheme. The tree is to be interpreted such that votes flow upwards, from the physical nodes (the leaves of the tree) up to the virtual node at its root.
 
-When a physical node casts its vote, the number of votes it is annotated with is added to the votes its parent virtual node has received. If the sum of those votes equals or exceeds the parent node's threshold, then the parent node in turn passes its vote to its parent. An annotated example is given in \autoref{fig:grid4}.
+When a physical node casts its vote, its votes are added to the votes its parent virtual node has already received. If the sum of those votes equals or exceeds the parent node's threshold, then the parent node in turn passes its vote to its parent. An annotated example is given in \autoref{fig:grid4}.
 
 \begin{figure}[h]
     \centering
@@ -271,6 +271,12 @@ When a physical node casts its vote, the number of votes it is annotated with is
     \label{fig:grid4}
 \end{figure}
 
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=0.9\textwidth, height=0.8\textheight, keepaspectratio]{Images/Grid4-state.pdf}
+    \caption{An election using the Grid Protocol. Each node has one vote. \texttt{A} votes first (maroon). \(V_4\) has a threshold of one, so it votes as well. \(V_2\) and \(V_6\) both have threshold two, so their votes are pending. Then \texttt{B} votes (blue), triggering a vote from \(V_5\). Now both \(V_4\) and \(V_5\) have voted, so \(V_2\)'s threshold of two is reached and it votes, too. At this stage, \(V_1\) and \(V_7\) each require one more vote. Lastly, \texttt{C} votes (green). \(V_4\) has already voted, so nothing happens in this branch. \(V_6\) receives a second vote, so it passes its vote to \(V_3\), immediately triggering it to vote to the root node \(V_1\), where the threshold is now reached, ending the election.}
+    \label{fig:grid4-state}
+\end{figure}
 
 \section{Overview of Structured Rafter\label{sc:overview-of-structured-rafter}}
 
