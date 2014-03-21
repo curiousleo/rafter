@@ -223,6 +223,14 @@ Since my project involved changing the way in which quorums\footnote{A \emph{quo
 
 \subsection{Structured voting schemes\label{ssc:structured-voting-schemes}}
 
+By taking into account the identity of nodes, as opposed to just counting them as in the majority consensus algorithm, we can build \emph{structured} voting schemes.
+
+\minisec{Quorum systems}
+
+A quorum system is defined as a tuple of a read and a write quorum set whose elements are called read quorums and write quorums, respectively. These are constructed such that every write quorum intersects with every other write quorum and with every read quorum in at least one process while read quorums need not intersect \autocite{voting}.
+
+The key realisation that lead to this project was that write quorums give precisely the guarantees required for Raft's leader election, namely that any two write quorums intersect. From this point on, I will concentrate on write quorums only; unless otherwise noted, \emph{quorum} will refer to write quorum.
+
 \section{Overview of Structured Rafter\label{sc:overview-of-structured-rafter}}
 
 \chapter{Preparation\label{ch:preparation}}
