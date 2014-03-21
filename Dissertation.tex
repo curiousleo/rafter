@@ -219,7 +219,7 @@ Each client request to a leader contains a command to be executed by the replica
 
 In order to guarantee overall correctness, different components of Raft are designed to make sure certain well-defined safety properties are true at all times. These properties are shown to hold and then used to prove correctness in the separate correctness proof \autocite{raftproof}.
 
-Since my project involved changing the way in which quorums\footnote{A \emph{quorum} is a minimal subset of the cluster that an operation has to obtain votes from in order to be performed. Majority voting, for example, specificies that any set of servers containing at least half the servers in the entire cluster constitutes a quorum.} are constructed, I had to pay special attention to the Election Safety property (stating that there can be at most one leader at any given time) and all the steps in the proof to do with quorums, in order to make sure all the desired properties still hold.
+Since my project involved changing the way in which quorums\footnote{A \emph{quorum} is a minimal subset of the cluster that an operation has to obtain votes from in order to be performed. Majority voting, for example, specifies that any set of servers containing at least half the servers in the entire cluster constitutes a quorum.} are constructed, I had to pay special attention to the Election Safety property (stating that there can be at most one leader at any given time) and all the steps in the proof to do with quorums, in order to make sure all the desired properties still hold.
 
 \subsection{Structured voting schemes\label{ssc:structured-voting-schemes}}
 
