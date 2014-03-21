@@ -1,5 +1,5 @@
 \documentclass[11pt,chapterprefix=true,toc=bibliography,numbers=noendperiod,
-               footnotes=multiple]{scrbook}
+               footnotes=multiple,twoside]{scrreprt}
 \usepackage{fixltx2e} % LaTeX patches, \textsubscript
 \usepackage{microtype}
 \usepackage{cmap} % fix search and cut-and-paste in Acrobat
@@ -46,7 +46,8 @@
 %%% Body
 \begin{document}
 
-\frontmatter
+% \frontmatter
+\pagenumbering{roman}
 
 \begin{titlepage}
 
@@ -119,9 +120,11 @@ Date \hspace{0.4in} \today
 
 \tableofcontents
 
-\mainmatter
+% \mainmatter
 
 \chapter{Introduction\label{ch:introduction}}
+
+\pagenumbering{arabic}
 
 % \begin{itemize}
     % \item Principal motivation for the project
@@ -310,7 +313,7 @@ When a physical node casts its vote, the number of votes it is annotated with is
 
 \printbibliography
 
-\backmatter
+% \backmatter
 
 \appendix
 
