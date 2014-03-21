@@ -41,6 +41,7 @@
 % custom commands
 \newcommand{\requestVoteRPC}[0]{\texttt{requestVote} \textsc{rpc}}
 \newcommand{\appendEntriesRPC}[0]{\texttt{appendEntries} \textsc{rpc}}
+\newcommand{\voted}[1]{\textbf{\color{black}#1}}
 
 %%% Body
 \begin{document}
@@ -229,7 +230,44 @@ By taking into account the identity of nodes, as opposed to just counting them a
 
 A quorum system is defined as a tuple of a read and a write quorum set whose elements are called read quorums and write quorums, respectively. These are constructed such that every write quorum intersects with every other write quorum and with every read quorum in at least one process while read quorums need not intersect \autocite{voting}.
 
-The key realisation that lead to this project was that write quorums give precisely the guarantees required for Raft's leader election, namely that any two write quorums intersect. From this point on, I will concentrate on write quorums only; unless otherwise noted, \emph{quorum} will refer to write quorum.
+The key realisation that lead to this project was that write quorums have precisely the property required for Raft's leader election, namely that any two write quorums intersect. From this point on, \emph{quorum} will mean \emph{write quorum} unless specifically noted otherwise.
+
+\minisec{Structured voting by example}
+
+Structured voting schemes impose a logical structure on the set of processes and use structural properties to specify quorum systems. For example, the structured Grid Protocol arranges processes in a logical rectangular grid \autocite{grid}. A write quorum consists of all processes from a complete column plus one process from each column.
+
+\begin{figure}[h]
+    \centering
+    {\ttfamily\color{gray}
+    \begin{tabular}{c | c | c | c}
+        A & \voted{B} & C & D \\
+        \hline
+        E & \voted{F} & \voted{G} & H \\
+        \hline
+        \voted{I} & \voted{J} & K & L \\
+        \hline
+        M & \voted{N} & O & \voted{P} \\
+    \end{tabular}
+    }
+    \caption{A Grid Protocol quorum: The entire second column (\texttt{B}, \texttt{F}, \texttt{J}, \texttt{N}) and one process from each other column (\texttt{I}, \texttt{G}, \texttt{P}) are included}
+    \label{fig:grid-quorum}
+\end{figure}
+
+\minisec{Specifying voting structures}
+
+\citeauthor{generators} present \emph{tree-shaped voting structures} as a universal quorum system representation in the form of semantics-enriched tree graphs. They are produced by voting structure specific \emph{voting structure generators} \autocite{generators}.
+
+In a tree-shaped voting structure, each node without children (a \enquote{physical node}) represents a process. Nodes with children (called \enquote{virtual nodes}) do not stand for processes. Instead, they represent the structure of the voting scheme. The tree is to be interpreted such that votes flow upwards, from the physical nodes (the leaves of the tree) up to the virtual node at its root.
+
+When a physical node casts its vote, the number of votes it is annotated with is added to the votes its parent virtual node has received. If the sum of those votes equals or exceeds the parent node's threshold, then the parent node in turn passes its vote to its parent. An annotated example is given in \autoref{fig:grid4}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth, keepaspectratio]{Images/Grid4.pdf}
+    \caption{A tree-structured voting scheme for a Grid Protocol managing four processes \texttt{A}, \texttt{B}, \texttt{C} and \texttt{D}.}
+    \label{fig:grid4}
+\end{figure}
+
 
 \section{Overview of Structured Rafter\label{sc:overview-of-structured-rafter}}
 
