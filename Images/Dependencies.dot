@@ -1,0 +1,31 @@
+digraph vstruct {
+node [shape=Mrecord];
+edge [dir=back];
+
+typ [label="Voting structure and state type specification"];
+vot [label="Core voting algorithm"];
+viz [label="Voting structure visualiser"];
+maj [label="Majority generator"];
+grd [label="Grid generator"];
+tri [label="Tree Quorum generator"];
+raf [label="Rafter integration"];
+mem [label="Memcached frontend"];
+ec2 [label="Amazon EC2 set-up"];
+ana [label="Benchmarking and analysis"];
+
+typ -> viz;
+typ -> vot;
+typ -> maj;
+viz -> maj [style=dashed];
+typ -> grd;
+viz -> grd [style=dashed];
+typ -> tri;
+viz -> tri [style=dashed];
+maj -> raf;
+grd -> raf [style=dashed];
+tri -> raf [style=dashed];
+vot -> raf;
+ec2 -> ana;
+mem -> ana;
+raf -> ana;
+}
