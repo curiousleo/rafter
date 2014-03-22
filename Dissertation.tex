@@ -41,6 +41,16 @@
 }
 \addbibresource{Bibliography.bib}
 \pagestyle{headings}
+
+\lstdefinestyle{erlang}{
+    language=Erlang,
+    morekeywords={fun, spec},
+    basicstyle=\fontfamily{jkptt}\selectfont,
+    keywordstyle=\bfseries,
+    captionpos=b,
+    abovecaptionskip=1\baselineskip,
+    belowcaptionskip=1\baselineskip
+}
 % custom commands
 \newcommand{\requestVoteRPC}[0]{\texttt{requestVote} \textsc{rpc}}
 \newcommand{\appendEntriesRPC}[0]{\texttt{appendEntries} \textsc{rpc}}
@@ -306,6 +316,19 @@ When a physical node casts its vote, its votes are added to the votes its parent
     % \item Draw attention to the parts of the work which are not your own
     % \item Mention major milestones
 % \end{itemize}
+
+\begin{lstlisting}[style=erlang, caption={Majority Protocol voting structure generator code}, label=lst:majority, float=htpb]
+-spec majority([peer()]) -> #vstruct{}.
+majority(Ids) ->
+    Threshold = round((length(Ids) + 1) / 2),
+    Nodes = lists:map(fun(Id) -> #vstruct_p{id = Id} end, Ids),
+    {Indices, _} = lists:mapfoldl(
+                     fun(Id, K) -> {{Id, [[K]]}, K+1} end,
+                     0, Ids),
+    #vstruct{tree = #vstruct_v{thresh = Threshold,
+                               children = Nodes},
+             indices = dict:from_list(Indices)}.
+\end{lstlisting}
 
 \chapter{Evaluation\label{ch:evaluation}}
 
