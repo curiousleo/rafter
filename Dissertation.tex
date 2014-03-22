@@ -310,7 +310,17 @@ When a physical node casts its vote, its votes are added to the votes its parent
     \label{fig:grid4-state}
 \end{figure}
 
-\section{Preliminary reading\label{sc:preliminary-reading}}
+\section{Rafter and Erlang}
+
+In the inception phase of the project, I was faced with the decision of whether to use and existing implementation of Raft or write one from scratch. Since I was primarily interested in implementing structured voting algorithms, and many implementations of Raft already exist, I decided to adapt an existing implementation.
+
+Having written a distributed key-value store in Node.js during an internship, I decided to look for an implementation that used a programming language with built-in support for concurrency that I had heard of: Erlang. Out of the five Raft implementations written in Erlang, Andrew Stone's \emph{Rafter} seemed to be the most mature.\footnote{Andrew Stone is a Distributed Systems Developer at Basho Technologies (\url{http://basho.com}). Rafter is an open source project hosted on GitHub (\url{http://github.com/andrewjstone/rafter}).}
+
+The choice of Erlang and Rafter then dictated my primary programming toolkit: The Erlang language, its core libraries (called the Open Telephony Platform, or \textsc{otp}), the static type checker Dialyzer\footnote{Dialyzer, the Discrepancy Analyzer for Erlang programs (\url{http://www.erlang.org/doc/man/dialyzer.html}), can be used to statically type check Erlang programs.}, and the unit testing framework QuickCheck\footnote{QuickCheck (\url{http://www.quviq.com/index.html}) is a commercial unit testing framework by Quvik \textsc{se}, which is used in Rafter.}
+
+\section{Requirements analysis\label{sc:requirements-analysis}}
+
+XXX
 
 \chapter{Implementation\label{ch:implementation}}
 
