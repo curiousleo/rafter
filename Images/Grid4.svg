@@ -74,8 +74,8 @@
      id="namedview300"
      showgrid="false"
      inkscape:zoom="1.2113264"
-     inkscape:cx="367.13806"
-     inkscape:cy="97.11701"
+     inkscape:cx="288.69563"
+     inkscape:cy="213.61872"
      inkscape:window-x="0"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
@@ -1235,47 +1235,47 @@
   <text
      xml:space="preserve"
      style="font-size:12.80000019px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Myriad Pro;-inkscape-font-specification:Myriad Pro Italic"
-     x="95.158165"
+     x="111.66899"
      y="112.3636"
      id="text6163"
      sodipodi:linespacing="125%"><tspan
        sodipodi:role="line"
        id="tspan6165"
-       x="95.158165"
+       x="111.66899"
        y="112.3636"
        style="font-size:12.80000019px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Myriad Pro;-inkscape-font-specification:Myriad Pro Italic">Virtual node</tspan></text>
   <text
      xml:space="preserve"
-     style="font-size:12.8px;font-style:italic;font-weight:normal;text-align:center;line-height:100%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Myriad Pro;-inkscape-font-specification:Myriad Pro Italic;font-stretch:normal;font-variant:normal"
+     style="font-size:12.80000019px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Myriad Pro;-inkscape-font-specification:Myriad Pro Italic"
      x="25.06671"
-     y="180.4398"
+     y="198.2715"
      id="text6163-9"
      sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
        id="tspan6165-6"
        x="25.066708"
-       y="180.4398"
-       style="font-size:12.8px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;text-anchor:middle;font-family:Myriad Pro;-inkscape-font-specification:Myriad Pro Italic">Physical</tspan><tspan
+       y="198.2715"
+       style="font-size:12.80000019px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;text-anchor:middle;font-family:Myriad Pro;-inkscape-font-specification:Myriad Pro Italic">Physical</tspan><tspan
        sodipodi:role="line"
        x="25.06671"
-       y="193.23981"
-       style="font-size:12.8px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;text-anchor:middle;font-family:Myriad Pro;-inkscape-font-specification:Myriad Pro Italic"
+       y="211.0715"
+       style="font-size:12.80000019px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;text-anchor:middle;font-family:Myriad Pro;-inkscape-font-specification:Myriad Pro Italic"
        id="tspan6192">node</tspan></text>
   <path
-     style="fill:none;stroke:#000000;stroke-width:0.8;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;marker-end:none;marker-start:none;opacity:0.58367347000000003"
-     d="m 25.217822,249.63692 0,-51.1264"
+     style="opacity:0.58367345000000004;fill:none;stroke:#000000;stroke-width:0.8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:none;marker-end:none"
+     d="m 25.217822,252.07851 0,-33.88507"
      id="path6190"
      inkscape:connector-curvature="0" />
   <text
      xml:space="preserve"
      style="font-size:12.80000019px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Myriad Pro;-inkscape-font-specification:Myriad Pro Italic"
-     x="419.59525"
+     x="402.58908"
      y="126.50883"
      id="text6163-67"
      sodipodi:linespacing="125%"><tspan
        sodipodi:role="line"
        id="tspan6165-1"
-       x="419.59525"
+       x="402.58908"
        y="126.50883"
        style="font-size:12.80000019px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Myriad Pro;-inkscape-font-specification:Myriad Pro Italic">Threshold</tspan></text>
   <text
@@ -1301,20 +1301,68 @@
      id="path6235"
      inkscape:connector-curvature="0" />
   <path
-     style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;marker-end:none;marker-start:none;opacity:0.58367347000000003"
-     d="m 222.89616,135.56964 -19.81299,0"
-     id="path6243"
-     inkscape:connector-curvature="0"
-     transform="scale(0.8,0.8)" />
-  <path
-     style="fill:none;stroke:#000000;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:none;marker-end:none;marker-start:url(#DotM);opacity:0.58367347000000003"
-     d="m 469.73302,152.90601 47.8814,0"
+     style="opacity:0.58367345000000004;fill:none;stroke:#000000;stroke-width:0.8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#DotM);marker-end:none"
+     d="m 375.18202,122.32481 24.12403,0"
      id="path6245"
-     inkscape:connector-curvature="0"
-     transform="scale(0.8,0.8)" />
+     inkscape:connector-curvature="0" />
   <path
      style="opacity:0.58367345000000004;fill:none;stroke:#000000;stroke-width:0.8;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#DotM);marker-end:none"
      d="m 482.81937,183.58581 31.70897,0"
      id="path6247"
      inkscape:connector-curvature="0" />
+  <g
+     id="g4368"
+     transform="translate(-381.15756,-17.704512)">
+    <text
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
+       id="text117-0"
+       font-size="14.00"
+       y="33.093311"
+       x="436.32986">A</text>
+    <text
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
+       id="text153-7"
+       font-size="14.00"
+       y="33.093311"
+       x="452.01346">B</text>
+    <text
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
+       id="text251-5"
+       font-size="14.00"
+       y="51.675339"
+       x="436.40164">C</text>
+    <text
+       style="font-size:14px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;font-family:DejaVu Sans Mono;-inkscape-font-specification:DejaVu Sans Mono"
+       id="text287-4"
+       font-size="14.00"
+       y="51.682175"
+       x="452.21854">D</text>
+    <path
+       inkscape:connector-curvature="0"
+       id="path3568"
+       d="m 443.44245,22.567958 0,30.172709"
+       style="fill:none;stroke:#747474;stroke-width:0.69999999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+    <path
+       inkscape:connector-curvature="0"
+       id="path3568-4"
+       d="m 456.03571,36.917192 -23.96752,0"
+       style="fill:none;stroke:#747474;stroke-width:0.69999999;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none" />
+  </g>
+  <text
+     xml:space="preserve"
+     style="font-size:12.80000019px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Myriad Pro;-inkscape-font-specification:Myriad Pro Italic"
+     x="62.365692"
+     y="52.569801"
+     id="text6163-67-4"
+     sodipodi:linespacing="100%"><tspan
+       sodipodi:role="line"
+       x="62.365692"
+       y="52.569801"
+       style="font-size:12.80000019px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;text-anchor:middle;font-family:Myriad Pro;-inkscape-font-specification:Myriad Pro Italic"
+       id="tspan4397">The grid represented</tspan><tspan
+       sodipodi:role="line"
+       x="62.365692"
+       y="65.369804"
+       style="font-size:12.80000019px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;text-anchor:middle;font-family:Myriad Pro;-inkscape-font-specification:Myriad Pro Italic"
+       id="tspan4401">by this voting structure</tspan></text>
 </svg>
