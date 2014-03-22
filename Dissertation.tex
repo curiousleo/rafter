@@ -22,6 +22,9 @@
             isbn=false,doi=false,backend=biber]{biblatex}
 \usepackage{nag}
 
+% TODO: list of figures, algorithms, tables?
+% TODO: custom cover page?
+
 %%% Custom LaTeX preamble
 % serif, non-bold headings:
 \addtokomafont{chapter}{\mdseries}
@@ -125,6 +128,8 @@ Date \hspace{0.4in} \today
 \chapter{Introduction\label{ch:introduction}}
 
 \pagenumbering{arabic}
+
+XXX Magic first paragraph: Summary of the project
 
 % \begin{itemize}
     % \item Principal motivation for the project
@@ -252,7 +257,7 @@ Structured voting schemes impose a logical structure on the set of processes and
         M & \voted{N} & O & \voted{P} \\
     \end{tabular}
     }
-    \caption{A Grid Protocol quorum: The entire second column (\texttt{B}, \texttt{F}, \texttt{J}, \texttt{N}) and one process from each other column (\texttt{I}, \texttt{G}, \texttt{P}) are included}
+    \caption[Grid protocol quorum table]{A Grid Protocol quorum: The entire second column (\texttt{B}, \texttt{F}, \texttt{J}, \texttt{N}) and one process from each other column (\texttt{I}, \texttt{G}, \texttt{P}) are included}
     \label{fig:grid-quorum}
 \end{figure}
 
@@ -267,14 +272,14 @@ When a physical node casts its vote, its votes are added to the votes its parent
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.8\textwidth, keepaspectratio]{Images/Grid4.pdf}
-    \caption{A tree-structured voting scheme for a Grid Protocol managing four processes \texttt{A}, \texttt{B}, \texttt{C} and \texttt{D}.}
+    \caption[Tree-structured voting scheme for a Grid Protocol]{A tree-structured voting scheme for a Grid Protocol managing four processes \texttt{A}, \texttt{B}, \texttt{C} and \texttt{D}.}
     \label{fig:grid4}
 \end{figure}
 
 \begin{figure}[p]
     \centering
     \includegraphics[width=0.9\textwidth, height=0.8\textheight, keepaspectratio]{Images/Grid4-state.pdf}
-    \caption{An election using the Grid Protocol. Each node has one vote. \texttt{A} votes first (maroon). \(V_4\) has a threshold of one, so it votes as well. \(V_2\) and \(V_6\) both have threshold two, so their votes are pending. Then \texttt{B} votes (blue), triggering a vote from \(V_5\). Now both \(V_4\) and \(V_5\) have voted, so \(V_2\)'s threshold of two is reached and it votes, too. At this stage, \(V_1\) and \(V_7\) each require one more vote. Lastly, \texttt{C} votes (green). \(V_4\) has already voted, so nothing happens in this branch. \(V_6\) receives a second vote, so it passes its vote to \(V_3\), immediately triggering it to vote to the root node \(V_1\), where the threshold is now reached, ending the election.}
+    \caption[An election using the Grid Protocol]{An election using the Grid Protocol. Each node has one vote. \texttt{A} votes first (maroon). \(V_4\) has a threshold of one, so it votes as well. \(V_2\) and \(V_6\) both have threshold two, so their votes are pending. Then \texttt{B} votes (blue), triggering a vote from \(V_5\). Now both \(V_4\) and \(V_5\) have voted, so \(V_2\)'s threshold of two is reached and it votes, too. At this stage, \(V_1\) and \(V_7\) each require one more vote. Lastly, \texttt{C} votes (green). \(V_4\) has already voted, so nothing happens in this branch. \(V_6\) receives a second vote, so it passes its vote to \(V_3\), immediately triggering it to vote to the root node \(V_1\), where the threshold is now reached, ending the election.}
     \label{fig:grid4-state}
 \end{figure}
 
@@ -324,5 +329,11 @@ When a physical node casts its vote, its votes are added to the votes its parent
 \appendix
 
 \chapter{Code samples\label{ch:code-samples}}
+
+% \listoffigures
+%
+% \listoftables
+%
+% \listofalgorithms
 
 \end{document}
