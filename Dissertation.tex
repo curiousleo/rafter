@@ -144,7 +144,7 @@ XXX Magic first paragraph: Summary of the project
     % \item Failure model: no Byzantine failures -- servers either work or not; fail-stop, permanent/volatile memory, lost/delayed messages but not corrupted
 % \end{itemize}
 
-\section{Motivation\label{sc:motivation}}
+\minisec{Motivation}
 
 As ever-increasing amounts of data are being handled in commercial settings as well as in research, distributed systems for processing and storage are becoming more and more ubiquitous. One main driver of this development is the need to increase fault tolerance.
 
@@ -159,9 +159,24 @@ Increasing the availability of a consistent distributed system would have two ef
     \item Applications that require high availability and currently run an algorithm that does not guarantee consistency, might switch to this new implementation too.
 \end{itemize}
 
-\section{Challenges\label{sc:challenges}}
+\minisec{Related work and challenges}
 
-\section{Related work\label{sc:related-work}}
+XXX
+
+\minisec{Overview of Structured Rafter\label{ms:overview-of-structured-rafter}}
+
+XXX
+
+\chapter{Preparation\label{ch:preparation}}
+
+% \begin{itemize}
+    % \item Work undertaken before code was written
+    % \item Refinement of project proposal
+    % \item Professional approach: Requirements analysis!, reference Software Engineering techniques
+    % \item PLs and systems which had to be learnt, theories and algorithms which required understanding
+% \end{itemize}
+
+\section{Background\label{sc:background}}
 
 \subsection{Distributed systems: \textsc{cap}, \textsc{acid} and \textsc{base}\label{ssc:cap-acid-and-base}}
 
@@ -278,21 +293,10 @@ When a physical node casts its vote, its votes are added to the votes its parent
 
 \begin{figure}[p]
     \centering
-    \includegraphics[width=0.9\textwidth, height=0.8\textheight, keepaspectratio]{Images/Grid4-state.pdf}
+    \includegraphics[width=0.9\textwidth, height=0.77\textheight, keepaspectratio]{Images/Grid4-state.pdf}
     \caption[An election using the Grid Protocol]{An election using the Grid Protocol. Each node has one vote. \texttt{A} votes first (maroon). \(V_4\) has a threshold of one, so it votes as well. \(V_2\) and \(V_6\) both have threshold two, so their votes are pending. Then \texttt{B} votes (blue), triggering a vote from \(V_5\). Now both \(V_4\) and \(V_5\) have voted, so \(V_2\)'s threshold of two is reached and it votes, too. At this stage, \(V_1\) and \(V_7\) each require one more vote. Lastly, \texttt{C} votes (green). \(V_4\) has already voted, so nothing happens in this branch. \(V_6\) receives a second vote, so it passes its vote to \(V_3\), immediately triggering it to vote to the root node \(V_1\), where the threshold is now reached, ending the election.}
     \label{fig:grid4-state}
 \end{figure}
-
-\section{Overview of Structured Rafter\label{sc:overview-of-structured-rafter}}
-
-\chapter{Preparation\label{ch:preparation}}
-
-% \begin{itemize}
-    % \item Work undertaken before code was written
-    % \item Refinement of project proposal
-    % \item Professional approach: Requirements analysis!, reference Software Engineering techniques
-    % \item PLs and systems which had to be learnt, theories and algorithms which required understanding
-% \end{itemize}
 
 \chapter{Implementation\label{ch:implementation}}
 
