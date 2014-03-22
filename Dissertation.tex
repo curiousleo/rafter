@@ -154,7 +154,7 @@ XXX Magic first paragraph: Summary of the project
     % \item Failure model: no Byzantine failures -- servers either work or not; fail-stop, permanent/volatile memory, lost/delayed messages but not corrupted
 % \end{itemize}
 
-\minisec{Motivation}
+\section{Motivation\label{sc:motivation}}
 
 As ever-increasing amounts of data are being handled in commercial settings as well as in research, distributed systems for processing and storage are becoming more and more ubiquitous. One main driver of this development is the need to increase fault tolerance.
 
@@ -169,11 +169,15 @@ Increasing the availability of a consistent distributed system would have two ef
     \item Applications that require high availability and currently run an algorithm that does not guarantee consistency, might switch to this new implementation too.
 \end{itemize}
 
-\minisec{Related work and challenges}
+\section{Challenges\label{sc:challenges}}
 
 XXX
 
-\minisec{Overview of Structured Rafter\label{ms:overview-of-structured-rafter}}
+\section{Related work\label{sc:related-work}}
+
+XXX
+
+\section{Overview of Structured Rafter\label{sc:overview-of-structured-rafter}}
 
 XXX
 
@@ -186,9 +190,7 @@ XXX
     % \item PLs and systems which had to be learnt, theories and algorithms which required understanding
 % \end{itemize}
 
-\section{Background\label{sc:background}}
-
-\subsection{Distributed systems: \textsc{cap}, \textsc{acid} and \textsc{base}\label{ssc:cap-acid-and-base}}
+\section[Introduction to distributed systems]{Introduction to distributed systems: \textsc{cap}, \textsc{acid} and \textsc{base}\label{ssc:cap-acid-and-base}}
 
 Eric Brewer's famous \textsc{cap} theorem states that any distributed system can provide at most two out of the three desirable properties consistency (\textsc{c}), availability (\textsc{a}), and partition tolerance (\textsc{p}).\autocite{cap} The following definitions are adapted from \textcite{capproof}:
 
@@ -215,7 +217,7 @@ The authors of \citetitle{dynamo} describe this as follows:%
 
 The conflict detection and resolution mechanisms required by eventually consistent systems increase their complexity compared to consistent systems, which do not need them. This begs the question: are there techniques that could be used to improve availability without giving up on consistency, allowing for simpler systems? The \textsc{cap} theorem tells us that we can never build strictly consistent and maximally available systems, but a different trade-off might be possible.
 
-\subsection{The Raft consensus algorithm\label{ssc:raft-consensus-algorithm}}
+\section{Introduction to the Raft consensus algorithm\label{ssc:raft-consensus-algorithm}}
 
 Although still a draft, the paper describing the new Raft consensus algorithm \autocite{raft} has created a lot of buzz; dozens of implementations in various languages and stages of development already exist.\footnote{For an up-to-date list of Raft implementations, see \url{http://raftconsensus.github.io/\#implementations}.}
 
@@ -255,7 +257,7 @@ In order to guarantee overall correctness, different components of Raft are desi
 
 Since my project involved changing the way in which quorums\footnote{A \emph{quorum} is a minimal subset of the cluster that an operation has to obtain votes from in order to be performed. Majority voting, for example, specifies that any set of servers containing at least half the servers in the entire cluster constitutes a quorum.} are constructed, I had to pay special attention to the Election Safety property (stating that there can be at most one leader at any given time) and all the steps in the proof to do with quorums, in order to make sure all the desired properties still hold.
 
-\subsection{Structured voting schemes\label{ssc:structured-voting-schemes}}
+\section{Introduction to structured voting schemes\label{ssc:structured-voting-schemes}}
 
 By taking into account the identity of nodes, as opposed to just counting them as in the majority consensus algorithm, we can build \emph{structured} voting schemes.
 
@@ -307,6 +309,8 @@ When a physical node casts its vote, its votes are added to the votes its parent
     \caption[An election using the Grid Protocol]{An election using the Grid Protocol. Each node has one vote. \texttt{A} votes first (maroon). \(V_4\) has a threshold of one, so it votes as well. \(V_2\) and \(V_6\) both have threshold two, so their votes are pending. Then \texttt{B} votes (blue), triggering a vote from \(V_5\). Now both \(V_4\) and \(V_5\) have voted, so \(V_2\)'s threshold of two is reached and it votes, too. At this stage, \(V_1\) and \(V_7\) each require one more vote. Lastly, \texttt{C} votes (green). \(V_4\) has already voted, so nothing happens in this branch. \(V_6\) receives a second vote, so it passes its vote to \(V_3\), immediately triggering it to vote to the root node \(V_1\), where the threshold is now reached, ending the election.}
     \label{fig:grid4-state}
 \end{figure}
+
+\section{Preliminary reading\label{sc:preliminary-reading}}
 
 \chapter{Implementation\label{ch:implementation}}
 
