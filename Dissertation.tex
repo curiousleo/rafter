@@ -54,6 +54,7 @@
 % custom commands
 \newcommand{\requestVoteRPC}[0]{\texttt{requestVote} \textsc{rpc}}
 \newcommand{\appendEntriesRPC}[0]{\texttt{appendEntries} \textsc{rpc}}
+\newcommand{\ECC}[0]{\textsc{ec}2 }
 \newcommand{\voted}[1]{\textbf{\color{black}#1}}
 
 %%% Body
@@ -316,11 +317,72 @@ In the inception phase of the project, I was faced with the decision of whether 
 
 Having written a distributed key-value store in Node.js during an internship, I decided to look for an implementation that used a programming language with built-in support for concurrency that I had heard of: Erlang. Out of the five Raft implementations written in Erlang, Andrew Stone's \emph{Rafter} seemed to be the most mature.\footnote{Andrew Stone is a Distributed Systems Developer at Basho Technologies (\url{http://basho.com}). Rafter is an open source project hosted on GitHub (\url{http://github.com/andrewjstone/rafter}).}
 
-The choice of Erlang and Rafter then dictated my primary programming toolkit: The Erlang language, its core libraries (called the Open Telephony Platform, or \textsc{otp}), the static type checker Dialyzer\footnote{Dialyzer, the Discrepancy Analyzer for Erlang programs (\url{http://www.erlang.org/doc/man/dialyzer.html}), can be used to statically type check Erlang programs.}, and the unit testing framework QuickCheck\footnote{QuickCheck (\url{http://www.quviq.com/index.html}) is a commercial unit testing framework by Quvik \textsc{se}, which is used in Rafter.}
+The choice of Erlang and Rafter then dictated my primary programming toolkit:
+
+\begin{description}
+    \item[Erlang] A dynamically typed functional programming language originally designed to run Ericsson's telephony switches, Erlang features a run-time system with built-in support for concurrency, distribution and fault tolerance.
+    \item[Open Telephony Platform] Commonly referred to as \enquote{the \textsc{otp}}, the Open Telephony Platform provides a set of Erlang libraries and design principles providing middle-ware to develop Erlang applications.
+    \item[QuickCheck] A commercial testing framework for Erlang by Quvik \textsc{se}. Rafter's unit and integration tests use it, and I adapted and amended them to cover my code as well.
+    \item[Dialyzer] The \enquote{Discrepancy Analyzer for Erlang programs} is used to statically type check Erlang programs.
+\end{description}
 
 \section{Requirements analysis\label{sc:requirements-analysis}}
 
-XXX
+\begin{table}[h]
+    \centering
+    \begin{tabularx}{\textwidth}{X c c}
+        \toprule
+        \textit{Objective} & \textit{Importance} & \textit{Difficulty} \\
+        \midrule
+        Voting structure and state type specification & high & medium \\
+        Core voting algorithm & high & hard \\
+        Voting structure visualiser & medium & medium \\
+        Majority Protocol voting structure generator & high & easy \\
+        Grid Protocol voting structure generator & medium & hard \\
+        Tree Quorum Protocol voting structure generator & low & hard \\
+        Rafter integration & high & hard \\
+        Memcached frontend & high & hard \\
+        Amazon \ECC benchmark set-up & high & hard \\
+        Benchmarking and analysis of the results & high & medium \\
+        \bottomrule
+    \end{tabularx}
+    \caption{Objectives of this project and their difficulty and importance}
+    \label{tab:objectives}
+\end{table}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=1\textwidth, keepaspectratio]{Images/Dependencies.pdf}
+    \caption{Dependency graph of the project's main components}
+    \label{fig:dependencies}
+\end{figure}
+
+\section{Implementation approach\label{sc:implementation-strategy}}
+
+The main software engineering technique I used to increase my chances of success were \emph{modularisation} and \emph{testing} using appropriate measures.
+
+\minisec{Modularisation}
+
+This technique permeated all levels of the project. The code itself was written in a functional style, where each function typically spans between one and ten lines. This increased understandability by forcing me to split larger functions into smaller ones, each performing a small and well-defined task.
+
+All development took place using Git, a popular decentralised version control system. I used Git's branching facility to keep independent pieces of code separate during their development. Whenever code from different branches needed to be combined, I merged the required feature branches into a temporary branch. For convenience, all documentation (including the proposal, the progress presentation and this very report) was kept under its own branch in the same repository.
+
+\begin{table}[h]
+    \centering
+    \begin{tabularx}{\textwidth}{l X}
+        \toprule
+        \textit{Branch name} & \textit{Description} \\
+        \midrule
+        \texttt{structured-voting} & Voting algorithms and voting structure generators \\
+        \texttt{memcached} & Memcached frontend \\
+        \texttt{time-to-consensus} & Time-to-consensus logging \\
+        \texttt{failure-command} & Follower failure simulation \\
+        \texttt{ec2-integration} & Amazon \ECC instance administration scripts \\
+        \bottomrule
+    \end{tabularx}
+    \caption{Feature branches used in the project repository}
+    \label{tab:branches}
+\end{table}
 
 \chapter{Implementation\label{ch:implementation}}
 
