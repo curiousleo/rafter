@@ -326,7 +326,9 @@ The choice of Erlang and Rafter then dictated my primary programming toolkit:
     \item[Dialyzer] The \enquote{Discrepancy Analyzer for Erlang programs} is used to statically type check Erlang programs.
 \end{description}
 
-\section{Requirements analysis\label{sc:requirements-analysis}}
+\section{Software engineering practice\label{sc:software-engineering-practice}}
+
+\subsection{Requirements analysis\label{sc:requirements-analysis}}
 
 \begin{table}[h]
     \centering
@@ -357,11 +359,9 @@ The choice of Erlang and Rafter then dictated my primary programming toolkit:
     \label{fig:dependencies}
 \end{figure}
 
-\section{Implementation approach\label{sc:implementation-strategy}}
-
 The main software engineering technique I used to increase my chances of success were \emph{modularisation} and \emph{testing} using appropriate measures.
 
-\minisec{Modularisation}
+\subsection{Modularisation}
 
 This technique permeated all levels of the project. The code itself was written in a functional style, where each function typically spans between one and ten lines. This increased understandability by forcing me to split larger functions into smaller ones, each performing a small and well-defined task.
 
@@ -386,7 +386,7 @@ All development took place using Git, a popular decentralised version control sy
 
 The voting algorithm, the voting structure visualiser and the generators for the Majority Protocol and the Grid Protocol were initially written and tested independently from Rafter. Only once I was sufficiently confident in the correctness of the code did I integrate it with Rafter. This integration process turned out to take much less time than expected -- due to the modularity of Rafter, only very few changes were required in order for it to use my generalised voting functions.
 
-\minisec{Testing}
+\subsection{Testing}
 
 XXX
 
@@ -398,6 +398,8 @@ XXX
 \end{figure}
 
 XXX
+
+\section{Implementation approach\label{sc:implementation-strategy}}
 
 \chapter{Implementation\label{ch:implementation}}
 
