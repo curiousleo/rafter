@@ -348,14 +348,14 @@ The choice of Erlang and Rafter then dictated my primary programming toolkit:
         Benchmarking and analysis of the results & high & medium \\
         \bottomrule
     \end{tabularx}
-    \caption{Objectives of this project and their difficulty and importance}
+    \caption{Objectives of the project}
     \label{tab:objectives}
 \end{table}
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth, keepaspectratio]{Images/Dependencies.pdf}
-    \caption{Dependency graph of the project's main components}
+    \caption{Dependency graph of the project's main components. Arrows point from dependent components to their dependencies.}
     \label{fig:dependencies}
 \end{figure}
 
@@ -365,7 +365,7 @@ The main software engineering technique I used to increase my chances of success
 
 This technique permeated all levels of the project. The code itself was written in a functional style, where each function typically spans between one and ten lines. This increased understandability by forcing me to split larger functions into smaller ones, each performing a small and well-defined task.
 
-All development took place using Git, a popular decentralised version control system. I used Git's branching facility to keep independent pieces of code separate during their development. Whenever code from different branches needed to be combined, I merged the required feature branches into a temporary branch. For convenience, all documentation (including the proposal, the progress presentation and this very report) was kept under its own branch in the same repository.
+All development took place using Git, a popular version control system.\footnote{Git (\url{http://git-scm.com}) is an open source distributed version control system emphasising speed, originally developed by Linux Torvalds to simplify the development of the Linux kernel. Git supports very cheap and fast branching, a feature I used extensively in this project.} I used Git's branching facility to keep independent pieces of code separate during their development. Whenever code from different branches needed to be combined, I merged the required feature branches into a temporary branch. For convenience, all documentation (including the proposal, the progress presentation and this very report) was kept under its own branch in the same repository.
 
 \begin{table}[h]
     \centering
@@ -384,18 +384,18 @@ All development took place using Git, a popular decentralised version control sy
     \label{tab:branches}
 \end{table}
 
-The voting algorithm, the voting structure visualiser and the generators for the Majority Protocol and the Grid Protocol were initially written and tested independently from Rafter. Only once I was sufficiently confident in the correctness of the code did I integrate it with Rafter. This integration process turned out to take much less time than expected -- due to the modularity of Rafter, only very few changes were required in order for it to use my generalised voting functions.
+The voting algorithm, the voting structure visualiser and the generators for the Majority Protocol and the Grid Protocol were initially written and tested independently from Rafter. Only once I was sufficiently confident in the correctness of the code did I integrate it with Rafter. This integration process turned out to take much less time than expected -- due to the modularity of Rafter, only few changes were required in order for it to use my generalised voting functions.
 
 \subsection{Testing}
 
 XXX
 
-\begin{figure}[h]
+\begin{table}[h]
     \centering
     \includegraphics[height=0.45\textheight, keepaspectratio]{Images/Coverage_summary.pdf}
     \caption[Unit test coverage]{Unit test coverage of the code. Note in particular the high coverage of the bottom four modules, which were written from scratch as part of this project.}
     \label{fig:coverage}
-\end{figure}
+\end{table}
 
 XXX
 
