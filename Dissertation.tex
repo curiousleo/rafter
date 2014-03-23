@@ -9,6 +9,7 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[british]{babel}
+\usepackage{tocloft}
 \usepackage{csquotes}
 \usepackage{tabularx}
 \usepackage{graphicx}
@@ -32,6 +33,11 @@
 \addtokomafont{disposition}{\rmfamily}
 \addtokomafont{descriptionlabel}{\rmfamily}
 \addtokomafont{pageheadfoot}{\itshape}
+% classic style page numbers in ToC
+\renewcommand\cftchappagefont{\fontfamily{jkpx}\selectfont}
+\renewcommand\cftsecpagefont{\fontfamily{jkpx}\selectfont}
+\renewcommand\cftsubsecpagefont{\fontfamily{jkpx}\selectfont}
+\renewcommand\cftsubsubsecpagefont{\fontfamily{jkpx}\selectfont}
 % section numbering up to subsection
 \setcounter{secnumdepth}{2}
 % hyperlinks
