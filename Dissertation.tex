@@ -316,22 +316,7 @@ When a physical node casts its vote, its votes are added to the votes its parent
     \label{fig:grid4-state}
 \end{figure}
 
-\section{Rafter and Erlang}
-
-In the inception phase of the project, I was faced with the decision of whether to use and existing implementation of Raft or write one from scratch. Since I was primarily interested in implementing structured voting algorithms, and many implementations of Raft already exist, I decided to adapt an existing implementation.
-
-Having written a distributed key-value store in Node.js during an internship, I decided to look for an implementation that used a programming language with built-in support for concurrency that I had heard of: Erlang. Out of the five Raft implementations written in Erlang, Andrew Stone's \emph{Rafter} seemed to be the most mature.\footnote{Andrew Stone is a Distributed Systems Developer at Basho Technologies (\url{http://basho.com}). Rafter is an open source project hosted on GitHub (\url{http://github.com/andrewjstone/rafter}).}
-
-The choice of Erlang and Rafter then dictated my primary programming toolkit:
-
-\begin{description}
-    \item[Erlang] A dynamically typed functional programming language originally designed to run Ericsson's telephony switches, Erlang features a run-time system with built-in support for concurrency, distribution and fault tolerance.
-    \item[Open Telephony Platform] Commonly referred to as \enquote{the \textsc{otp}}, the Open Telephony Platform provides a set of Erlang libraries and design principles providing middle-ware to develop Erlang applications.
-    \item[QuickCheck] A commercial testing framework for Erlang by Quvik \textsc{se}. Rafter's unit and integration tests use it, and I adapted and amended them to cover my code as well.
-    \item[Dialyzer] The \enquote{Discrepancy Analyzer for Erlang programs} is used to statically type check Erlang programs.
-\end{description}
-
-\section{Software engineering practice\label{sc:software-engineering-practice}}
+\section{Software engineering\label{sc:software-engineering}}
 
 \subsection{Requirements analysis\label{sc:requirements-analysis}}
 
@@ -426,6 +411,33 @@ This generator function is used wherever a test requires a voting structure. As 
 The file \texttt{test/rafter\_voting\_majority\_eqc.erl} defines a property of the Majority Protocol in the function \texttt{prop\_majority\_quorum()}. In essence, this property states that an election succeeds if and only if more than half of the nodes agree (\(v \ge \lceil n \, / \, 2 \rceil \), where \(v\) is the number of votes and \(n\) the total number of processes.)
 
 \section{Implementation approach\label{sc:implementation-strategy}}
+
+XXX
+
+\section{Languages, tools and libraries\label{sc:tools}}
+
+XXX
+
+\subsection{Rafter and structured voting\label{ssc:rafter-structured-voting}}
+
+XXX
+
+In the inception phase of the project, I was faced with the decision of whether to use and existing implementation of Raft or write one from scratch. Since I was primarily interested in implementing structured voting algorithms, and many implementations of Raft already exist, I decided to adapt an existing implementation.
+
+Having written a distributed key-value store in Node.js during an internship, I decided to look for an implementation that used a programming language with built-in support for concurrency that I had heard of: Erlang. Out of the five Raft implementations written in Erlang, Andrew Stone's \emph{Rafter} seemed to be the most mature.\footnote{Andrew Stone is a Distributed Systems Developer at Basho Technologies (\url{http://basho.com}). Rafter is an open source project hosted on GitHub (\url{http://github.com/andrewjstone/rafter}).}
+
+The choice of Erlang and Rafter then dictated my primary programming toolkit:
+
+\begin{description}
+    \item[Erlang] A dynamically typed functional programming language originally designed to run Ericsson's telephony switches, Erlang features a run-time system with built-in support for concurrency, distribution and fault tolerance.
+    \item[Open Telephony Platform] Commonly referred to as \enquote{the \textsc{otp}}, the Open Telephony Platform provides a set of Erlang libraries and design principles providing middle-ware to develop Erlang applications.
+    \item[QuickCheck] A commercial testing framework for Erlang by Quvik \textsc{se}. Rafter's unit and integration tests use it, and I adapted and amended them to cover my code as well.
+    \item[Dialyzer] The \enquote{Discrepancy Analyzer for Erlang programs} is used to statically type check Erlang programs.
+\end{description}
+
+\subsection{Amazon \ECC and benchmarking\label{ssc:ec2-benchmarking}}
+
+XXX
 
 \chapter{Implementation\label{ch:implementation}}
 
