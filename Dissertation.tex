@@ -1,3 +1,4 @@
+\RequirePackage[l2tabu, orthodox]{nag}
 \documentclass[11pt,chapterprefix=true,toc=bibliography,numbers=noendperiod,
                footnotes=multiple,twoside]{scrreprt}
 \usepackage{fixltx2e} % LaTeX patches, \textsubscript
@@ -21,7 +22,6 @@
 \usepackage[hidelinks]{hyperref}
 \usepackage[autocite=footnote,citestyle=authoryear-comp,bibstyle=authoryear,
             isbn=false,doi=false,backend=biber]{biblatex}
-\usepackage{nag}
 
 % TODO: list of figures, algorithms, tables?
 % TODO: custom cover page?
@@ -72,9 +72,13 @@
 
 \vfil
 
-\centerline{\large Computer Science Part \textsc{ii} Project} \vspace{0.4in}
-\centerline{\Large\textbf{Extending Raft with structured voting}} \vspace{0.3in}
-\centerline{\large\textit{\today}}
+\begin{center}
+    {\large Computer Science Part \textsc{ii} Project} \vspace{0.4in}
+
+    {\Large\textbf{Extending Raft with structured voting}} \vspace{0.3in}
+
+    {\large\textit{\today}}
+\end{center}
 
 \vfil
 
