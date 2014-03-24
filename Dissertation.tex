@@ -315,13 +315,6 @@ When a physical node casts its vote, its votes are added to the votes its parent
     \label{fig:grid4}
 \end{figure}
 
-\begin{figure}[p]
-    \centering
-    \includegraphics[width=0.9\textwidth, height=0.77\textheight, keepaspectratio]{Images/Grid4-state.pdf}
-    \caption[An election using the Grid Protocol]{An election using the Grid Protocol. Each node has one vote. \texttt{A} votes first (maroon). \(V_4\) has a threshold of one, so it votes as well. \(V_2\) and \(V_6\) both have threshold two, so their votes are pending. Then \texttt{B} votes (blue), triggering a vote from \(V_5\). Now both \(V_4\) and \(V_5\) have voted, so \(V_2\)'s threshold of two is reached and it votes, too. At this stage, \(V_1\) and \(V_7\) each require one more vote. Lastly, \texttt{C} votes (green). \(V_4\) has already voted, so nothing happens in this branch. \(V_6\) receives a second vote, so it passes its vote to \(V_3\), immediately triggering it to vote to the root node \(V_1\), where the threshold is now reached, ending the election.}
-    \label{fig:grid4-state}
-\end{figure}
-
 \section{Software engineering\label{sc:software-engineering}}
 
 \subsection{Requirements analysis\label{sc:requirements-analysis}}
@@ -458,18 +451,62 @@ XXX
     % \item Mention major milestones
 % \end{itemize}
 
-\begin{lstlisting}[style=erlang, caption={Majority Protocol voting structure generator code}, label=lst:majority, float=htpb]
--spec majority([peer()]) -> #vstruct{}.
-majority(Ids) ->
-    Threshold = round((length(Ids) + 1) / 2),
-    Nodes = lists:map(fun(Id) -> #vstruct_p{id = Id} end, Ids),
-    {Indices, _} = lists:mapfoldl(
-                     fun(Id, K) -> {{Id, [[K]]}, K+1} end,
-                     0, Ids),
-    #vstruct{tree = #vstruct_v{thresh = Threshold,
-                               children = Nodes},
-             indices = dict:from_list(Indices)}.
-\end{lstlisting}
+\section{Overview of the structured voting implementation}
+
+
+
+\begin{enumerate}
+    \item 
+\end{enumerate}<++>
+
+\section{Voting algorithm and data types}
+
+The core voting algorithm as illustrated in \autoref{fig:grid4-state} lends itself well to a recursive implementation, given that it is represented in a tree-shaped data structure. The data structures
+
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=0.9\textwidth, height=0.77\textheight, keepaspectratio]{Images/Grid4-state.pdf}
+    \caption[An election using the Grid Protocol]{An election using the Grid Protocol. Each node has one vote. \texttt{A} votes first (maroon). \(V_4\) has a threshold of one, so it votes as well. \(V_2\) and \(V_6\) both have threshold two, so their votes are pending. Then \texttt{B} votes (blue), triggering a vote from \(V_5\). Now both \(V_4\) and \(V_5\) have voted, so \(V_2\)'s threshold of two is reached and it votes, too. At this stage, \(V_1\) and \(V_7\) each require one more vote. Lastly, \texttt{C} votes (green). \(V_4\) has already voted, so nothing happens in this branch. \(V_6\) receives a second vote, so it passes its vote to \(V_3\), immediately triggering it to vote to the root node \(V_1\), where the threshold is now reached, ending the election.}
+    \label{fig:grid4-state}
+\end{figure}
+
+XXX
+
+\section{Voting structure generators}
+
+XXX
+
+\subsection{Majority Protocol}
+
+XXX
+
+\subsection{Grid Protocol}
+
+XXX
+
+\subsection{Tree Quorum Protocol}
+
+XXX
+
+\section{Integration with Rafter}
+
+XXX
+
+\section{Overview of the benchmarking code}
+
+XXX
+
+\section{Memcached frontend}
+
+XXX
+
+\section{Failure simulation}
+
+XXX
+
+\section{Benchmarking scripts}
+
+XXX
 
 \section{Summary}
 
