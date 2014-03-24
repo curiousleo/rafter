@@ -112,10 +112,7 @@ def collect_results(cluster_size, protocol, failure_mode):
     The parameters are used to construct a file name for the TTC measurements.
     '''
 
-    # XXX <hack>
-    if Ec2InstanceWrapper.get_from_host_string()['tags'].get('Name') != 'leader':
-        return
-    # XXX </hack>
+    name = Ec2InstanceWrapper.get_from_host_string()['tags'].get('Name')
 
     if isinstance(protocol, tuple):
         (protocol, param) = protocol
@@ -125,11 +122,19 @@ def collect_results(cluster_size, protocol, failure_mode):
         failure_mode = '{failure_mode}_{param}'.format(**locals())
 
     test = '{cluster_size}-{protocol}-{failure_mode}'.format(**locals())
-    ec2_rsync_download(
-            '/tmp/rafter_ttc_log.log',
-            '/home/leo/Temp/{test}'.format(**locals()),
-            rsync_args='-avz')
-    run('echo "Experiment,Cluster,Operation,TTC" > /tmp/rafter_ttc_log.log')
+
+    if name == 'leader':
+        ec2_rsync_download(
+                '/tmp/rafter_ttc_log.log',
+                '/home/leo/Temp/{test}.ttc'.format(**locals()),
+                rsync_args='-avz')
+        run('echo "Experiment,Cluster,Operation,TTC" > /tmp/rafter_ttc_log.log')
+
+    if name == 'runner':
+        ec2_rsync_download(
+                '/tmp/rafter_memcached.log',
+                '/home/leo/Temp/{test}.memcached'.format(**locals()),
+                rsync_args='-av')
 
 @task
 def configure(leader, followers, protocol, failure_mode):
@@ -158,7 +163,8 @@ def memaslap(leader_address, runtime=120):
             --stat_freq={runtime}s --time={runtime}s \
             --execute_number=10000 \
             --verify=0.01 --exp_verify=0.01 \
-            --cfg_cmd={conf}' \
+            --cfg_cmd={conf} \
+            | tee /tmp/rafter_memcached.log'
             .format(**locals()))
 
 @task
