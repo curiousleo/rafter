@@ -3,6 +3,8 @@
 -export([quorum/2, merge_vstructs/3, init_vstate/1, vote/3, vote/1,
          to_list/1, member/2]).
 
+-export([drop/2, chunk/2, ceil/1, floor/1]).
+
 -include("rafter.hrl").
 
 -spec merge_vstructs(pos_integer(), pos_integer(), [#vstruct{}]) ->
@@ -110,12 +112,42 @@ acc_votes(State = #vstate_v{children = States}) ->
     No = length(lists:filter(Voted(false), States)),
     State#vstate_v{yes_votes = Yes, no_votes = No}.
 
--spec to_list(#vstate{} | #vstruct{} | undefined) -> [peer()].
-to_list(#vstate{indices = Indices}) ->
-    dict:fetch_keys(Indices);
+-spec to_list(#vstruct{}) -> [peer()].
 to_list(#vstruct{indices = Indices}) ->
     dict:fetch_keys(Indices).
 
 -spec member(peer(), #vstate{} | #vstruct{}) -> boolean().
 member(I, S) ->
     lists:member(I, to_list(S)).
+
+% general helper functions
+
+-spec drop(non_neg_integer(), list()) -> list().
+drop(_, []) ->
+    [];
+drop(0, L) ->
+    L;
+drop(N, [_|L]) ->
+    drop(N-1, L).
+
+-spec chunk(non_neg_integer(), list()) -> [ list() ].
+chunk(_, []) ->
+    [];
+chunk(N, L) ->
+    [lists:sublist(L, N) | chunk(N, drop(N, L))].
+
+ceil(X) ->
+    T = erlang:trunc(X),
+    case (X - T) of
+        Neg when Neg < 0 -> T;
+        Pos when Pos > 0 -> T + 1;
+        _ -> T
+    end.
+
+floor(X) ->
+    T = erlang:trunc(X),
+    case (X - T) of
+        Neg when Neg < 0 -> T - 1;
+        Pos when Pos > 0 -> T;
+        _ -> T
+    end.

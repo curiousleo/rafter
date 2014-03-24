@@ -1,13 +1,17 @@
 -module(rafter_voting_grid).
 
--export([grid/1]).
+-export([grid/2, grid/1]).
 
 -include("rafter.hrl").
 -type grid_spec() :: {pos_integer(), pos_integer(), non_neg_integer()}.
 
 -spec grid([peer()]) -> #vstruct{}.
 grid(Ids) ->
-    GridSpec = makeGrid(length(Ids), true),
+    grid(Ids, true).
+
+-spec grid([peer()], boolean()) -> #vstruct{}.
+grid(Ids, FavoringRows) ->
+    GridSpec = makeGrid(length(Ids), FavoringRows),
     rafter_voting:merge_vstructs(1, 2, [columnCovers(Ids, GridSpec),
                                         completeColumnCovers(Ids, GridSpec)]).
 
@@ -29,7 +33,7 @@ completeColumnCovers(Ids, {Rows, Cols, D}) ->
 -spec completeColumnCover([peer()], non_neg_integer(), grid_spec()) ->
     #vstruct{}.
 completeColumnCover(Ids, Col, {_Rows, Cols, _D}) ->
-    RowsIds = chunk(Cols, Ids),
+    RowsIds = rafter_voting:chunk(Cols, Ids),
     %% ColIds = lists:map(fun(RowIds) -> lists:nth(Col, RowIds) end, RowsIds),
     %% cannot use map here: lists:nth may fail
     ColIds = lists:foldl(
@@ -65,39 +69,9 @@ makeGridFavoringRows(N) when N < 4 ->
     {N, 1};
 makeGridFavoringRows(N) ->
     Sqrt = math:sqrt(N),
-    Rows = ceil(Sqrt),
-    Floor = floor(Sqrt),
+    Rows = rafter_voting:ceil(Sqrt),
+    Floor = rafter_voting:floor(Sqrt),
     Cols = if Rows * Floor < N -> Rows;
               true -> Floor
            end,
     {Rows, Cols}.
-
-floor(X) ->
-    T = erlang:trunc(X),
-    case (X - T) of
-        Neg when Neg < 0 -> T - 1;
-        Pos when Pos > 0 -> T;
-        _ -> T
-    end.
-
-ceil(X) ->
-    T = erlang:trunc(X),
-    case (X - T) of
-        Neg when Neg < 0 -> T;
-        Pos when Pos > 0 -> T + 1;
-        _ -> T
-    end.
-
--spec drop(non_neg_integer(), list()) -> list().
-drop(_, []) ->
-    [];
-drop(0, L) ->
-    L;
-drop(N, [_|L]) ->
-    drop(N-1, L).
-
--spec chunk(non_neg_integer(), list()) -> [ list() ].
-chunk(_, []) ->
-    [];
-chunk(N, L) ->
-    [lists:sublist(L, N) | chunk(N, drop(N, L))].

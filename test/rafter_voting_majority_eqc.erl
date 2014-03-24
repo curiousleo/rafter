@@ -9,15 +9,15 @@
 
 -compile(export_all).
 
+eqc_test_() ->
+    ?_assertEqual(true, eqc:quickcheck(eqc:numtests(50, prop_majority_quorum()))).
+
 prop_majority_quorum() ->
-    ?FORALL(N, nat(),
-        ?FORALL(YesVotes,
-            lists:sublist(
-              choose(0, N),
-              shuffle(lists:seq(0, N))),
+    ?FORALL(N, choose(2, 100),
+        ?FORALL({Yes, Nodes}, {choose(1, N), shuffle(lists:seq(1, N))},
             begin
-                Nodes = lists:seq(0, N),
-                IsQuorum = length(Nodes) > N div 2,
+                YesVotes = lists:sublist(Nodes, Yes),
+                IsQuorum = length(YesVotes) > N div 2,
                 IsQuorum =:= has_quorum(Nodes, YesVotes)
             end)
         ).
