@@ -43,14 +43,20 @@
 \addbibresource{Bibliography.bib}
 \pagestyle{headings}
 
-\lstdefinestyle{erlang}{
-    language=Erlang,
-    morekeywords={fun, spec},
-    basicstyle=\fontfamily{jkptt}\selectfont,
+\lstset{
+    basicstyle=\small\fontfamily{jkptt}\selectfont,
     keywordstyle=\bfseries,
     captionpos=b,
     abovecaptionskip=1\baselineskip,
     belowcaptionskip=1\baselineskip
+}
+
+\lstdefinestyle{erlang}{
+    language=Erlang,
+    morekeywords={fun, spec}
+}
+\lstdefinestyle{cpp}{
+    language=C++
 }
 % custom commands
 \newcommand{\requestVoteRPC}[0]{\texttt{requestVote} \textsc{rpc}}
