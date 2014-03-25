@@ -19,6 +19,7 @@
 \usepackage{algpseudocode}
 \usepackage{algorithm}
 \usepackage[chapter]{minted}
+\usepackage{caption}
 \usepackage{paralist}
 \usepackage[autocite=footnote,citestyle=authoryear-comp,bibstyle=authoryear,
             isbn=false,doi=false,backend=biber]{biblatex}
@@ -60,6 +61,8 @@
     precode=ruleabove,
     midcode=rulebelow
 }
+
+\captionsetup{labelfont=bf, format=plain}
 
 % custom commands
 \newcommand{\requestVoteRPC}[0]{\texttt{requestVote} \textsc{rpc}}
