@@ -282,7 +282,7 @@ A quorum system is defined as a tuple of a read and a write quorum set whose ele
 
 The key realisation that lead to this project was that write quorums have precisely the property required for Raft's leader election, namely that any two write quorums intersect. From this point on, \emph{quorum} will mean \emph{write quorum} unless specifically noted otherwise.
 
-\minisec{Structured voting by example}
+\minisec{Structured voting by example\label{voting-example}}
 
 Structured voting schemes impose a logical structure on the set of processes and use structural properties to specify quorum systems. For example, the structured Grid Protocol arranges processes in a logical rectangular grid \autocite{grid}. A write quorum consists of all processes from a complete column plus one process from each column.
 
@@ -454,7 +454,15 @@ XXX
     % \item Mention major milestones
 % \end{itemize}
 
-\section{Overview of the structured voting implementation}
+\section{Overview}
+
+two parts
+
+structured voting: Erlang, functional programming
+
+benchmarking: Python, boto, Julia, automatisation and analysis
+
+\subsection{A note on functional programming}
 
 \begin{listing}[h]
     \begin{erlangcode}
@@ -489,7 +497,15 @@ for(std::map<id, paths_t>::iterator indices_it = indices.begin();
 
 \section{Voting algorithm and data types}
 
-The core voting algorithm as illustrated in \autoref{fig:grid4-state} lends itself well to a recursive implementation, given that it is represented in a tree-shaped data structure. The data structures
+Two data types are used in the structured voting code: one to represent a voting structure, and one to represent the state of an election. Both are implemented as record types in Erlang, and are called \texttt{vstruct} and \texttt{vstate}, respectively; their internal structure is very similar. They are used as follows:
+
+\begin{enumerate}
+    \item A voting structure generator creates a \texttt{vstruct}.
+    \item This voting structure is used to initialise a new election state \texttt{vstate}.
+    \item The election state is updated by the voting algorithm whenever new votes arrive until the election succeeds or fails.
+\end{enumerate}
+
+The core voting algorithm as illustrated in \autoref{fig:grid4-state} lends itself well to a recursive implementation.
 
 \begin{figure}[p]
     \centering
@@ -504,11 +520,31 @@ XXX
 
 XXX
 
+In the following, \(n\) stands for the number of processes.
+
 \subsection{Majority Protocol}
 
-XXX
+The Majority Protocol (also know as Majority Consensus Voting\autocite{majority}) requires quorums to contain \(\lceil (n + 1) / 2 \rceil\) processes. This makes it an unstructured voting protocol. However, unstructured voting protocols can be regarded as a subclass of structured voting protocols, since they fit into the same framework of voting structure generators.
+
+This voting structure has a rigid format, which allows for a straightforward implementation: It consists of \(n\) physical nodes, all sharing the same virtual parent node (which also acts as the root of the tree-shaped voting structure). Each physical node has one vote, and the threshold of the root node is \(\lceil (n + 1) / 2 \rceil\). An example for a Majority Protocol voting structure with \(n = 5\) nodes and a corresponding threshold of three is given in \autoref{fig:majority5-struct}.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.5\textwidth, keepaspectratio]{Images/Majority5.pdf}
+    \caption{Voting structure for the Majority Protocol with five processes.}
+    \label{fig:majority5-struct}
+\end{figure}
+
 
 \subsection{Grid Protocol}
+
+The Grid Protocol was introduced in the Preparation chapter as an example (see \autoref{voting-example}). It arranges processes in a logical rectangular grid \autocite{grid}; a quorum consists of all processes from a complete column plus one process from each column.
+
+Assuming for now that our nodes fit into a rectangular \(c \times r\) grid so that \(n = c r\) we can translate the requirements of this specification into a voting structure as follows:
+
+\begin{description}
+    \item[\enquote{all processes from a complete column}] For each column in the grid, we create a substructure whose virtual root node has threshold \(r\).
+\end{description}
 
 XXX
 
