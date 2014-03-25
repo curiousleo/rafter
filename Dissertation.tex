@@ -9,6 +9,8 @@
 \usepackage[T1]{fontenc}
 \usepackage[utf8]{inputenc}
 \usepackage[british]{babel}
+\usepackage[table,hyperref,dvipsnames]{xcolor}
+\usepackage{floatrow}
 \usepackage{csquotes}
 \usepackage{tabularx}
 \usepackage{graphicx}
@@ -16,12 +18,11 @@
 \usepackage{algorithmicx}
 \usepackage{algpseudocode}
 \usepackage{algorithm}
-\usepackage{listings}
+\usepackage[chapter]{minted}
 \usepackage{paralist}
-\usepackage[table,hyperref,dvipsnames]{xcolor}
-\usepackage[hidelinks]{hyperref}
 \usepackage[autocite=footnote,citestyle=authoryear-comp,bibstyle=authoryear,
             isbn=false,doi=false,backend=biber]{biblatex}
+\usepackage[hidelinks]{hyperref}
 
 % TODO: list of figures, algorithms, tables?
 % TODO: custom cover page?
@@ -43,21 +44,23 @@
 \addbibresource{Bibliography.bib}
 \pagestyle{headings}
 
-\lstset{
-    basicstyle=\small\fontfamily{jkptt}\selectfont,
-    keywordstyle=\bfseries,
-    captionpos=b,
-    abovecaptionskip=1\baselineskip,
-    belowcaptionskip=1\baselineskip
+\usemintedstyle{tango}
+\newminted{cpp}{fontfamily=jkptt, fontsize=\small}
+\newminted{erlang}{fontfamily=jkptt, fontsize=\small}
+\newmint{erlang}{fontfamily=jkptt}
+
+\DeclareFloatVCode{ruleabove}%
+    {{\color{gray}\par\rule\hsize{0.5pt}\vskip4pt\par}}
+\DeclareFloatVCode{rulebelow}%
+    {{\color{gray}\par\vspace{-18pt}\rule\hsize{0.5pt}\vskip4pt\par}}
+\floatsetup[listing]{
+    style=plain,
+    frameset={\fboxsep6pt}
+    capposition=bottom,
+    precode=ruleabove,
+    midcode=rulebelow
 }
 
-\lstdefinestyle{erlang}{
-    language=Erlang,
-    morekeywords={fun, spec}
-}
-\lstdefinestyle{cpp}{
-    language=C++
-}
 % custom commands
 \newcommand{\requestVoteRPC}[0]{\texttt{requestVote} \textsc{rpc}}
 \newcommand{\appendEntriesRPC}[0]{\texttt{appendEntries} \textsc{rpc}}
@@ -449,11 +452,36 @@ XXX
 
 \section{Overview of the structured voting implementation}
 
+\begin{listing}[h]
+    \begin{erlangcode}
+NewIndices = dict:map(fun(_, Paths) -> [[0|P] || P <- Paths] end, Indices)
+    \end{erlangcode}
+    \caption{A typical line of Erlang code, taken from the Grid Protocol voting structure generator. Note how the use of higher-order functions like \texttt{dict:map}, anonymous functions and list comprehensions allow for very dense code.}
+    \label{lst:erlang-majority}
+\end{listing}
 
+\begin{listing}[h]
+    \begin{cppcode}
+#include <map>
+#include <deque>
 
-\begin{enumerate}
-    \item 
-\end{enumerate}<++>
+typedef int id;
+typedef std::deque<std::deque<std::size_t> > paths_t;
+
+// ...
+
+for(std::map<id, paths_t>::iterator indices_it = indices.begin();
+        indices_it != indices.end(); ++indices_it) {
+    paths_t paths = indices_it->second;
+    for(paths_t::iterator paths_it = paths.begin();
+            paths_it != paths.end(); ++paths_it) {
+        paths_it->push_front(0);
+    }
+}
+    \end{cppcode}
+    \caption{The Erlang code from \autoref{lst:erlang-majority}, translated into relatively idiomatic C++.}
+    \label{lst:cpp-majority}
+\end{listing}
 
 \section{Voting algorithm and data types}
 
@@ -538,59 +566,6 @@ XXX
 \appendix
 
 \chapter{Code samples\label{ch:code-samples}}
-
-\begin{lstlisting}[style=erlang, caption={Majority Protocol voting structure generator code in Erlang}, label=lst:majority, float=htpb]
--record(vstruct_p, { votes = 1 :: pos_integer(), id :: peer() }).
--record(vstruct_v, { votes = 1 :: pos_integer(), thresh :: pos_integer(),
-          children :: [ #vstruct_v{} | #vstruct_p{} ] }).
--record(vstruct, { tree :: #vstruct_v{}, indices :: dict() }).
-
--spec majority(list(peer())) -> #vstruct{}.
-majority(Ids) ->
-    Threshold = round((length(Ids) + 1) / 2),
-    Nodes = [#vstruct_p{id = Id} || Id <- Ids],
-    {Indices, _} = lists:mapfoldl(
-                     fun(Id, K) -> {{Id, [[K]]}, K+1} end,
-                     0, Ids),
-    #vstruct{tree = #vstruct_v{thresh = Threshold,
-                               children = Nodes},
-             indices = dict:from_list(Indices)}.
-\end{lstlisting}
-
-\begin{lstlisting}[style=cpp, caption={Majority Protocol voting structure generator code in C++, for comparison}, label=lst:majority, float=htpb]
-typedef int id;
-typedef std::vector<std::size_t> path_t;
-typedef std::vector<path_t> paths_t;
-typedef std::map<id,std::vector<std::vector<std::size_t> > > indices_t;
-typedef std::pair<id, std::vector<std::vector<std::size_t> > > value_t;
-typedef struct { int id; int votes; } vstruct_p;
-typedef struct { std::size_t thresh; void *children; } vstruct_v;
-typedef struct { vstruct_v *tree; indices_t *indices; } vstruct;
-
-vstruct majority(std::vector<id> ids) {
-    std::size_t ids_len = ids.size();
-    std::size_t threshold = (std::size_t)std::round((ids_len + 1.0) / 2.0);
-    std::vector<vstruct_p> *nodes = new std::vector<vstruct_p>(ids_len);
-
-    for(std::vector<id>::iterator ids_it = ids.begin();
-            ids_it != ids.end(); ++ids_it) {
-        nodes->push_back((vstruct_p){ .id = *ids_it, .votes = 1 });
-    }
-
-    indices_t *indices = new indices_t();
-    std::size_t k = 0;
-    for(std::vector<id>::iterator ids_it = ids.begin();
-            ids_it != ids.end(); ++ids_it) {
-        paths_t paths = paths_t { path_t {k} };
-        value_t id_paths_pair(*ids_it, paths);
-        indices->insert(id_paths_pair);
-    }
-
-    vstruct_v *tree = new vstruct_v(
-            (vstruct_v){ .thresh = threshold, .children = nodes});
-    return (vstruct){ .tree = tree, .indices = indices};
-}
-\end{lstlisting}
 
 % \listoffigures
 %
