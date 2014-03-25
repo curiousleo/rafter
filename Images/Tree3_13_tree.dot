@@ -1,0 +1,14 @@
+digraph vstruct {
+A -> B;
+A -> F;
+A -> J;
+B -> C;
+B -> D;
+B -> E;
+F -> G;
+F -> H;
+F -> I;
+J -> K;
+J -> L;
+J -> M;
+}
