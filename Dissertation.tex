@@ -309,13 +309,13 @@ Structured voting schemes impose a logical structure on the set of processes and
 
 In a tree-shaped voting structure, each node without children (a \enquote{physical node}) represents a process. Nodes with children (called \enquote{virtual nodes}) represent the structure of the voting scheme. The tree is to be interpreted such that votes flow upwards, from the physical nodes (the leaves of the tree) up to the virtual node at its root.
 
-When a physical node casts its vote, its votes are added to the votes its parent virtual node has already received. If the sum of those votes equals or exceeds the parent node's threshold, then the parent node in turn passes its vote to its parent. An annotated example is given in \autoref{fig:grid4}.
+When a physical node casts its vote, its votes are added to the votes its parent virtual node has already received. If the sum of those votes equals or exceeds the parent node's threshold, then the parent node in turn passes its vote to its parent. An annotated example is given in \autoref{fig:majority5-defs}.
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.8\textwidth, keepaspectratio]{Images/Grid4.pdf}
-    \caption[Tree-structured voting scheme for a Grid Protocol]{A tree-structured voting scheme for a Grid Protocol managing four processes \texttt{A}, \texttt{B}, \texttt{C} and \texttt{D}.}
-    \label{fig:grid4}
+    \includegraphics[width=0.6\textwidth, keepaspectratio]{Images/Majority5-defs.pdf}
+    \caption[Tree-structured voting scheme for a Majority Protocol]{A tree-structured voting scheme for a Majority Protocol managing five processes.}
+    \label{fig:majority5-defs}
 \end{figure}
 
 \section{Software engineering\label{sc:software-engineering}}
@@ -526,8 +526,6 @@ In the following, \(n\) stands for the number of processes.
 
 The Majority Protocol (also know as Majority Consensus Voting\autocite{majority}) requires quorums to contain \(\lceil (n + 1) / 2 \rceil\) processes. This makes it an unstructured voting protocol. However, unstructured voting protocols can be regarded as a subclass of structured voting protocols, since they fit into the same framework of voting structure generators.
 
-This voting structure has a rigid format, which allows for a straightforward implementation: It consists of \(n\) physical nodes, all sharing the same virtual parent node (which also acts as the root of the tree-shaped voting structure). Each physical node has one vote, and the threshold of the root node is \(\lceil (n + 1) / 2 \rceil\). An example for a Majority Protocol voting structure with \(n = 5\) nodes and a corresponding threshold of three is given in \autoref{fig:majority5-struct}.
-
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.5\textwidth, keepaspectratio]{Images/Majority5.pdf}
@@ -535,6 +533,7 @@ This voting structure has a rigid format, which allows for a straightforward imp
     \label{fig:majority5-struct}
 \end{figure}
 
+This voting structure has a rigid format, which allows for a straightforward implementation: It consists of \(n\) physical nodes, all sharing the same virtual parent node (which also acts as the root of the tree-shaped voting structure). Each physical node has one vote, and the threshold of the root node is \(\lceil (n + 1) / 2 \rceil\). An example for a Majority Protocol voting structure with \(n = 5\) nodes and a corresponding threshold of three is given in \autoref{fig:majority5-struct}.
 
 \subsection{Grid Protocol}
 
@@ -543,10 +542,18 @@ The Grid Protocol was introduced in the Preparation chapter as an example (see \
 Assuming for now that our nodes fit into a rectangular \(c \times r\) grid so that \(n = c r\) we can translate the requirements of this specification into a voting structure as follows:
 
 \begin{description}
-    \item[\enquote{all processes from a complete column}] For each column in the grid, we create a substructure whose virtual root node has threshold \(r\).
+    \item[\enquote{all processes from a complete column}] For each column in the grid (each consisting of \(r\) processes), we create a substructure whose virtual root node has threshold \(r\). These subroots are then given a common virtual parent node, the \textsc{cc}-cover root (for complete column cover). Since we require only one complete column, that parent node's threshold is set to one.
+    \item[\enquote{one process from each column}] Again we create a substructure for each column in the grid. Their virtual root nodes have a threshold of one (since we require \emph{one} process from each column), and are again given a common virtual parent node, called the \textsc{c}-cover root (for column cover). As one node from each column is needed, its threshold must be \(c\).
 \end{description}
 
-XXX
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth, keepaspectratio]{Images/Grid4-covers.pdf}
+    \caption{Annotated voting structure for the Grid Protocol with four processes.}
+    \label{fig:grid4-covers}
+\end{figure}
+
+The Grid Protocol specification demands that both requirements must be fulfilled in order to reach a quorum. We thus make the \textsc{cc}-cover root and the \textsc{c}-cover root the children of a virtual node with a threshold of two as in \autoref{fig:grid4-covers}. This makes sure that an election only succeeds when both a \textsc{cc}-cover and a \textsc{c}-cover have been found.
 
 \subsection{Tree Quorum Protocol}
 
