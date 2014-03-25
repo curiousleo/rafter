@@ -555,9 +555,26 @@ Assuming for now that our nodes fit into a rectangular \(c \times r\) grid so th
 
 The Grid Protocol specification demands that both requirements must be fulfilled in order to reach a quorum. We thus make the \textsc{cc}-cover root and the \textsc{c}-cover root the children of a virtual node with a threshold of two as in \autoref{fig:grid4-covers}. This makes sure that an election only succeeds when both a \textsc{cc}-cover and a \textsc{c}-cover have been found.
 
+XXX What if \(n \neq c r\)?
+
 \subsection{Tree Quorum Protocol}
 
-XXX
+The Tree Quorum Protocol \autocite{tree} comes in many flavours which allows for different trade-offs between read and write quorum size to be made. For my voting structure generator, I picked the variant with the smallest write quorum called \enquote{log write protocol} since read quorums are not used in this project.
+
+In this protocol, the processes are logically arranged in a tree of degree \(d\) (meaning that every parent has \(d\) children). For now, we assume that the tree is complete, that is, it has the maximum number of nodes. A quorum is then defined as any set of nodes forming a path from the root to any leaf of the tree.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.9\textwidth, keepaspectratio]{Images/Tree3_13.pdf}
+    \caption{Voting structure for the Tree Quorum Protocol based on a ternary tree with 13 processes. Processes \texttt{A}, \texttt{F} and \texttt{G} have voted. They lie on a path from the root (\texttt{A}) to a leaf (\texttt{G}), so they form a quorum. The dotted grey lines are not part of the voting structure proper; they only indicate how the original tree is preserved in the voting structure.}
+    \label{fig:grid3_13}
+\end{figure}
+
+Take the tree in the top left-hand corner of \autoref{fig:grid3_13} as an example. Building the voting structure bottom-up, we build a substructure representing the subtree with root \texttt{B}. This substructure should only vote if \texttt{B} and one of \texttt{C}, \texttt{D} or \texttt{E} have voted.
+
+Since it does not matter which of \texttt{C}, \texttt{D} and \texttt{E} voted, we can make all three children of a virtual node with a threshold of one. This virtual node in some sense represents the logical \emph{or} since it votes as soon as any of its children do.
+
+To complete the substructure, we make the virtual \emph{or}-node and \texttt{B} the children of a virtual node with threshold set to two (a logical \emph{and} in some sense.) This \emph{and}-node is the root of the substructure containing the four processes, and its root, by construction, votes only if \texttt{B} and one of \texttt{C}, \texttt{D} or \texttt{E} have voted. The entire voting structure is then built up recursively in this way.
 
 \section{Integration with Rafter}
 
