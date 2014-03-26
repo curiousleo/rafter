@@ -525,7 +525,7 @@ XXX
 
 In this section, I will describe how the voting structure generators for the three voting protocols I implemented work. These generators output tree-shaped voting structures, which are universal in expressing quorum systems \autocite{structures}. The challenge in building them is to translate the protocol specifications into tree-shaped voting structures.
 
-To simplify this translation, I will now introduce two common patterns that will be used over and over in the remainder of this section: \emph{any}- and \emph{all}-nodes.\footnote{Note that the terms any-node and all-node are not used in structured voting literature, but I found them very helpful when designing or reading voting structures.}
+To simplify this translation, I will now introduce two common patterns that will be used in the description of the Grid Protocol and the Tree Quorum Protocol: \emph{any}- and \emph{all}-nodes.\footnote{Note that the terms any-node and all-node are not used in structured voting literature, but I found them very helpful when designing or reading voting structures.}
 
 \begin{figure}[h]
     \centering
@@ -552,7 +552,7 @@ In contrast, all-nodes have a threshold equal to the number of children they hav
 
 \[ \text{all-node} = \bigwedge_{p\,\in\,\text{Children}(\text{any-node})} p \]
 
-In the following, \(n\) stands for the number of processes.
+In the following, \(n\) refers to the total number of processes.
 
 \subsection{Majority Protocol}
 
@@ -565,7 +565,7 @@ The Majority Protocol (also know as Majority Consensus Voting\autocite{majority}
     \label{fig:majority5-struct}
 \end{figure}
 
-This voting structure has a rigid format, which allows for a straightforward implementation: It consists of \(n\) physical nodes, all sharing the same virtual parent node (which also acts as the root of the tree-shaped voting structure). Each physical node has one vote, and the threshold of the root node is \(\lceil (n + 1) / 2 \rceil\). An example for a Majority Protocol voting structure with \(n = 5\) nodes and a corresponding threshold of three is given in \autoref{fig:majority5-struct}.
+This voting structure has a rigid format, which allows for a straightforward implementation: It consists of \(n\) physical nodes, all sharing the same virtual parent node (which also acts as the root of the tree-shaped voting structure). Each physical node has one vote, and the threshold of the root node is \(\lceil (n + 1) / 2 \rceil\). An example for a Majority Protocol voting structure with five processes and a corresponding threshold of three is given in \autoref{fig:majority5-struct}.
 
 \subsection{Grid Protocol}
 
@@ -590,21 +590,33 @@ Assuming for now that our nodes fit into a rectangular \(c \times r\) grid so th
     \label{fig:grid4-covers}
 \end{figure}
 
-The Grid Protocol specification demands that both requirements must be fulfilled in order to reach a quorum. We thus make the \textsc{cc}-cover root and the \textsc{c}-cover root the children of an all-node as in \autoref{fig:grid4-covers}. This makes sure that an election only succeeds when both a \textsc{cc}-cover and a \textsc{c}-cover have been found.
+The Grid Protocol specification demands that both requirements must be fulfilled in order to reach a quorum. We thus make the \textsc{cc}-cover root and the \textsc{c}-cover root the children of an all-node as in \autoref{fig:grid4-covers}, giving \( \left[ \bigwedge_c \bigvee_{p\,\in\,c} p \right] \wedge \left[ \bigvee_c \bigwedge_{p\,\in\,c} p \right] \) as required -- note how the tree-shaped voting structure resembles the abstract syntax tree of the logical expression. This makes sure that an election only succeeds when both a \textsc{cc}-cover and a \textsc{c}-cover have been found.
 
-Going the other way round, that is, \emph{reading} \autoref{fig:grid4-covers}, we can regard the tree-shaped voting structure as the abstract syntax tree of a logical expression. We can write it down as follows, where \(c\) ranges over the columns and \(p\) over the processes' votes:
+\minisec{Dealing with incomplete grids}
 
-\begin{align*}
-    \text{Success} &\equiv \text{\textsc{c}-cover} \wedge \text{\textsc{cc}-cover} \\
-    &= \left[ \bigwedge_c \bigvee_{p\,\in\,c} p \right]
-       \wedge \left[ \bigvee_c \bigwedge_{p\,\in\,c} p \right] \\
-    % &= (\text{any process from column 1} \wedge \text{any process from column 2}) \\
-    % &\quad\wedge (\text{all processes from column 1} \vee \text{all processes from column 2}) \\
-    &= [(A \vee C) \wedge (B \vee D)] \wedge [(A \wedge C) \vee (B \wedge D)]
-    \label{mat:grid4-bool}
-\end{align*}
+In the description of the Grid Protocol above, we assumed that the number of processes \(n\) fits nicely into a rectangular grid with \(r\) rows and \(c\) columns. We can of course always enforce this, even when the number of processes is prime, by letting either \(r = 1\) or \(c = 1\). In these extreme cases, however, the Grid Protocol reduces to locking \emph{all} processes:
 
-XXX What if \(n \neq c r\)?
+\begin{description}
+    \item[\(\mathbf{r = 1}\)] makes the \textsc{c}-cover equal to the set of all nodes;
+    \item[\(\mathbf{c = 1}\)] makes the \textsc{cc}-cover equal to the set of all nodes.
+\end{description}
+
+This is clearly not desirable. Instead, the grid structure we impose on the processes is the smallest almost-square grid that all processes can fit in.\footnote{Almost-square here means that \(c\) and \(r\) differ by at most one, so \(|\,c - r\,| \leq 1\).} Specifically, we let
+
+\[ (r, c) =
+    \begin{cases}
+        \;\left( \left\lceil \sqrt{n} \right\rceil,
+                 \left\lfloor \sqrt{n} \right\rfloor \right)
+                 & \text{if } \left\lceil \sqrt{n} \right\rceil
+                        \cdot \left\lfloor \sqrt{n} \right\rfloor \geq n \\[0.5em]
+        \;\left( \left\lceil \sqrt{n} \right\rceil,
+                 \left\lceil \sqrt{n} \right\rceil \right) & \text{otherwise}
+    \end{cases}
+\]
+
+Note that this implies \(r \geq c\); we are said to be \enquote{favouring rows}. Swapping \(r\) and \(c\) on the left-hand side lets us construct grids \enquote{favouring columns}.
+
+The slots in the grid that are not taken up by a process are then considered to be populated by dead placeholder processes. As a little optimisation, we can remove the \textsc{cc}-covers for the columns that contain a placeholder since those columns can never be complete.
 
 \subsection{Tree Quorum Protocol}
 
@@ -619,11 +631,9 @@ In this protocol, the processes are logically arranged in a tree of degree \(d\)
     \label{fig:grid3_13}
 \end{figure}
 
-Take the tree in the top left-hand corner of \autoref{fig:grid3_13} as an example. Building the voting structure bottom-up, we build a substructure representing the subtree with root \texttt{B}. This substructure should only vote if \texttt{B} and one of \texttt{C}, \texttt{D} or \texttt{E} have voted.
+Take the tree in the top left-hand corner of \autoref{fig:grid3_13} as an example. Building the voting structure bottom-up, we start by assembling a substructure representing the subtree with root \texttt{B}. This substructure should only vote if \texttt{B} and one of \texttt{C}, \texttt{D} or \texttt{E} have voted: \( \texttt{B} \wedge \bigvee_{p\,\in\,\text{Children}(\texttt{B})} p \). We can model this easily in terms of any-nodes and all-nodes: \texttt{C}, \texttt{D} and \texttt{E} are given an any-node as their parent, and this any-node and \texttt{B} are made the children of an all-node.
 
-Since it does not matter which of \texttt{C}, \texttt{D} and \texttt{E} voted, we can make all three children of a virtual node with a threshold of one. This virtual node in some sense represents the logical \emph{or} since it votes as soon as any of its children do.
-
-To complete the substructure, we make the virtual \emph{or}-node and \texttt{B} the children of a virtual node with threshold set to two (a logical \emph{and} in some sense.) This \emph{and}-node is the root of the substructure containing the four processes, and its root, by construction, votes only if \texttt{B} and one of \texttt{C}, \texttt{D} or \texttt{E} have voted. The entire voting structure is then built up recursively in this way.
+Recursively, we proceed in the same way for the subtrees rooted in \texttt{F} and \texttt{J}, and then for the entire tree with \texttt{A} at its root and \texttt{B}, \texttt{F} and \texttt{J} as its children.
 
 \section{Integration with Rafter}
 
