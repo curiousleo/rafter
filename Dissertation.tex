@@ -338,7 +338,7 @@ When a physical node casts its vote, its votes are added to the votes its parent
         Voting structure visualiser & medium & medium \\
         Majority Protocol voting structure generator & high & easy \\
         Grid Protocol voting structure generator & medium & hard \\
-        Tree Quorum Protocol voting structure generator & low & hard \\
+        Generalised Tree Quorum Protocol voting structure generator & low & hard \\
         Rafter integration & high & hard \\
         Memcached frontend & high & hard \\
         Amazon \ECC benchmark set-up & high & hard \\
@@ -405,7 +405,7 @@ The QuickCheck tests, in their simplest form, consist of \emph{generators} (not 
 In \texttt{test/rafter\_gen.erl}, the function \texttt{vstruct()} generates a voting structure, proceeding as follows: It
 \begin{inparaenum}[(a)]
     \item creates a list of unique identifiers of random length uniformly distributed between three and 40,
-    \item picks a voting structure generator at random (Majority Protocol, Grid Protocol, or Tree Quorum Protocol),
+    \item picks a voting structure generator at random (Majority Protocol, Grid Protocol, or Generalised Tree Quorum Protocol),
     \item generates additional parameters depending on the voting structure generator chosen,
     \item calls the chosen voting structure generator with the shuffled list of identifiers and any additional parameters as arguments, and
     \item returns the resulting voting structure.
@@ -415,7 +415,7 @@ This generator function is used wherever a test requires a voting structure. As 
 
 \minisec{Property example}
 
-The file \texttt{test/rafter\_voting\_majority\_eqc.erl} defines a property of the Majority Protocol in the function \texttt{prop\_majority\_quorum()}. In essence, this property states that an election succeeds if and only if more than half of the nodes agree (\(v \ge \lceil n \, / \, 2 \rceil \), where \(v\) is the number of votes and \(n\) the total number of processes.)
+The file \texttt{test/rafter\_voting\_majority\_eqc.erl} defines a property of the Majority Protocol in the function \texttt{prop\_majority\_quorum()}. In essence, this property states that an election succeeds if and only if more than half of the nodes agree (\(v \ge \left\lceil n \, / \, 2 \right\rceil \), where \(v\) is the number of votes and \(n\) the total number of processes.)
 
 \section{Implementation approach\label{sc:implementation-strategy}}
 
@@ -473,7 +473,7 @@ benchmarking: Python, boto, Julia, automatisation and analysis
     \begin{erlangcode}
 NewIndices = dict:map(fun(_, Paths) -> [[0|P] || P <- Paths] end, Indices)
     \end{erlangcode}
-    \caption{A typical line of Erlang code, taken from the Grid Protocol voting structure generator. Note how the use of higher-order functions like \texttt{dict:map}, anonymous functions and list comprehensions allow for very dense code.}
+    \caption{A typical line of Erlang code, taken from the Grid Protocol voting structure generator. Note how the use of higher-order functions like \texttt{dict:map}, anonymous functions and list comprehensions allows for very dense code.}
     \label{lst:erlang-majority}
 \end{listing}
 
@@ -496,7 +496,7 @@ for(std::map<id, paths_t>::iterator indices_it = indices.begin();
     }
 }
     \end{cppcode}
-    \caption{The Erlang code from \autoref{lst:erlang-majority}, translated into relatively idiomatic C++.}
+    \caption{The Erlang code from \autoref{lst:erlang-majority}, translated into relatively idiomatic \textsc{c}++.}
     \label{lst:cpp-majority}
 \end{listing}
 
@@ -525,7 +525,7 @@ XXX
 
 In this section, I will describe how the voting structure generators for the three voting protocols I implemented work. These generators output tree-shaped voting structures, which are universal in expressing quorum systems \autocite{structures}. The challenge in building them is to translate the protocol specifications into tree-shaped voting structures.
 
-To simplify this translation, I will now introduce two common patterns that will be used in the description of the Grid Protocol and the Tree Quorum Protocol: \emph{any}- and \emph{all}-nodes.\footnote{Note that the terms any-node and all-node are not used in structured voting literature, but I found them very helpful when designing or reading voting structures.}
+To simplify this translation, I will now introduce two common patterns that will be used in the description of the Grid Protocol and the (Generalised) Tree Quorum Protocol: \emph{any}- and \emph{all}-nodes.\footnote{Note that the terms any-node and all-node are not used in structured voting literature, but I found them very helpful when designing or reading voting structures.}
 
 \begin{figure}[h]
     \centering
@@ -556,7 +556,7 @@ In the following, \(n\) refers to the total number of processes.
 
 \subsection{Majority Protocol}
 
-The Majority Protocol (also know as Majority Consensus Voting\autocite{majority}) requires quorums to contain \(\lceil (n + 1) / 2 \rceil\) processes. This makes it an unstructured voting protocol. However, unstructured voting protocols can be regarded as a subclass of structured voting protocols, since they fit into the same framework of voting structure generators.
+The Majority Protocol (also know as Majority Consensus Voting\autocite{majority}) requires quorums to contain \(\left\lceil (n + 1) / 2 \right\rceil\) processes. This makes it an unstructured voting protocol. However, unstructured voting protocols can be regarded as a subclass of structured voting protocols, since they fit into the same framework of voting structure generators.
 
 \begin{figure}[h]
     \centering
@@ -565,7 +565,7 @@ The Majority Protocol (also know as Majority Consensus Voting\autocite{majority}
     \label{fig:majority5-struct}
 \end{figure}
 
-This voting structure has a rigid format, which allows for a straightforward implementation: It consists of \(n\) physical nodes, all sharing the same virtual parent node (which also acts as the root of the tree-shaped voting structure). Each physical node has one vote, and the threshold of the root node is \(\lceil (n + 1) / 2 \rceil\). An example for a Majority Protocol voting structure with five processes and a corresponding threshold of three is given in \autoref{fig:majority5-struct}.
+This voting structure has a rigid format, which allows for a straightforward implementation: It consists of \(n\) physical nodes, all sharing the same virtual parent node (which also acts as the root of the tree-shaped voting structure). Each physical node has one vote, and the threshold of the root node is \(\left\lceil (n + 1) / 2 \right\rceil\). An example for a Majority Protocol voting structure with five processes and a corresponding threshold of three is given in \autoref{fig:majority5-struct}.
 
 \subsection{Grid Protocol}
 
@@ -618,7 +618,7 @@ Note that this implies \(r \geq c\); we are said to be \enquote{favouring rows}.
 
 The slots in the grid that are not taken up by a process are then considered to be populated by dead placeholder processes. As a little optimisation, we can remove the \textsc{cc}-covers for the columns that contain a placeholder since those columns can never be complete.
 
-\subsection{Tree Quorum Protocol}
+\subsection{(Generalised) Tree Quorum Protocol}
 
 The Tree Quorum Protocol \autocite{tree} comes in many flavours which allows for different trade-offs between read and write quorum size to be made. For my voting structure generator, I picked the variant with the smallest write quorum called \enquote{log write protocol} since read quorums are not used in this project.
 
