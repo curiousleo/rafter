@@ -75,9 +75,9 @@
      inkscape:window-height="702"
      id="namedview300"
      showgrid="false"
-     inkscape:zoom="0.85653711"
-     inkscape:cx="200.42814"
-     inkscape:cy="125.64914"
+     inkscape:zoom="1.7130742"
+     inkscape:cx="326.59832"
+     inkscape:cy="63.284069"
      inkscape:window-x="0"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
@@ -688,7 +688,7 @@
      style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">
     <tspan
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Nimbus Roman No9 L;-inkscape-font-specification:Nimbus Roman No9 L Italic"
-       id="tspan5871">V</tspan>
+       id="tspan5871">all</tspan>
   </text>
   <polyline
      points="280,-243 280,-289 "
@@ -755,7 +755,7 @@
      style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">
     <tspan
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Nimbus Roman No9 L;-inkscape-font-specification:Nimbus Roman No9 L Italic"
-       id="tspan5869">V</tspan>
+       id="tspan5869">all</tspan>
   </text>
   <polyline
      points="208,-159 208,-205 "
@@ -822,7 +822,7 @@
      style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">
     <tspan
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Nimbus Roman No9 L;-inkscape-font-specification:Nimbus Roman No9 L Italic"
-       id="tspan5873">V</tspan>
+       id="tspan5873">any</tspan>
   </text>
   <polyline
      points="352,-159 352,-205 "
@@ -859,7 +859,7 @@
      style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">
     <tspan
        style="font-style:italic;font-family:Nimbus Roman No9 L;-inkscape-font-specification:Nimbus Roman No9 L Italic"
-       id="tspan5865">V</tspan>
+       id="tspan5865">any</tspan>
   </text>
   <polyline
      points="100,-75 100,-121 "
@@ -912,7 +912,7 @@
      style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">
     <tspan
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Nimbus Roman No9 L;-inkscape-font-specification:Nimbus Roman No9 L Italic"
-       id="tspan5867">V</tspan>
+       id="tspan5867">any</tspan>
   </text>
   <polyline
      points="208,-75 208,-121 "
@@ -1077,7 +1077,7 @@
      style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">
     <tspan
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Nimbus Roman No9 L;-inkscape-font-specification:Nimbus Roman No9 L Italic"
-       id="tspan5877">V</tspan>
+       id="tspan5877">all</tspan>
   </text>
   <polyline
      points="352,-75 352,-121 "
@@ -1114,7 +1114,7 @@
      style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">
     <tspan
        style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Nimbus Roman No9 L;-inkscape-font-specification:Nimbus Roman No9 L Italic"
-       id="tspan5875">V</tspan>
+       id="tspan5875">all</tspan>
   </text>
   <polyline
      points="460,-75 460,-121 "
