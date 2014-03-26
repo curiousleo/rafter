@@ -18,8 +18,10 @@
 \usepackage{algorithmicx}
 \usepackage{algpseudocode}
 \usepackage{algorithm}
+\usepackage{mathtools}
 \usepackage[chapter]{minted}
 \usepackage{caption}
+\usepackage{subcaption}
 \usepackage{paralist}
 \usepackage[autocite=footnote,citestyle=authoryear-comp,bibstyle=authoryear,
             isbn=false,doi=false,backend=biber]{biblatex}
@@ -521,7 +523,34 @@ XXX
 
 \section{Voting structure generators}
 
-XXX
+In this section, I will describe how the voting structure generators for the three voting protocols I implemented work. These generators output tree-shaped voting structures, which are universal in expressing quorum systems \autocite{structures}. The challenge in building them is to translate the protocol specifications into tree-shaped voting structures.
+
+To simplify this translation, I will now introduce two common patterns that will be used over and over in the remainder of this section: \emph{any}- and \emph{all}-nodes.\footnote{Note that the terms any-node and all-node are not used in structured voting literature, but I found them very helpful when designing or reading voting structures.}
+
+\begin{figure}[h]
+    \centering
+    \begin{subfigure}[t]{0.4\textwidth}
+        \includegraphics[width=\textwidth, keepaspectratio]{Images/Any.pdf}
+        \caption{An any-node has a threshold of one, so it votes as soon as \emph{any} of its children do.}
+        \label{fig:any}
+    \end{subfigure}
+    \quad
+    \begin{subfigure}[t]{0.4\textwidth}
+        \includegraphics[width=\textwidth, keepaspectratio]{Images/All.pdf}
+        \caption{An all-node's threshold is equal to the number of children it has, so it requires \emph{all} of them to vote.}
+        \label{fig:all}
+    \end{subfigure}
+    \caption{Common patterns in tree-shaped voting structures.}
+    \label{fig:tsvs-patterns}
+\end{figure}
+
+Any-nodes have a threshold of one. This means that they pass their vote to their parent as soon as any of their children vote. In logical terms, any-nodes express a logical \emph{or}: In \autoref{fig:any}, the root votes if and only if \texttt{A} \emph{or} \texttt{B} \emph{or} \texttt{C} vote. More formally, if for a process \(p\), \(p = \text{true}\) denotes that \(p\) votes,
+
+\[ \text{any-node} = \bigvee_{p\,\in\,\text{Children}(\text{any-node})} p \]
+
+In contrast, all-nodes have a threshold equal to the number of children they have, so they vote when all their children have voted. In this sense, all-nodes are the tree-shaped voting structure equivalent of the logical \emph{and}: The root in \autoref{fig:all} votes if and only if \texttt{A} \emph{and} \texttt{B} \emph{and} \texttt{C} vote. Taking the same mapping between truth assignments and voting as above,
+
+\[ \text{all-node} = \bigwedge_{p\,\in\,\text{Children}(\text{any-node})} p \]
 
 In the following, \(n\) stands for the number of processes.
 
@@ -545,8 +574,13 @@ The Grid Protocol was introduced in the Preparation chapter as an example (see \
 Assuming for now that our nodes fit into a rectangular \(c \times r\) grid so that \(n = c r\) we can translate the requirements of this specification into a voting structure as follows:
 
 \begin{description}
-    \item[\enquote{all processes from a complete column}] For each column in the grid (each consisting of \(r\) processes), we create a substructure whose virtual root node has threshold \(r\). These subroots are then given a common virtual parent node, the \textsc{cc}-cover root (for complete column cover). Since we require only one complete column, that parent node's threshold is set to one.
-    \item[\enquote{one process from each column}] Again we create a substructure for each column in the grid. Their virtual root nodes have a threshold of one (since we require \emph{one} process from each column), and are again given a common virtual parent node, called the \textsc{c}-cover root (for column cover). As one node from each column is needed, its threshold must be \(c\).
+    \item[\enquote{all processes from a complete column}] This means that there must be one column such that every process in that column has voted. The literature calls this the \textsc{cc}-cover, for \emph{complete column cover}. In logical terms, it can be expressed as \(\bigvee_c \bigwedge_{p\,\in\,c} p \), where \(c\) ranges over the columns.
+
+        Using the analogy between logic and tree-shaped voting structures introduced at the beginning of this section, we can translate this formula into a voting substructure as follows: for each column \(c\), there is an all-node whose children are the processes in that column (this models \(\bigwedge_{p\,\in\,c} p \).) The root of the substructure is an any-node, which has the all-nodes as its children. It is the \enquote{\textsc{cc}-cover subroot} in \autoref{fig:grid4-covers}.
+
+    \item[\enquote{one process from each column}] Translating this requirement (called \textsc{c}-cover for \emph{column cover}) into logic, we have \(\bigwedge_c \bigvee_{p\,\in\,c} p \).
+
+        We model this expression as a tree-shaped voting structure as follows: for each column \(c\), we add an any-node whose children are the processes in that column (giving us \(\bigvee_{p\,\in\,c} p \).) These any-nodes are given an all-node as their parent, called \enquote{\textsc{c}-cover subroot} in \autoref{fig:grid4-covers}.
 \end{description}
 
 \begin{figure}[h]
@@ -556,7 +590,19 @@ Assuming for now that our nodes fit into a rectangular \(c \times r\) grid so th
     \label{fig:grid4-covers}
 \end{figure}
 
-The Grid Protocol specification demands that both requirements must be fulfilled in order to reach a quorum. We thus make the \textsc{cc}-cover root and the \textsc{c}-cover root the children of a virtual node with a threshold of two as in \autoref{fig:grid4-covers}. This makes sure that an election only succeeds when both a \textsc{cc}-cover and a \textsc{c}-cover have been found.
+The Grid Protocol specification demands that both requirements must be fulfilled in order to reach a quorum. We thus make the \textsc{cc}-cover root and the \textsc{c}-cover root the children of an all-node as in \autoref{fig:grid4-covers}. This makes sure that an election only succeeds when both a \textsc{cc}-cover and a \textsc{c}-cover have been found.
+
+Going the other way round, that is, \emph{reading} \autoref{fig:grid4-covers}, we can regard the tree-shaped voting structure as the abstract syntax tree of a logical expression. We can write it down as follows, where \(c\) ranges over the columns and \(p\) over the processes' votes:
+
+\begin{align*}
+    \text{Success} &\equiv \text{\textsc{c}-cover} \wedge \text{\textsc{cc}-cover} \\
+    &= \left[ \bigwedge_c \bigvee_{p\,\in\,c} p \right]
+       \wedge \left[ \bigvee_c \bigwedge_{p\,\in\,c} p \right] \\
+    % &= (\text{any process from column 1} \wedge \text{any process from column 2}) \\
+    % &\quad\wedge (\text{all processes from column 1} \vee \text{all processes from column 2}) \\
+    &= [(A \vee C) \wedge (B \vee D)] \wedge [(A \wedge C) \vee (B \wedge D)]
+    \label{mat:grid4-bool}
+\end{align*}
 
 XXX What if \(n \neq c r\)?
 
