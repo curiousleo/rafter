@@ -4,11 +4,11 @@
 
 -include("rafter.hrl").
 
--spec majority([peer()]) -> #vstruct{}.
+-spec majority(list(peer())) -> #vstruct{}.
 majority(Ids) ->
-    T = round((length(Ids) + 1) / 2),
-    Phys = lists:map(fun(Id) -> #vstruct_p{id = Id} end, Ids),
+    Treshold = round((length(Ids) + 1) / 2),
+    Nodes = [#vstruct_p{id = Id } || Id <- Ids],
     {Indices, _} = lists:mapfoldl(fun(Id, K) -> {{Id, [[K]]}, K+1} end,
                                   0, Ids),
-    #vstruct{tree = #vstruct_v{thresh = T, children = Phys},
+    #vstruct{tree = #vstruct_v{thresh = Treshold, children = Nodes},
              indices = dict:from_list(Indices)}.
