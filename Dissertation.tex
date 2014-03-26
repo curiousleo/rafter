@@ -463,11 +463,17 @@ XXX
 
 two parts
 
+also: how much of the code is mine? -- \texttt{git diff master --stat src/}
+
 structured voting: Erlang, functional programming
 
 benchmarking: Python, boto, Julia, automatisation and analysis
 
 \subsection{A note on functional programming}
+
+Most of the code written for this project is in Erlang. Being a functional programming language, Erlang supports a very dense programming style. Its core libraries (which are imported by default) include modules for working with lists, dictionaries (hashmaps), sets, string, timers, \textsc{i/o} and random values, each of which is used in my code at some point, among others.
+
+Just to illustrate this point, I picked a typical line of Erlang code (\autoref{lst:erlang-majority}) and \enquote{translated} it into relatively idiomatic \textsc{c}++03 (\autoref{lst:cpp-majority}.) Note that the Erlang code only makes use of the built-in module \texttt{dict}, so no imports are required. As a dynamically typed language, Erlang does not need type declarations either, although they \emph{can} be added as annotations to functions for clarity. Thus, the code in \autoref{lst:erlang-majority} really does stand on its own, as long as it is wrapped in a function.
 
 \begin{listing}[h]
     \begin{erlangcode}
@@ -633,7 +639,13 @@ In this protocol, the processes are logically arranged in a tree of degree \(d\)
 
 Take the tree in the top left-hand corner of \autoref{fig:grid3_13} as an example. Building the voting structure bottom-up, we start by assembling a substructure representing the subtree with root \texttt{B}. This substructure should only vote if \texttt{B} and one of \texttt{C}, \texttt{D} or \texttt{E} have voted: \( \texttt{B} \wedge \bigvee_{p\,\in\,\text{Children}(\texttt{B})} p \). We can model this easily in terms of any-nodes and all-nodes: \texttt{C}, \texttt{D} and \texttt{E} are given an any-node as their parent, and this any-node and \texttt{B} are made the children of an all-node.
 
-Recursively, we proceed in the same way for the subtrees rooted in \texttt{F} and \texttt{J}, and then for the entire tree with \texttt{A} at its root and \texttt{B}, \texttt{F} and \texttt{J} as its children.
+We proceed in the same way for the subtrees rooted in \texttt{F} and \texttt{J}, and then for the entire tree with \texttt{A} at its root and \texttt{B}, \texttt{F} and \texttt{J} as its children. Note that this is the only truly recursive tree-shaped voting structure: Majority Protocol voting structures always have a height of two, and any Grid Protocol voting structure is four nodes high. Tree Quorum voting structures, on the other hand, have height \(\log_d{n+1}\) (this is a natural number assuming that the trees are always complete.)
+
+\minisec{Dealing with incomplete trees}
+
+Considering incomplete trees leads us from the Tree Quorum Protocol \autocite{tree} to the Generalised Tree Quorum Protocol \autocite{gen-tree}. In the special case of the \enquote{log write} protocol, however, there is no difference in the algorithm: a quorum still consists of a path from the root to a leaf.
+
+XXX more explanation required? side-by-side diagrams?
 
 \section{Integration with Rafter}
 
