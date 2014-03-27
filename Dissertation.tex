@@ -469,9 +469,9 @@ structured voting: Erlang, functional programming
 
 benchmarking: Python, boto, Julia, automatisation and analysis
 
-\subsection{A note on functional programming}
+\subsection{A note on functional programming\label{ssc:fp-note}}
 
-Most of the code written for this project is in Erlang. Being a functional programming language, Erlang supports a very dense programming style. Its core libraries (which are imported by default) include modules for working with lists, dictionaries (hashmaps), sets, string, timers, \textsc{i/o} and random values, each of which is used in my code at some point, among others.
+Most of the code written for this project is in Erlang. Being a functional programming language, Erlang supports a very dense programming style. Its core libraries (which are imported by default) include modules for working with lists, dictionaries (hashmaps), sets, string, timers, \textsc{i/o} and databases as well as random values, each of which is used in my code at some point, among others.
 
 Just to illustrate this point, I picked a typical line of Erlang code (\autoref{lst:erlang-majority}) and \enquote{translated} it into relatively idiomatic \textsc{c}++03 (\autoref{lst:cpp-majority}.) Note that the Erlang code only makes use of the built-in module \texttt{dict}, so no imports are required. As a dynamically typed language, Erlang does not need type declarations either, although they \emph{can} be added as annotations to functions for clarity. Thus, the code in \autoref{lst:erlang-majority} really does stand on its own, as long as it is wrapped in a function.
 
@@ -649,7 +649,15 @@ XXX more explanation required? side-by-side diagrams?
 
 \section{Integration with Rafter}
 
-XXX
+Having written and tested the structured voting code, I integrated it into Rafter. This process took place in rougly the following steps:
+
+\begin{enumerate}
+    \item Integrating my code with Rafter meant reading and understanding its source code first: 1,500 lines of code,\footnote{That's 1,500 actual lines of code as measured by \texttt{cloc} (\url{http://cloc.sourceforge.net}). See \autoref{ssc:fp-note} for a discussion of Erlang's code density.} spread over 11 modules and undocumented except for a few comments, in a language I was still learning. Using module and function names as a guide, I found the relevant pieces of code that needed changing. Andrew Stone, the developer of Rafter, helped me understand the purpose of a few functions whose task I could not figure out myself.
+    \item I renamed my modules and moved them into the appropriate directory to fit into the naming scheme and directory structure of Rafter. Also, the type specifications had to be pasted into the appropriate include file.
+    \item In order to use my structured voting code, the node configuration had to be changed from a list of peers (which is all that is needed when only the Majority Protocol is used) to a voting structure (enabling Rafter to use other protocols as well.) This required updating every line of code that made use of this field from the configuration record.
+    \item All the places in the code which implicitely assumed that the Majority Protocol was being used had to be rewritten. In most cases, this meant making them wrappers around my generalised structured voting code.
+\end{enumerate}
+
 
 \section{Overview of the benchmarking code}
 
@@ -657,7 +665,59 @@ XXX
 
 \section{Memcached frontend}
 
-XXX
+XXX need to rework this: make it clearer, maybe using a diagram with client, tcp connection to leader, backend etc.?
+
+Memcached is a high-performance key-value cache designed to sit between an application and a database. If the application issues a query that has been seen before by Memcached, it is served from the cache; otherwise, it is executed on the database and the result stored in Memcached. Originally developed for LiveJournal, Memcached is now used by Youtube, Twitter, Reddit, Facebook and Wikipedia, among others.
+
+My implementation of a Memcached frontend for Rafter amounts to a slight abuse of Memcached for my own intentions. First and foremost, Memcached caches are designed to be very fast, at the expense even of durability: clients cannot, in general, expect the cache to keep a value in memory indefinitely -- dropping a key-value pair to make place for a new one is perfectly acceptable for a cache like Memcached. Rafter, in contrast, is designed to be durable: every write operation is flushed to disk at once. Therefore, building a Memcached server on top of it results in an implementation that is orders of magnitude times slower than original Memcached.
+
+I added a Memcached frontend to Rafter for two reasons: to showcase a useful application that could be built on top of it, and to be able to use Memcached's benchmarking tool, \texttt{memaslap}.\footnote{\texttt{memaslap} is part of libMemcached (\url{http://libmemcached.org/libMemcached.html}), an open source library and toolset for Memcached.}
+
+Newer versions of Memcached support a binary protocol,\footnote{Memcached's new binary protocol is described in this document: \url{https://code.google.com/p/memcached/wiki/BinaryProtocolRevamped}.} which I found less ambiguous than the standard text-based protocol. Decoding and encoding binary protocols being a particular strength of Erlang, the decision over which protocol to implement was easy. \autoref{lst:request-header} shows part of the code the implements the decoding of a Memcached request.
+
+Next, I picked the commands and features I wanted the frontend to support. Since it was meant to be a proof-of-concept, I decided to stick to the minimal set of commands required for a key-value store: \texttt{get}, \texttt{set}, and \texttt{noop}, with the obvious meaning. For simplicity, I also decided not to support the data version check feature (the \textsc{cas} header field.)
+
+\minisec{Implementing Memcached}
+
+The actual implementation of the Memcached frontend consists of three parts: A supervisor, protocol decoder/encoder, and a backend.
+
+\begin{description}
+    \item[The supervisor] starts and watches over instances of the decoder/encoder. \emph{Supervisors} are a \emph{behaviour} defined in the \textsc{otp}, Erlang's set of core libraries. Crucially, they are notified when a process started by them fails. By default, the Memcached supervisor starts 20 instances of the decoder/encoder, which allows up to 20 clients to connect to the server simultaneously. Whenever one of them crashes, a new decoder/encoder is brought up.
+    \item[The protocol decoder and encoder] makes up the actual \enquote{frontend}: this is the component a Memcached client talks to directly via \textsc{tcp}.
+    \item[The backend] finally executes the commands decoded by the frontend by reading from and writing to a local database. In Raft terminology, this module constitutes the \emph{state machine}. It uses Erlang's built-in \texttt{ets} (Erlang Term Storage) module for storing the data.
+\end{description}
+
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=0.7\textwidth, keepaspectratio]{Images/Request_header.pdf}
+    \caption[Request header format in Memcached's revamped binary protocol]{Request header format in Memcached's revamped binary protocol. This diagram was taken from screenshot of \url{https://code.google.com/p/memcached/wiki/BinaryProtocolRevamped}.}
+    \label{fig:request-header}
+\end{figure}
+
+\begin{listing}[p]
+    \begin{erlangcode}
+case Packet of
+    <<_Magic:8,    Opcode:8,    KeyLen:16,
+      ExtrasLen:8, _DataType:8, _BucketId:16,
+      BodyLen:32,
+      Opaque:4/binary,     % binary: 4 bytes = 32 bits
+      _CAS:64,             % request header ends here
+      Body:BodyLen/binary, % request body
+      Next/binary          % start of next request header
+      >> ->
+      case {Opcode, ExtrasLen, Body} of
+          {10, 0, <<>>} ->
+              %% NOOP handling
+          { 0, 0, <<Key:KeyLen/binary>>} ->
+              %% GET handling
+          { 1, 8, <<Flags:4/binary, Expiry:32, Key:KeyLen/binary,
+                    Value/binary>>} ->
+              %% SET handling
+      end
+    \end{erlangcode}
+    \caption[Request decoding in Erlang]{This listing shows the relevant part of the function which decodes Memcached requests from the binary protocol described in \autoref{fig:request-header}. The structure of the \texttt{case Packet of} statement reflects the structure of the packet header. Note how we can use the variable \texttt{BodyLen} captured in the case statement to specify the size of the \texttt{Body} variable within the same case statement. Variables preceded by an underscore are not used.}
+    \label{lst:request-header}
+\end{listing}
 
 \section{Failure simulation}
 
