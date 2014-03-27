@@ -721,6 +721,28 @@ case Packet of
 
 \section{Failure simulation}
 
+In order to evaluate and compare the different voting structures, I added failure simulation to Rafter's state machine. Apart from being in \texttt{leader}, \texttt{follower} or \texttt{candidate} state, nodes can now also be in the \texttt{failed} state. Failed nodes do not process any incoming messages, nor do they send any messages to other nodes.
+
+The failure simulation, like all the benchmarking code I wrote for this project, assumes that the leader is fixed and stays up. This leader can then instruct its followers to fail -- either once or repeatedly. For the \enquote{fail once} failure mode, the process is as follows:
+
+\begin{enumerate}
+    \item The benchmark runner sends a message to the leader with parameters \(\lambda\) and \(T\).
+    \item After waiting for a time \(t \sim \text{Exp}(\lambda)\), the leader sends a message to a random follower to go into the \texttt{failed} state for time \(T\).
+    \item The leader repeats step (2.) until it receives a \enquote{stop} message.
+\end{enumerate}
+
+Repeated failures work similarly:
+
+\begin{enumerate}
+    \item The benchmark runner sends a message to the leader with parameters \(\lambda\) and \texttt{Up}.
+    \item Immediately, the leader sends a message to all its follower to start failing.
+    \item On receiving this message, each follower waits for time \(t \sim \text{Exp}(\lambda)\) before transitioning to the \texttt{failed} state.
+    \item After waiting for time \(t \cdot \frac{1 - \texttt{Up}}{\texttt{Up}}\), the follower goes back to \texttt{follower} state.
+    \item Followers repeat steps (3.) and (4.) until the leader sends out a \enquote{stop} message.
+\end{enumerate}
+
+The point of failing for time \(t \cdot \frac{1 - \texttt{Up}}{\texttt{Up}}\) is that followers are \enquote{up}, that is, actively participating in the cluster as followers, for \(\texttt{Up} \cdot 100\%\) of the time.
+
 XXX
 
 \section{Benchmarking scripts}
