@@ -683,7 +683,7 @@ The actual implementation of the Memcached frontend consists of three parts: A s
 \begin{figure}[p]
     \centering
     \includegraphics[width=0.7\textwidth, keepaspectratio]{Images/Request_header.pdf}
-    \caption[Request header format in Memcached's revamped binary protocol]{Request header format in Memcached's revamped binary protocol. This diagram was taken from screenshot of \url{https://code.google.com/p/memcached/wiki/BinaryProtocolRevamped}.}
+    \caption[Request header format in Memcached's revamped binary protocol]{Request header format in Memcached's revamped binary protocol. This diagram was taken from a screenshot of \url{https://code.google.com/p/memcached/wiki/BinaryProtocolRevamped}.}
     \label{fig:request-header}
 \end{figure}
 
@@ -696,17 +696,17 @@ case Packet of
       Opaque:4/binary,     % binary: 4 bytes = 32 bits
       _CAS:64,             % request header ends here
       Body:BodyLen/binary, % request body
-      Next/binary          % start of next request header
-      >> ->
-      case {Opcode, ExtrasLen, Body} of
-          {10, 0, <<>>} ->
-              %% NOOP handling
-          { 0, 0, <<Key:KeyLen/binary>>} ->
-              %% GET handling
-          { 1, 8, <<Flags:4/binary, Expiry:32, Key:KeyLen/binary,
-                    Value/binary>>} ->
-              %% SET handling
-      end
+      Next/binary>> ->     % start of next request header
+        case {Opcode, ExtrasLen, Body} of
+            {?NOOP, 0, <<>>} ->
+                % handle noop
+            {?GET,  0, <<Key:KeyLen/binary>>} ->
+                % handle get
+            {?SET,  8, <<Flags:4/binary, Expiry:32, Key:KeyLen/binary,
+                         Value/binary>>} ->
+                % handle set
+        end
+end
     \end{erlangcode}
     \caption[Request decoding in Erlang]{This listing shows the relevant part of the function which decodes Memcached requests from the binary protocol described in \autoref{fig:request-header}. The structure of the \texttt{case Packet of} statement reflects the structure of the packet header. Note how we can use the variable \texttt{BodyLen} captured in the case statement to specify the size of the \texttt{Body} variable within the same case statement. Variables preceded by an underscore are not used.}
     \label{lst:request-header}
