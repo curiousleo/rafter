@@ -1,5 +1,5 @@
 \RequirePackage[l2tabu, orthodox]{nag}
-\documentclass[11pt,chapterprefix=true,toc=bibliography,numbers=noendperiod,
+\documentclass[draft,11pt,chapterprefix=true,toc=bibliography,numbers=noendperiod,
                footnotes=multiple,twoside]{scrreprt}
 \usepackage{fixltx2e} % LaTeX patches, \textsubscript
 \usepackage{microtype}
@@ -212,6 +212,10 @@ Many big internet firms have been operating data centres for years now. This has
 
 \chapter{Preparation\label{ch:preparation}}
 
+A lot of reading and careful planning was necessary before I could start extending Rafter with structured voting. I first needed to understand \citeauthor{generators}'s unified framework for specifying voting structures, primarily by reading \citeauthor{voting}'s PhD thesis \autocite{voting}. I had to familiarise myself with Rafter and the programming language it is written in, Erlang; and finally, I had to set up a benchmarking environment in Amazon's Elastic Compute Cloud.
+
+In this chapter, I will first introduce some of the challenges posed by distributed systems in general. I will give an overview of the Raft consensus algorithm, and then describe structured voting schemes, taking the Grid Protocol as an example. I will mention the software engineering techniques that were applied to the project and describe my implementation approach. Finally, a list of the languages, tools and libraries used in this project will be given.
+
 % \begin{itemize}
     % \item Work undertaken before code was written
     % \item Refinement of project proposal
@@ -288,7 +292,9 @@ Since my project involved changing the way in which quorums\footnote{A \emph{quo
 
 \section{Introduction to structured voting schemes\label{ssc:structured-voting-schemes}}
 
-By taking into account the identity of nodes, as opposed to just counting them as in the majority consensus algorithm, we can build \emph{structured} voting schemes.
+Voting schemes specify quorums. On an abstract level, they provide a decision procedure, which, given some knowledge about the entire cluster and a set of processes, decides whether or not it constitues a quorum.
+
+The Majority Protocol and Read One Write All are examples of unstructured voting schemes: whether or not a set of nodes forms a quorum depends only on its cardinality. By taking into account the identity of nodes, as opposed to just counting them, we can build \emph{structured} voting schemes.
 
 \minisec{Quorum systems}
 
