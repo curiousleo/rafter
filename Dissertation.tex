@@ -182,7 +182,7 @@ This dissertation describes the extension of an implementation of the new Raft c
 
 \section{Motivation\label{sc:motivation}}
 
-As ever-increasing amounts of data are being handled in commercial settings as well as in research, distributed systems for processing and storage are becoming more and more ubiquitous. One main driver of this development is the need to increase fault tolerance.
+As ever-increasing amounts of data are being handled in commercial settings as well as in research, distributed systems for processing and storage are becoming more and more ubiquitous. One main driver of this development is the need to increase fault tolerance in the face of arbitrary network and node failures.
 
 According to Eric Brewer's famous \textsc{cap} theorem \autocite{cap}, a partition tolerant system cannot be both strictly consistent and maximally available.\footnote{The terms consistency, availability and partition tolerance are defined in \autoref{ssc:cap-acid-and-base}.} Many recent distributed data stores sacrifice consistency for availability. Some applications, however, require strong consistency guarantees -- data backup and configuration management systems, for example. Consensus protocols like Paxos \autocite{paxos} and Raft \autocite{raft} guarantee consistency at the cost of decreased availability.
 
@@ -190,11 +190,25 @@ In this project, I added support for structured voting schemes to an existing im
 
 \section{Challenges\label{sc:challenges}}
 
-XXX
+So far, structured voting schemes have mostly been confined to academic papers and theoretical analysis. I am not aware of any popular modern distributed storage system that uses structured voting schemes to generate quorums. Since the discovery of a unified framework for specifying structured voting schemes by \citeauthor{generators}, it has become possible to implement a generic voting structure interpreter that works with any voting structure specified in this way. This makes it possible to switch between different voting schemes without having to re-implement the code which decides whether or not a given set of nodes constitutes a quorum.
+
+However, no known implementation of the voting algorithm at the heart of any implementation of structured voting schemes exists to date. I therefore had to design my own, based on the high-level description from Storm's PhD thesis.
+
+In addition, distributed programming in itself is a challenge: any component may fail at the least convenient time; network connections may be unreliable; messages may be dropped, duplicated or reordered. Fortunately, Erlang provides some tools that make writing distributed systems a bit easier.
+
+Lastly, benchmarking a distributed system running in the cloud is difficult. Thorough planning and a high degree of automation is required to make it at all feasible.
 
 \section{Related work\label{sc:related-work}}
 
-XXX
+The primary source of ideas for this project was Christian Storm's PdD thesis, \citetitle{voting} \parencite{voting}, which puts unstructured and structured voting schemes into a common framework and analyses them analytically.
+
+During an internship at \textsc{tng} Technology Consulting\footnote{\url{http://www.tngtech.com/}}, I produced a working prototype of a key-value store based on structured voting schemes using the Node.js JavaScript framework.\footnote{Node.js (\url{http://nodejs.org/}) is a platform for building network applications in JavaScript.} This was done under the supervision of Christoph Stock and Christian Storm.
+
+Literature on voting schemes goes back much further: Majority voting was introduced in \citedate{majority} \autocite{majority}; the Tree Quorum Protocol was first presented in \citedate{tree} \autocite{tree} and generalised in a \citedate{gen-tree} paper \autocite{gen-tree}; the Grid Protocol was first described in \citedate{grid} \autocite{grid} and improved upon in a paper dating back to \citedate{bettergrid} \autocite{bettergrid}.
+
+The Raft consensus algorithm, on the other hand, is a very recent addition to distributed systems toolset. Indeed, at the time of this writing, the original Raft paper is still a draft \autocite{raft}. It has nonetheless led to a lot of excitement since its first version, and a few dozen implementations in different languages and in various stages of development exist.
+
+Many big internet firms have been operating data centres for years now. This has enabled them to collect data about the frequency of different types of failures over time. I used data compiled by of Google Senior Fellow \citeauthor{distr} \autocite{distr} to direct my failure simulation.
 
 \chapter{Preparation\label{ch:preparation}}
 
