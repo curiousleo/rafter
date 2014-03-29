@@ -125,15 +125,17 @@
 
 \section*{Original aims of the project\label{sc:original-aims}}
 
-XXX
+My aim was to extend Rafter,\footnote{Rafter is an open source project hosted on GitHub (\url{http://github.com/andrewjstone/rafter}).} an implementation of the new Raft \autocite{raft} consensus algorithm written in Erlang, with the ability to form quorums using structured voting schemes. This includes implementing and testing voting structure generators for at least the Majority Protocol and the Grid Protocol. In order to compare the performance of original Rafter and my extended implementation as well as measuring how different structured voting schemes scale with the number of nodes, benchmarks will be run with a cluster of Rafter instances in the Amazon Elastic Compute Cloud.
 
 \section*{Work completed\label{sc:work-completed}}
 
-XXX
+All objectives outlined in the proposal have been met: I have extended Rafter using structured voting schemes, and implemented a voting structure generator for the Tree Quorum Protocol in addition to the voting structure generators for the Majority Protocol and the Grid Protocol. Benchmarks in the Amazon cloud have been run, and the results have been analysed and evaluated.
 
 \section*{Special Difficulties\label{sc:special-difficulties}}
 
 None.
+
+\newpage
 
 \section*{Declaration of Originality\label{sc:declaration-of-originality}}
 
@@ -163,7 +165,7 @@ Date \hspace{0.4in} \today
 
 \pagenumbering{arabic}
 
-XXX Magic first paragraph: Summary of the project
+This dissertation describes the extension of an implementation of the new Raft consensus algorithm with the ability to form quorums using structured voting schemes.
 
 % \begin{itemize}
     % \item Principal motivation for the project
