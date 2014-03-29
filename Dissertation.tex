@@ -353,10 +353,10 @@ When a physical node casts its vote, its votes are added to the votes its parent
         Voting structure visualiser & medium & medium \\
         Majority Protocol voting structure generator & high & easy \\
         Grid Protocol voting structure generator & medium & hard \\
-        Generalised Tree Quorum Protocol voting structure generator & low & hard \\
+        Tree Quorum Protocol voting structure generator & low & hard \\
         Rafter integration & high & hard \\
-        Memcached frontend & high & hard \\
-        Amazon \ECC benchmark set-up & high & hard \\
+        Memcached frontend & high & medium \\
+        Amazon \ECC benchmark set-up & high & medium \\
         Benchmarking and analysis of the results & high & medium \\
         \bottomrule
     \end{tabularx}
@@ -411,7 +411,7 @@ The QuickCheck tests, in their simplest form, consist of \emph{generators} (not 
 In \texttt{test/rafter\_gen.erl}, the function \texttt{vstruct()} generates a voting structure, proceeding as follows: It
 \begin{inparaenum}[(a)]
     \item creates a list of unique identifiers of random length uniformly distributed between three and 40,
-    \item picks a voting structure generator at random (Majority Protocol, Grid Protocol, or Generalised Tree Quorum Protocol),
+    \item picks a voting structure generator at random (Majority Protocol, Grid Protocol, or Tree Quorum Protocol),
     \item generates additional parameters depending on the voting structure generator chosen,
     \item calls the chosen voting structure generator with the shuffled list of identifiers and any additional parameters as arguments, and
     \item returns the resulting voting structure.
@@ -537,7 +537,7 @@ XXX
 
 In this section, I will describe how the voting structure generators for the three voting protocols I implemented work. These generators output tree-shaped voting structures, which are universal in expressing quorum systems \autocite{structures}. The challenge in building them is to translate the protocol specifications into tree-shaped voting structures.
 
-To simplify this translation, I will now introduce two common patterns that will be used in the description of the Grid Protocol and the (Generalised) Tree Quorum Protocol: \emph{any}- and \emph{all}-nodes.\footnote{Note that the terms any-node and all-node are not used in structured voting literature, but I found them very helpful when designing or reading voting structures.}
+To simplify this translation, I will now introduce two common patterns that will be used in the description of the Grid Protocol and the Tree Quorum Protocol: \emph{any}- and \emph{all}-nodes.\footnote{Note that the terms any-node and all-node are not used in structured voting literature, but I found them very helpful when designing or reading voting structures.}
 
 \begin{figure}[h]
     \centering
