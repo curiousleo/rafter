@@ -188,13 +188,6 @@ According to Eric Brewer's famous \textsc{cap} theorem \autocite{cap}, a partiti
 
 In this project, I added support for structured voting schemes to an existing implementation of Raft. My aim was increase the availability and scalability of data storage systems built on top of this implementation while still providing the same consistency guarantees as the original Raft algorithm.
 
-Increasing the availability of a consistent distributed system would have two effects:
-
-\begin{itemize}
-    \item Applications that require consistency and already use a consensus algorithm that provides consistency could have their availability increased by migrating to this new implementation;
-    \item Applications that require high availability and currently run an algorithm that does not guarantee consistency, might switch to this new implementation too.
-\end{itemize}
-
 \section{Challenges\label{sc:challenges}}
 
 XXX
