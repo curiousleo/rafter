@@ -507,27 +507,24 @@ I listed this project's objectives, analysed the dependencies between its compon
     % \item Mention major milestones
 % \end{itemize}
 
+This chapter describes the implementation of the structured voting extension for Rafter and the benchmarking set-up.
+
 \section{Overview}
 
-two parts
+The implementation phase of this project took place in two stages: At first, I concentrated on writing the structured voting code, which I subsequently integrated into Rafter.
 
-also: how much of the code is mine? -- \texttt{git diff master --stat src/}
+In the second stage, I set up the benchmarking environment. This included adding logging facilities to Rafter, but also writing Fabric tasks to automate the actual benchmarking process in the Amazon Elastic Compute Cloud.
 
-structured voting: Erlang, functional programming
-
-benchmarking: Python, boto, Julia, automatisation and analysis
+% also: how much of the code is mine? -- \texttt{git diff master --stat src/}
 
 \section{Voting algorithm and data types}
 
-Two data types are used in the structured voting code: one to represent a voting structure, and one to represent the state of an election. Both are implemented as record types in Erlang, and are called \texttt{vstruct} and \texttt{vstate}, respectively; their internal structure is very similar. They are used as follows:
+The data structure which represents a \emph{voting structure} has two components:
 
-\begin{enumerate}
-    \item A voting structure generator creates a \texttt{vstruct}.
-    \item This voting structure is used to initialise a new election state \texttt{vstate}.
-    \item The election state is updated by the voting algorithm whenever new votes arrive until the election succeeds or fails.
-\end{enumerate}
-
-The core voting algorithm as illustrated in \autoref{fig:grid4-state} lends itself well to a recursive implementation.
+\begin{itemize}
+    \item The voting structure itself. It is a tree whose nodes are annotated with the number of votes and, in the case of virtual nodes, the threshold.
+    \item Some way of locating a physical node in that tree, given its identifier. This was done using a dictionary mapping identifiers to sets of paths. Each path is a list of integers; starting at the root and descending into the child in its child list specified by the head of the list, the path leads to the physical node which represents that identifier in the tree.
+\end{itemize}
 
 \begin{figure}[p]
     \centering
@@ -536,7 +533,15 @@ The core voting algorithm as illustrated in \autoref{fig:grid4-state} lends itse
     \label{fig:grid4-state}
 \end{figure}
 
-XXX
+Another data type is used in the structured voting code to represent the \emph{state of an election}. Both are implemented as record types in Erlang, and are called \texttt{vstruct} and \texttt{vstate}, respectively; their internal structure is very similar (see \autoref{lst:voting-types} for the full definition.) \texttt{vstate} additionally contains information about what a physical node has voted for (\texttt{true}, \texttt{false} or \texttt{pending}), and a summary of the children's votes in case of a virtual node (represented as integer fields \texttt{yes\_nodes} and \texttt{no\_nodes}.) They are used as follows:
+
+\begin{enumerate}
+    \item A voting structure generator creates a \texttt{vstruct}.
+    \item This voting structure is used to initialise a new election state \texttt{vstate}.
+    \item The election state is updated by the voting algorithm whenever new votes arrive until the election succeeds or fails.
+\end{enumerate}
+
+The core voting algorithm as illustrated in \autoref{fig:grid4-state}, in combination with the \texttt{vstate} data structure described above, lends itself well to a recursive implementation: After looking up the paths in the identifier--path dictionary, the function recurses into the tree along the path and updates the vote at the leaf. After the recursive call, it updates the \texttt{yes\_votes} and \texttt{no\_votes} fields of the virtual nodes along the path. The resulting \texttt{vstate} is then returned.
 
 \section{Voting structure generators}
 
@@ -743,9 +748,22 @@ Repeated failures work similarly:
     \item Followers repeat steps (3.) and (4.) until the leader sends out a \enquote{stop} message.
 \end{enumerate}
 
-The point of failing for time \(t \cdot \frac{1 - \texttt{Up}}{\texttt{Up}}\) is that followers are \enquote{up}, that is, actively participating in the cluster as followers, for \(\texttt{Up} \cdot 100\%\) of the time.
+The point of failing for time \(t \cdot \frac{1 - \texttt{Up}}{\texttt{Up}}\) is that followers are \enquote{up}, that is, actively participating in the cluster as \texttt{follower}s, for approximately \(\texttt{Up} \cdot 100\%\) of the time:
 
-XXX
+\[ \frac{\text{uptime}}{\text{total time}}
+ = \frac{\text{uptime}}{\text{uptime} + \text{duration of failure}}
+ = \frac{t}{t + t \cdot \frac{1-\texttt{Up}}{\texttt{Up}}}
+ = \frac{\texttt{Up}}{\texttt{Up} + 1 - \texttt{Up}} = \texttt{Up} \]
+
+Since \(t\) is an inter-event time, generating it using an exponential distribution is an obvious choice. Erlang's core libraries provide a function \texttt{random:uniform()} for generating uniformly distributed floating point numbers \(U \sim \text{U}(0,1)\). Using the formula introduced in the Part \textsc{ii} Computer Systems Modelling course, \(t\) is calculated from \(U\) and the parameter \(\lambda\) as \(t \coloneqq -\frac{1}{\lambda}\log{U}\).
+
+\section{Reporting issues and bugs}
+
+During the development of this project, I noticed several issues with the software I was using. In some cases, this was due to a misunderstanding on my part -- for example, I was having trouble setting up and using QuickCheck, so I contacted Thomas Arts of Quiviq who helped me sort things out. In some cases, I found mistakes in the documentation: when this happened, I forked the project, corrected the mistake, and created a pull request. This caused me to create pull requests for Rafter\footnote{Rafter documentation pull request: \url{https://github.com/andrewjstone/rafter/pull/17}}, StatsBase.jl\footnote{StatsBase.jl documentation pull request: \url{https://github.com/JuliaStats/StatsBase.jl/pull/48}} (a statistics package for the scientific programming language Julia that I used to analyse the benchmarking data) and awsfabrictasks\footnote{awsfabrictasks documentation pull request: \url{https://github.com/espenak/awsfabrictasks/pull/16}}.
+
+Apart from these comparatively unimportant issues, I found two actual bugs in the software I was using. The first one concerned the performance of Rafter: I noticed that both read and write operations took more and more time the longer Rafter ran for. I wrote a small test script, took some measurements and reported the problem to Andrew Stone, the original author of Rafter, who responded quickly and managed to fix the issue within a few days.\footnote{I discussed the Rafter performance issue with Andrew Stone on Rafter's GitHub issue tracker: \url{https://github.com/andrewjstone/rafter/issues/22}}
+
+The second larger issue I found was a problem with a very common use case that was not well addressed in awsfabrictasks's \textsc{api}. I reported this to the software's author, Espen Angell Kristiansen; eventually, this discussion then turned into a proper bug report.\footnote{The original awsfabrictasks issue was discussed here: \url{https://github.com/espenak/awsfabrictasks/issues/15}, and then followed up by this bug report: \url{https://github.com/espenak/awsfabrictasks/issues/17}.}
 
 \section{Summary}
 
