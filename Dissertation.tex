@@ -543,6 +543,14 @@ Another data type is used in the structured voting code to represent the \emph{s
 
 The core voting algorithm as illustrated in \autoref{fig:grid4-state}, in combination with the \texttt{vstate} data structure described above, lends itself well to a recursive implementation: After looking up the paths in the identifier--path dictionary, the function recurses into the tree along the path and updates the vote at the leaf. After the recursive call, it updates the \texttt{yes\_votes} and \texttt{no\_votes} fields of the virtual nodes along the path. The resulting \texttt{vstate} is then returned.
 
+\section{Voting structure and election state visualiser}
+
+Once the Erlang representation of voting structures and election states was fixed, I wrote a visualiser module for them. This allowed me to visually debug my voting algorithm and the voting structure generators.
+
+The visualiser module generates output in the \textsc{dot} graph description language. A \textsc{dot} node is written out for each node in the tree, and edges connect parents and their children. The \texttt{dot} program, which is part of the Graphviz package from \textsc{at\&t} Labs Research, was then used to create \textsc{pdf} or \textsc{svg} files for display.\footnote{Graphviz (short for Graph Visualisation Software): \url{http://graphviz.org}}
+
+Many of the tree diagrams in this report were created using this visualisation tool and then edited and annotated using Inkscape.\footnote{Inkscape is an open source vector graphics editor. \url{http://inkscape.org}}
+
 \section{Voting structure generators}
 
 In this section, I will describe how the voting structure generators for the three voting protocols I implemented work. These generators output tree-shaped voting structures, which are universal in expressing quorum systems \autocite{structures}. The challenge in building them is to translate the protocol specifications into tree-shaped voting structures.
