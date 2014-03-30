@@ -488,12 +488,15 @@ Orchestrating a cluster of Amazon Elastic Compute Cloud instances and running be
 
 \begin{description}
     \item[Fabric] is a Python library and command-line tool for streamlining the use of \textsc{ssh} for application deployment or systems administration tasks.\footnote{Fabric: \url{fabfile.org}}. Administrative functions like starting an Erlang node on an instance or compiling Rafter were defined as \emph{tasks} within the Fabric framework, which could then be executed on arbitrary \ECC instances with the help of the \texttt{awsfabrictasks} plugin.\footnote{awsfabrictasks: \url{https://awsfabrictasks.readthedocs.org/en/latest/}}
+    \item[Boto] is a Python interface to Amazon Web Services. Awsfabrictasks is built on top of Boto, but sometimes I had to use it directly to accomplish more complex tasks.
     \item[Memaslap] was used to generate a test load on the cluster. It is part of libMemcached, an open source client library and toolset for the Memcached server.\footnote{libMemcached: \url{http://libmemcached.org}} It is highly configurable, but still in an early phase of development, which required me to patch its Makefile in order to get it to compile.
 \end{description}
 
 \section{Summary}
 
-XXX
+In this chapter, I gave a brief introduction to distributed systems, precisely defining the terms consistency, availability and partition tolerance as they are understood in the context of the \textsc{cap} theorem. This was followed by an overview of the Raft consensus algorithm, where I explained the state machine approach to building distributed systems. Structured voting schemes were introduced by way of an example, namely the Grid Protocol. Tree-shaped voting structures were explained, and a labelled example was given for the Majority Protocol.
+
+I listed this project's objectives, analysed the dependencies between its components, and elaborated on the role of modularisation and testing. Lastly, I talked about the programming languages and tools I used in this project.
 
 \chapter{Implementation\label{ch:implementation}}
 
