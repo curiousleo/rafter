@@ -790,6 +790,23 @@ Rafter puts information related to a specific request in a record of type \textt
 
 I then amended the function sending the client response to also send a message to the logger containing the time difference between the current system time and the time when the request was started.
 
+\section{Benchmarking scripts}
+
+As mentioned before, the benchmarks were automated using Fabric and the awsfabrictasks plugin. One function task called benchmark executes a sweep of the parameter space, starting nodes as appropriate and collecting the logged results. It makes use of a few helper functions:
+
+\begin{description}
+    \item[deploy] Executes a series of Git commands on the remote instance to bring the project repository up to date and to a specific branch. It then runs \texttt{make} to build the project.\footnote{Make is a popular build automation tool.}
+    \item[start\_erlang\_node] Takes a name as its parameter and starts an Erlang node with that name on the instance.
+    \item[stop\_erlang\_node] Kills the Erlang interpreter process.
+    \item[configure] Creates a configuration script and executes it. The script evaluates an Erlang program that is created on the fly. It uses Erlang's remote procedure call module, \texttt{rpc}, to issue a call to the leader to update its configuration, which consists of the list of followers and the voting scheme to use. The script then sends a message to the leader to relay a \texttt{restart} message to its followers so they all recover from being in the \texttt{failed} state. Lastly, the new failure mode is sent to the leader.
+    \item[memaslap] Runs \texttt{memaslap}, the Memcached load tester, locally, targeting the leader. The output of the program is diverted into a log file.
+    \item[collect\_results] Uses \texttt{rsync} to download the log files to the machine running the benchmarks.\footnote{rsync is a file transfer program providing compression and encryption. \url{http://rsync.samba.org}}
+\end{description}
+
+Then \texttt{benchmark} task uses these helper functions as follows: For each combination of cluster size, protocol and failure mode that is to be tested, the procedure starts by deploying the latest version of the project source code and compiling it (using the \texttt{deploy} task.) It then starts up an Erlang node with a fresh name on each of them. These nodes start in the \texttt{follower} state and with an empty initial configuration.
+
+Next, the leader is reconfigured using the \texttt{configure} task. Then \texttt{memaslap} is run, its results as well as the time to consensus measurements are downloaded by the \texttt{collect\_results} task.
+
 \section{Reporting issues and bugs}
 
 During the development of this project, I noticed several issues with the software I was using. In some cases, this was due to a misunderstanding on my part -- for example, I was having trouble setting up and using QuickCheck, so I contacted Thomas Arts of Quiviq who helped me sort things out. In some cases, I found mistakes in the documentation: when this happened, I forked the project, corrected the mistake, and created a pull request. This caused me to create pull requests for Rafter\footnote{Rafter documentation pull request: \url{https://github.com/andrewjstone/rafter/pull/17}}, StatsBase.jl\footnote{StatsBase.jl documentation pull request: \url{https://github.com/JuliaStats/StatsBase.jl/pull/48}} (a statistics package for the scientific programming language Julia that I used to analyse the benchmarking data) and awsfabrictasks\footnote{awsfabrictasks documentation pull request: \url{https://github.com/espenak/awsfabrictasks/pull/16}}.
