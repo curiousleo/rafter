@@ -346,7 +346,7 @@ The main software engineering technique I used to increase my chances of success
 
 \subsection{Requirements analysis\label{sc:requirements-analysis}}
 
-The requirement for this project to be deemed a success was a demonstration of the modified version of Rafter running some application on a cluster in the Amazon Elastic Compute Cloud, using my modules to find quorums, and performing at a similar level to the original version of Rafter by Andrew Stone. \autoref{tab:objectives} gives a more detailed breakdown of the objectives, and \autoref{fig:dependencies} shows the dependencies between the different components of the project.
+The requirement for this project to be deemed a success was a demonstration of the modified version of Rafter running some application on a cluster in the Amazon Elastic Compute Cloud, using my modules to find quorums, and performing similarly to the original version of Rafter by Andrew Stone. \autoref{tab:objectives} gives a more detailed breakdown of the objectives, and \autoref{fig:dependencies} shows the dependencies between the different components of the project.
 
 \begin{table}[h]
     \centering
@@ -440,7 +440,7 @@ The choice of Erlang and Rafter then determined my primary programming toolkit f
 \begin{description}
     \item[Erlang] A dynamically typed functional programming language originally designed to run Ericsson's telephony switches, Erlang features a run-time system with built-in support for concurrency, distribution and fault tolerance.
     \item[Open Telephony Platform] Commonly referred to as \enquote{the \textsc{otp}}, the Open Telephony Platform provides a set of Erlang libraries and design principles providing middle-ware to develop Erlang applications.
-    \item[QuickCheck] A commercial testing framework for Erlang by Quvik \textsc{se}. Rafter's unit and integration tests use it, and I adapted and amended them to cover my code as well.
+    \item[QuickCheck] A commercial testing framework for Erlang by Quviq \textsc{se}. Rafter's unit and integration tests use it, and I adapted and amended them to cover my code as well.
     \item[Dialyzer] The \enquote{Discrepancy Analyzer for Erlang programs} is used to statically type check Erlang programs.
 \end{description}
 
@@ -564,7 +564,7 @@ Any-nodes have a threshold of one. This means that they pass their vote to their
 
 In contrast, all-nodes have a threshold equal to the number of children they have, so they vote when all their children have voted. In this sense, all-nodes are the tree-shaped voting structure equivalent of the logical \emph{and}: The root in \autoref{fig:all} votes if and only if \texttt{A} \emph{and} \texttt{B} \emph{and} \texttt{C} vote. Taking the same mapping between truth assignments and voting as above,
 
-\[ \text{all-node} = \bigwedge_{p\,\in\,\text{Children}(\text{any-node})} p \]
+\[ \text{all-node} = \bigwedge_{p\,\in\,\text{Children}(\text{all-node})} p \]
 
 In the following, \(n\) refers to the total number of processes.
 
@@ -653,8 +653,6 @@ We proceed in the same way for the subtrees rooted in \texttt{F} and \texttt{J},
 
 Considering incomplete trees leads us from the Tree Quorum Protocol \autocite{tree} to the Generalised Tree Quorum Protocol \autocite{gen-tree}. In the special case of the \enquote{log write} protocol, however, there is no difference in the algorithm: a quorum still consists of a path from the root to a leaf.
 
-XXX more explanation required? side-by-side diagrams?
-
 \section{Integration with Rafter}
 
 Having written and tested the structured voting code, I integrated it into Rafter. This process took place in rougly the following steps:
@@ -666,14 +664,7 @@ Having written and tested the structured voting code, I integrated it into Rafte
     \item All the places in the code which implicitely assumed that the Majority Protocol was being used had to be rewritten. In most cases, this meant making them wrappers around my generalised structured voting code.
 \end{enumerate}
 
-
-\section{Overview of the benchmarking code}
-
-XXX
-
 \section{Memcached frontend}
-
-XXX need to rework this: make it clearer, maybe using a diagram with client, tcp connection to leader, backend etc.?
 
 Memcached is a high-performance key-value cache designed to sit between an application and a database. If the application issues a query that has been seen before by Memcached, it is served from the cache; otherwise, it is executed on the database and the result stored in Memcached. Originally developed for LiveJournal, Memcached is now used by Youtube, Twitter, Reddit, Facebook and Wikipedia, among others.
 
@@ -731,7 +722,7 @@ end
 
 In order to evaluate and compare the different voting structures, I added failure simulation to Rafter's state machine. Apart from being in \texttt{leader}, \texttt{follower} or \texttt{candidate} state, nodes can now also be in the \texttt{failed} state. Failed nodes do not process any incoming messages, nor do they send any messages to other nodes.
 
-The failure simulation, like all the benchmarking code I wrote for this project, assumes that the leader is fixed and stays up. This leader can then instruct its followers to fail -- either once or repeatedly. For the \enquote{fail once} failure mode, the process is as follows:
+The failure simulation, like all the benchmarking code I wrote for this project, assumes that the leader is fixed and stays up. This leader can then instruct its followers to fail -- either once or repeatedly. It is, in turn, controlled by the \emph{benchmark runner}, which is the Amazon \ECC instance that runs the benchmarking scripts. For the \enquote{fail once} failure mode, the process is as follows:
 
 \begin{enumerate}
     \item The benchmark runner sends a message to the leader with parameters \(\lambda\) and \(T\).
