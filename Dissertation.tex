@@ -109,6 +109,8 @@
 
 \end{titlepage}
 
+
+
 \chapter*{Proforma\label{ch:proforma}}
 
 \begin{center}
@@ -147,6 +149,8 @@ Signed
 \vspace{0.2in}
 Date \hspace{0.4in} \today
 
+
+
 \chapter*{Acknowledgements\label{ch:acknowledgements}}
 
 \begin{itemize}
@@ -160,6 +164,8 @@ Date \hspace{0.4in} \today
 % \mainmatter
 
 %TC:endignore
+
+
 
 \chapter{Introduction\label{ch:introduction}}
 
@@ -209,6 +215,8 @@ Literature on voting schemes goes back much further: Majority voting was introdu
 The Raft consensus algorithm, on the other hand, is a very recent addition to distributed systems toolset. Indeed, at the time of this writing, the original Raft paper is still a draft \autocite{raft}. It has nonetheless led to a lot of excitement since its first version, and a few dozen implementations in different languages and in various stages of development exist.
 
 Many big internet firms have been operating data centres for years now. This has enabled them to collect data about the frequency of different types of failures over time. I used data compiled by of Google Senior Fellow \citeauthor{distr} \autocite{distr} to direct my failure simulation.
+
+
 
 \chapter{Preparation\label{ch:preparation}}
 
@@ -497,6 +505,8 @@ Orchestrating a cluster of Amazon Elastic Compute Cloud instances and running be
 In this chapter, I gave a brief introduction to distributed systems, precisely defining the terms consistency, availability and partition tolerance as they are understood in the context of the \textsc{cap} theorem. This was followed by an overview of the Raft consensus algorithm, where I explained the state machine approach to building distributed systems. Structured voting schemes were introduced by way of an example, namely the Grid Protocol. Tree-shaped voting structures were explained, and a labelled example was given for the Majority Protocol.
 
 I listed this project's objectives, analysed the dependencies between its components, and elaborated on the role of modularisation and testing. Lastly, I talked about the programming languages and tools I used in this project.
+
+
 
 \chapter{Implementation\label{ch:implementation}}
 
@@ -794,6 +804,8 @@ In this chapter, I described the implementation of the structured voting extensi
 
 The voting structures for the Majority Protocol, the Grid Protocol and the Tree Quorum Protocol were derived and explained. I described the process of integrating my structured voting code into Rafter before detailing the two extensions to Rafter I implemented to make benchmarking possible: the Memcached frontend and failure simulation. Finally, I mentioned the bug reports and pull requests I created for various pieces of software I used in this project.
 
+
+
 \chapter{Evaluation\label{ch:evaluation}}
 
 % \begin{itemize}
@@ -829,6 +841,8 @@ Benchmarking a distributed system is far from trivial and requires substantial p
 
 XXX
 
+
+
 \chapter{Conclusions\label{ch:conclusions}}
 
 % \begin{itemize}
@@ -843,6 +857,8 @@ XXX
 % \backmatter
 
 \appendix
+
+
 
 \chapter{Code samples\label{ch:code-samples}}
 
