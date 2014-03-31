@@ -294,9 +294,9 @@ Each client request to a leader contains a command to be executed by the replica
 
 \minisec{Safety guarantees}
 
-In order to guarantee overall correctness, different components of Raft are designed to make sure certain well-defined safety properties are true at all times. These properties are shown to hold and then used to prove correctness in the separate correctness proof \autocite{raftproof}.
+In order to guarantee overall correctness, different components of Raft are designed to make sure certain well-defined safety properties are true at all times (see \autoref{sc:rafter-safety} for the complete list.) These properties are shown to hold and then used to prove correctness in the separate correctness proof \autocite{raftproof}.
 
-Since my project involved changing the way in which quorums\footnote{A \emph{quorum} is a minimal subset of the cluster that an operation has to obtain votes from in order to be performed. Majority voting, for example, specifies that any set of servers containing at least half the servers in the entire cluster constitutes a quorum.} are constructed, I had to pay special attention to the Election Safety property (stating that there can be at most one leader at any given time) and all the steps in the proof to do with quorums, in order to make sure all the desired properties still hold.
+Since my project involved changing the way in which quorums\footnote{A \emph{quorum} is a minimal subset of the cluster that an operation has to obtain votes from in order to be performed. Majority voting, for example, specifies that any set of servers containing at least half the servers in the entire cluster constitutes a quorum.} are constructed, I had to pay special attention to the Election Safety property (stating that there can be at most one leader at any given time) and all the steps in the proof to do with quorums, in order to make sure all the desired properties still hold (see \autoref{sc:rafter-proof} for a justification.)
 
 \section{Introduction to structured voting schemes\label{ssc:structured-voting-schemes}}
 
@@ -887,7 +887,27 @@ XXX
 
 
 
-\chapter{Code samples\label{ch:code-samples}}
+\chapter{Additional resources}
+
+\section{Raft safety guarantees\label{sc:rafter-safety}}
+
+Figure 3 of the Raft paper lists the following safety properties which the algorithm guarantees to be true at all times:\autocite{raft}
+
+\begin{description}
+    \item[Election Safety] at most one leader can be elected in a given term.\footnote{Raft divides time into \emph{terms} of arbitrary length. Each begins with an election, in which one or more candidates attempt to become leader.}
+    \item[Leader Append-Only] a leader never overwrites or deletes entries in its log; it only appends new entries.
+    \item[Log Matching] if two logs contain an entry with the same index and term, then the logs are identical in all entries up through the given index.
+    \item[Leader Completeness] if a log entry is committed in a given term, then that entry will be present in the logs of the leaders for all higher-numbered terms.
+    \item[State Machine Safety] if a server has applied a log entry at a given index to its state machine, no other server will ever apply a different log entry for the same index.
+\end{description}
+
+\section{Raft correctness proof: intersection requirement\label{sc:rafter-proof}}
+
+The Raft correctness proof uses a variable \texttt{Quorums}. It is introduced by the following comment: \enquote{The set of all quorums. This just calculates simple majorities, but the only important property is that \emph{every quorum overlaps with every other}.} This is what originally inspired me to look into replacing majority voting by structured voting schemes in Raft.
+
+Later in the proof, the intersection property is used multiple times. One example is in Lemma 2, \emph{There is at most one leader per term}: step three of its proof says, \enquote{Let \textit{voter} be an arbitrary member of \textit{e.votes} \(\cup\) \textit{f.votes}. Such a member must exist since any two quorums overlap} (here, \(e\) and \(f\) are two elections taking place in the same term.)
+
+\section{Code samples\label{ch:code-samples}}
 
 \begin{listing}[h]
     \begin{erlangcode}
