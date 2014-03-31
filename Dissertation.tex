@@ -500,6 +500,12 @@ Orchestrating a cluster of Amazon Elastic Compute Cloud instances and running be
     \item[Memaslap] was used to generate a test load on the cluster. It is part of libMemcached, an open source client library and toolset for the Memcached server.\footnote{libMemcached: \url{http://libmemcached.org}} It is highly configurable, but still in an early phase of development, which required me to patch its Makefile in order to get it to compile.
 \end{description}
 
+\section{Development environment and backup}
+
+The entire project was developed on my private laptop running Arch Linux, using the Vim text editor.\footnote{Vim is an extensible open source text editor for programmers. \url{http://www.vim.org}} I used version R16B03 of the Erlang interpreter and compiler.\footnote{The most recent version of the Erlang interpreter can be found here: \url{http://www.erlang.org/download.html}} Apart from a few temporary files and compilation artefacts, every file I created was checked into some branch of the project's Git repository. See \autoref{tab:branches} for a list of the main long-running branches created.
+
+I used a public GitHub repository at \url{https://github.com/curiousleo/rafter} as a backup and a way to share files with my project supervisors; I \enquote{pushed} my changes to this repository after every significant change, but at least every few hours while I was working on the project. I took daily backups of my home directory, which contained the project repository, to an external hard drive.
+
 \section{Summary}
 
 In this chapter, I gave a brief introduction to distributed systems, precisely defining the terms consistency, availability and partition tolerance as they are understood in the context of the \textsc{cap} theorem. This was followed by an overview of the Raft consensus algorithm, where I explained the state machine approach to building distributed systems. Structured voting schemes were introduced by way of an example, namely the Grid Protocol. Tree-shaped voting structures were explained, and a labelled example was given for the Majority Protocol.
