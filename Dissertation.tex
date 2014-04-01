@@ -337,6 +337,8 @@ Structured voting schemes impose a logical structure on the set of processes and
 
 In a tree-shaped voting structure, each node without children (a \enquote{physical node}) represents a process. Nodes with children (called \enquote{virtual nodes}) represent the structure of the voting scheme. The tree is to be interpreted such that votes flow upwards, from the physical nodes (the leaves of the tree) up to the virtual node at its root.
 
+Note that in general, voting schemes are most naturally represented by directed acyclic graphs. But since from an algorithmic perspective, tree structures are easier to operate on, we simply transform the voting scheme graphs into tree by duplicating nodes as necessary.
+
 When a physical node casts its vote, its votes are added to the votes its parent virtual node has already received. If the sum of those votes equals or exceeds the parent node's threshold, then the parent node in turn passes its vote to its parent. An annotated example is given in \autoref{fig:majority5-defs}.
 
 \begin{figure}[h]
@@ -501,7 +503,7 @@ The data structure which represents a \emph{voting structure} has two components
 
 \begin{itemize}
     \item The voting structure itself. It is a tree whose nodes are annotated with the number of votes and, in the case of virtual nodes, the threshold (see \autoref{fig:majority5-defs} for an annotated example.)
-    \item Some way of locating a physical node in that tree, given its identifier. This was done using a dictionary mapping identifiers to sets of paths. Each path is a list of integers; starting at the root and descending into the child in its child list specified by the head of the list, the path leads to the physical node which represents that identifier in the tree.
+    \item Some way of locating a physical node in that tree, given its identifier. This was done using a dictionary mapping identifiers to sets of paths.\footnote{As noted in the Introduction, voting schemes are by their nature directed acyclic graphs. In order to transform them into trees, we must occasionally duplicate nodes. This is why identifiers are mapped to \emph{sets} of paths.} Each path is a list of integers; starting at the root and descending into the child in its child list specified by the head of the list, the path leads to the physical node which represents that identifier in the tree.
 
         As an example, the identifier \texttt{C} in \autoref{fig:grid4-state} has paths [0, 0, 1] and [1, 0, 1] associated with it: \texttt{C} can be reached by going left (0), left (0), centre (1) from the root, or via right (1), left (0), centre (1).
 \end{itemize}
