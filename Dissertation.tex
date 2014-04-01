@@ -452,44 +452,6 @@ The choice of Erlang and Rafter then determined my primary programming toolkit f
     \item[Dialyzer] The \enquote{Discrepancy Analyzer for Erlang programs} is used to statically type check Erlang programs.
 \end{description}
 
-\minisec{A note on functional programming\label{ms:fp-note}}
-
-Most of the code written for this project is in Erlang. Being a functional programming language, Erlang supports a very dense programming style. Its core libraries (which are imported by default) include modules for working with lists, dictionaries (hashmaps), sets, string, timers, \textsc{i/o} and databases as well as random values, each of which is used in my code at some point, among others.
-
-Just to illustrate this point, I picked a typical line of Erlang code (\autoref{lst:erlang-majority}) and \enquote{translated} it into relatively idiomatic \textsc{c}++03 (\autoref{lst:cpp-majority}.) Note that the Erlang code only makes use of the built-in module \texttt{dict}, so no imports are required. As a dynamically typed language, Erlang does not need type declarations either, although they \emph{can} be added as annotations to functions for clarity. Thus, the code in \autoref{lst:erlang-majority} really does stand on its own, as long as it is wrapped in a function.
-
-\begin{listing}[p]
-    \begin{erlangcode}
-NewIndices = dict:map(fun(_, Paths) -> [[0|P] || P <- Paths] end, Indices)
-    \end{erlangcode}
-    \caption{A typical line of Erlang code, taken from the Grid Protocol voting structure generator. Note how the use of higher-order functions like \texttt{dict:map}, anonymous functions and list comprehensions allows for very dense code.}
-    \label{lst:erlang-majority}
-\end{listing}
-
-\begin{listing}[p]
-    \begin{cppcode}
-#include <map>
-#include <deque>
-
-typedef int id;
-typedef std::deque<std::deque<std::size_t> > paths_t;
-
-// ...
-
-for(std::map<id, paths_t>::iterator indices_it = indices.begin();
-        indices_it != indices.end(); ++indices_it) {
-    paths_t paths = indices_it->second;
-    for(paths_t::iterator paths_it = paths.begin();
-            paths_it != paths.end(); ++paths_it) {
-        paths_it->push_front(0);
-    }
-}
-    \end{cppcode}
-    \caption{The Erlang code from \autoref{lst:erlang-majority}, translated into relatively idiomatic \textsc{c}++.}
-    \label{lst:cpp-majority}
-\end{listing}
-
-
 \subsection{Amazon \ECC and benchmarking\label{ssc:ec2-benchmarking}}
 
 Orchestrating a cluster of Amazon Elastic Compute Cloud instances and running benchmarks required an altogether different set of tools.
@@ -907,7 +869,46 @@ The Raft correctness proof uses a variable \texttt{Quorums}. It is introduced by
 
 Later in the proof, the intersection property is used multiple times. One example is in Lemma 2, \emph{There is at most one leader per term}: step three of its proof says, \enquote{Let \textit{voter} be an arbitrary member of \textit{e.votes} \(\cup\) \textit{f.votes}. Such a member must exist since any two quorums overlap} (here, \(e\) and \(f\) are two elections taking place in the same term.)
 
-\section{Code samples\label{ch:code-samples}}
+\section{A note on functional programming\label{sc:fp-note}}
+
+Most of the code written for this project is in Erlang. Being a functional programming language, Erlang supports a very dense programming style. Its core libraries (which are imported by default) include modules for working with lists, dictionaries (hashmaps), sets, string, timers, \textsc{i/o} and databases as well as random values, each of which is used in my code at some point, among others.
+
+Just to illustrate this point, I picked a typical line of Erlang code (\autoref{lst:erlang-majority}) and \enquote{translated} it into relatively idiomatic \textsc{c}++03 (\autoref{lst:cpp-majority}.) Note that the Erlang code only makes use of the built-in module \texttt{dict}, so no imports are required. As a dynamically typed language, Erlang does not need type declarations either, although they \emph{can} be added as annotations to functions for clarity. Thus, the code in \autoref{lst:erlang-majority} really does stand on its own, as long as it is wrapped in a function.
+
+\begin{listing}[h]
+    \begin{erlangcode}
+NewIndices = dict:map(fun(_, Paths) -> [[0|P] || P <- Paths] end, Indices)
+    \end{erlangcode}
+    \caption{A typical line of Erlang code, taken from the Grid Protocol voting structure generator. Note how the use of higher-order functions like \texttt{dict:map}, anonymous functions and list comprehensions allows for very dense code.}
+    \label{lst:erlang-majority}
+\end{listing}
+
+\begin{listing}[h]
+    \begin{cppcode}
+#include <map>
+#include <deque>
+
+typedef int id;
+typedef std::deque<std::deque<std::size_t> > paths_t;
+
+// ...
+
+for(std::map<id, paths_t>::iterator indices_it = indices.begin();
+        indices_it != indices.end(); ++indices_it) {
+    paths_t paths = indices_it->second;
+    for(paths_t::iterator paths_it = paths.begin();
+            paths_it != paths.end(); ++paths_it) {
+        paths_it->push_front(0);
+    }
+}
+    \end{cppcode}
+    \caption{The Erlang code from \autoref{lst:erlang-majority}, translated into relatively idiomatic \textsc{c}++.}
+    \label{lst:cpp-majority}
+\end{listing}
+
+\newpage
+
+\section{Voting structure and election state type specifications\label{sc:voting-types}}
 
 \begin{listing}[h]
     \begin{erlangcode}
