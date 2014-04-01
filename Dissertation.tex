@@ -510,7 +510,7 @@ The data structure which represents a \emph{voting structure} has two components
 
 \begin{figure}[p]
     \centering
-    \includegraphics[height=\dimexpr \textheight - 8\baselineskip \relax, keepaspectratio]{Images/Grid4-state.pdf}
+    \includegraphics[height=\dimexpr \textheight - 9\baselineskip \relax, keepaspectratio]{Images/Grid4-state.pdf}
     \caption[An election using the Grid Protocol]{An election using the Grid Protocol. Each node has one vote. \texttt{A} votes first (maroon). \(V_4\) has a threshold of one, so it votes as well. \(V_2\) and \(V_6\) both have threshold two, so their votes are pending. Then \texttt{B} votes (blue), triggering a vote from \(V_5\). Now both \(V_4\) and \(V_5\) have voted, so \(V_2\)'s threshold of two is reached and it votes, too. At this stage, \(V_1\) and \(V_7\) each require one more vote. Lastly, \texttt{C} votes (green). \(V_4\) has already voted, so nothing happens in this branch. \(V_6\) receives a second vote, so it passes its vote to \(V_3\), immediately triggering it to vote to the root node \(V_1\), where the threshold is now reached, ending the election.}
     \label{fig:grid4-state}
 \end{figure}
