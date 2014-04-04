@@ -536,7 +536,7 @@ The visualiser module generates output in the \textsc{dot} graph description lan
 
 Many of the tree diagrams in this report were created using this visualisation tool and then edited and annotated using Inkscape.\footnote{Inkscape is an open source vector graphics editor. \url{http://inkscape.org}}
 
-\section{Voting structure generators}
+\section{Voting structure generators\label{sc:voting}}
 
 In this section, I will describe how the voting structure generators for the three voting protocols I implemented work. These generators output tree-shaped voting structures, which are universal in expressing quorum systems \autocite{structures}. The challenge in building them is to translate the protocol specifications into tree-shaped voting structures.
 
@@ -569,7 +569,7 @@ In contrast, all-nodes have a threshold equal to the number of children they hav
 
 In the following, \(n\) refers to the total number of processes.
 
-\subsection{Majority Protocol}
+\subsection{Majority Protocol\label{ssc:majority}}
 
 The Majority Protocol (also know as Majority Consensus Voting\autocite{majority}) requires quorums to contain \(\left\lceil (n + 1) / 2 \right\rceil\) processes. This makes it an unstructured voting protocol. However, unstructured voting protocols can be regarded as a subclass of structured voting protocols, since they fit into the same framework of voting structure generators.
 
@@ -631,7 +631,7 @@ Note that this implies \(r \geq c\); we are said to be \enquote{favouring rows}.
 
 The slots in the grid that are not taken up by a process are then considered to be populated by dead placeholder processes. As a little optimisation, we can remove the \textsc{cc}-covers for the columns that contain a placeholder since those columns can never be complete.
 
-\subsection{(Generalised) Tree Quorum Protocol}
+\subsection{(Generalised) Tree Quorum Protocol\label{ssc:tree}}
 
 The Tree Quorum Protocol \autocite{tree} comes in many flavours which allows for different trade-offs between read and write quorum size to be made. For my voting structure generator, I picked the variant with the smallest write quorum called \enquote{log write protocol} since read quorums are not used in this project.
 
@@ -654,7 +654,7 @@ Note that this is the only truly recursive tree-shaped voting structure: Majorit
 
 Considering incomplete trees takes us from the Tree Quorum Protocol to the Generalised Tree Quorum Protocol \autocite{gen-tree}. In the special case of the \enquote{log write} protocol, however, there is no difference in the algorithm: a quorum still consists of a path from the root to a leaf.
 
-\section{Integration with Rafter}
+\section{Integration with Rafter\label{sc:rafter-integration}}
 
 Having written and tested the structured voting code, I integrated it into Rafter. This process took place in rougly the following steps:
 
@@ -765,7 +765,7 @@ Rafter puts information related to a specific request in a record of type \textt
 
 I then amended the function sending the client response to also send a message to the logger containing the time difference between the current system time and the time when the request was started.
 
-\section{Benchmarking scripts}
+\section{Benchmarking scripts\label{sc:benchmarking-scripts}}
 
 As mentioned before, the benchmarks were automated using Fabric and the awsfabrictasks plugin. A task called \textit{benchmark} executes a sweep of the parameter space, starting nodes as appropriate and collecting the logged results. It makes use of a few helper functions:
 
