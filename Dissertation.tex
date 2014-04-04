@@ -26,6 +26,7 @@
 \usepackage[autocite=footnote,citestyle=authoryear-comp,bibstyle=authoryear,
             isbn=false,doi=false,backend=biber]{biblatex}
 \usepackage[bookmarks,hidelinks]{hyperref}
+\usepackage{cleveref}
 
 % TODO: list of figures, algorithms, tables?
 % TODO: custom cover page?
@@ -190,7 +191,7 @@ This dissertation describes the extension of an implementation of the new Raft c
 
 As ever-increasing amounts of data are being handled in commercial settings as well as in research, distributed systems for processing and storage are becoming more and more ubiquitous. One main driver of this development is the need to increase fault tolerance in the face of arbitrary network and node failures.
 
-According to Eric Brewer's famous \textsc{cap} theorem \autocite{cap}, a partition tolerant system cannot be both strictly consistent and maximally available.\footnote{The terms consistency, availability and partition tolerance are defined in \autoref{ssc:cap-acid-and-base}.} Many recent distributed data stores sacrifice consistency for availability. Some applications, however, require strong consistency guarantees -- data backup and configuration management systems, for example. Consensus protocols like Paxos \autocite{paxos} and Raft \autocite{raft} guarantee consistency at the cost of decreased availability.
+According to Eric Brewer's famous \textsc{cap} theorem \autocite{cap}, a partition tolerant system cannot be both strictly consistent and maximally available.\footnote{The terms consistency, availability and partition tolerance are defined in \cref{ssc:cap-acid-and-base}.} Many recent distributed data stores sacrifice consistency for availability. Some applications, however, require strong consistency guarantees -- data backup and configuration management systems, for example. Consensus protocols like Paxos \autocite{paxos} and Raft \autocite{raft} guarantee consistency at the cost of decreased availability.
 
 In this project, I added support for structured voting schemes to an existing implementation of Raft. My aim was increase the availability and scalability of data storage systems built on top of this implementation while still providing the same consistency guarantees as the original Raft algorithm.
 
@@ -264,7 +265,7 @@ Although still a draft, the paper describing the new Raft consensus algorithm \a
 
 In the following, I will give a short overview of the Raft consensus algorithm. It is meant to introduce the terminology required for the Implementation and Evaluation chapters.
 
-At its core, Raft uses a replicated state machine architecture, implemented using a replicated log (see \autoref{fig:replicated-state-machine}): each log contains the same commands in the same order, so each state machine processes the same sequence of commands. Since the state machines are assumed to be deterministic, each computes the same state and the same sequence of outputs.
+At its core, Raft uses a replicated state machine architecture, implemented using a replicated log (see \cref{fig:replicated-state-machine}): each log contains the same commands in the same order, so each state machine processes the same sequence of commands. Since the state machines are assumed to be deterministic, each computes the same state and the same sequence of outputs.
 
 \begin{figure}[h]
     \centering
@@ -273,7 +274,7 @@ At its core, Raft uses a replicated state machine architecture, implemented usin
     \label{fig:replicated-state-machine}
 \end{figure}
 
-Raft implements this replicated log architecture using a collections of servers (a cluster) communicating via remote procedure calls (\textsc{rpc}s), of which there are two: \texttt{appendEntries} and \texttt{requestVote}. At any given time each server is either a \emph{leader}, \emph{follower}, or \emph{candidate} (see \autoref{fig:consensus-fsm}). In normal operation, there is exactly one leader and all other servers are followers.
+Raft implements this replicated log architecture using a collections of servers (a cluster) communicating via remote procedure calls (\textsc{rpc}s), of which there are two: \texttt{appendEntries} and \texttt{requestVote}. At any given time each server is either a \emph{leader}, \emph{follower}, or \emph{candidate} (see \cref{fig:consensus-fsm}). In normal operation, there is exactly one leader and all other servers are followers.
 
 \begin{figure}[h]
     \centering
@@ -294,9 +295,9 @@ Each client request to a leader contains a command to be executed by the replica
 
 \minisec{Safety guarantees}
 
-In order to guarantee overall correctness, different components of Raft are designed to make sure certain well-defined safety properties are true at all times (see \autoref{sc:rafter-safety} for the complete list.) These properties are shown to hold and then used to prove correctness in the separate correctness proof \autocite{raftproof}.
+In order to guarantee overall correctness, different components of Raft are designed to make sure certain well-defined safety properties are true at all times (see \cref{sc:rafter-safety} for the complete list.) These properties are shown to hold and then used to prove correctness in the separate correctness proof \autocite{raftproof}.
 
-Since my project involved changing the way in which quorums\footnote{A \emph{quorum} is a minimal subset of the cluster that an operation has to obtain \enquote{yes} votes from in order to be performed. Majority voting, for example, specifies that any set of servers containing at least half the servers in the entire cluster constitutes a quorum.} are constructed, I had to pay special attention to the Election Safety property (stating that there can be at most one leader at any given time) and all the steps in the proof to do with quorums, in order to make sure all the desired properties still hold (see \autoref{sc:rafter-proof} for a justification.)
+Since my project involved changing the way in which quorums\footnote{A \emph{quorum} is a minimal subset of the cluster that an operation has to obtain \enquote{yes} votes from in order to be performed. Majority voting, for example, specifies that any set of servers containing at least half the servers in the entire cluster constitutes a quorum.} are constructed, I had to pay special attention to the Election Safety property (stating that there can be at most one leader at any given time) and all the steps in the proof to do with quorums, in order to make sure all the desired properties still hold (see \cref{sc:rafter-proof} for a justification.)
 
 \section{Introduction to structured voting schemes\label{ssc:structured-voting-schemes}}
 
@@ -339,7 +340,7 @@ In a tree-shaped voting structure, each node without children (a \enquote{physic
 
 Note that in general, voting schemes are most naturally represented by directed acyclic graphs. But since from an algorithmic perspective, tree structures are easier to operate on, we simply transform the voting scheme graphs into tree by duplicating nodes as necessary.
 
-When a physical node casts its vote, its votes are added to the votes its parent virtual node has already received. If the sum of those votes equals or exceeds the parent node's threshold, then the parent node in turn passes its vote to its parent. An annotated example is given in \autoref{fig:majority5-defs}.
+When a physical node casts its vote, its votes are added to the votes its parent virtual node has already received. If the sum of those votes equals or exceeds the parent node's threshold, then the parent node in turn passes its vote to its parent. An annotated example is given in \cref{fig:majority5-defs}.
 
 \begin{figure}[h]
     \centering
@@ -350,13 +351,13 @@ When a physical node casts its vote, its votes are added to the votes its parent
 
 \section{Software engineering\label{sc:software-engineering}}
 
-An analysis of the requirements made the dependencies between the different components of the project explicit (see \autoref{fig:dependencies}.) This helped me draw up a development schedule, which is outlined in my proposal.
+An analysis of the requirements made the dependencies between the different components of the project explicit (see \cref{fig:dependencies}.) This helped me draw up a development schedule, which is outlined in my proposal.
 
 The main software engineering technique I used to increase my chances of success were \emph{modularisation} and \emph{testing} as explained below.
 
 \subsection{Requirements analysis\label{sc:requirements-analysis}}
 
-The requirement for this project to be deemed a success was a demonstration of the extended version of Rafter running some application on a cluster in the Amazon Elastic Compute Cloud, using my structured voting modules to find quorums, and performing similarly to the original version of Rafter by Andrew Stone. \autoref{tab:objectives} gives a more detailed breakdown of the objectives, and \autoref{fig:dependencies} shows the dependencies between the different components of the project.
+The requirement for this project to be deemed a success was a demonstration of the extended version of Rafter running some application on a cluster in the Amazon Elastic Compute Cloud, using my structured voting modules to find quorums, and performing similarly to the original version of Rafter by Andrew Stone. \Cref{tab:objectives} gives a more detailed breakdown of the objectives, and \cref{fig:dependencies} shows the dependencies between the different components of the project.
 
 \begin{table}[h]
     \centering
@@ -416,7 +417,7 @@ The voting algorithm, the voting structure visualiser and the generators for the
 
 In general, I did a lot of manual testing in the early stages of the development of each component. Once the code had reached a stage where testing by hand did not uncover any more bugs, I wrote a QuickCheck test for that component.
 
-Voting structure generators, in particular, were tested using two complementary methods: visually, I checked them for correctness using the voting structure visualiser (see \autoref{sc:visualiser}); a QuickCheck property tested for internal integrity.
+Voting structure generators, in particular, were tested using two complementary methods: visually, I checked them for correctness using the voting structure visualiser (see \cref{sc:visualiser}); a QuickCheck property tested for internal integrity.
 
 The QuickCheck tests, in their simplest form, consist of \emph{generators} (not to be confused with voting structure generators) and a set of functions specifying the \emph{properties} of the generated objects. QuickCheck then randomly instantiates objects using the generators, and tests if their behave as expected.
 
@@ -459,14 +460,14 @@ The choice of Erlang and Rafter then determined my primary programming toolkit f
 Orchestrating a cluster of Amazon Elastic Compute Cloud instances and running benchmarks required an altogether different set of tools.
 
 \begin{description}
-    \item[Fabric] is a Python library and command-line tool for streamlining the use of \textsc{ssh} for application deployment or systems administration tasks.\footnote{Fabric: \url{http://fabfile.org}}. Administrative functions like starting an Erlang node on an instance or compiling Rafter were defined as \emph{tasks} within the Fabric framework, which could then be executed on arbitrary \ECC instances with the help of the \texttt{awsfabrictasks} plugin.\footnote{awsfabrictasks: \url{https://awsfabrictasks.readthedocs.org/en/latest/}}
+    \item[Fabric] is a Python library and command-line tool for streamlining the use of \textsc{ssh} for application deployment or systems administration tasks.\footnote{Fabric: \url{http://fabfile.org}}. Administrative functions like starting an Erlang node on an instance or compiling Rafter were defined as \emph{tasks} within the Fabric framework, which could then be executed on arbitrary \ECC instances with the help of the \enquote{awsfabrictasks} plugin.\footnote{awsfabrictasks: \url{https://awsfabrictasks.readthedocs.org/en/latest/}}
     \item[Boto] is a Python interface to Amazon Web Services. Awsfabrictasks is built on top of Boto, but sometimes I had to use it directly to accomplish more complex tasks.
     \item[Memaslap] was used to generate a test load on the cluster. It is part of libMemcached, an open source client library and toolset for the Memcached server.\footnote{libMemcached: \url{http://libmemcached.org}} It is highly configurable, but still in an early phase of development, which required me to patch its Makefile in order to get it to compile.
 \end{description}
 
 \section{Development environment and backup}
 
-The entire project was developed on my private laptop running Arch Linux, using the Vim text editor.\footnote{Vim is an extensible open source text editor for programmers. \url{http://www.vim.org}} I used version R16B03 of the Erlang interpreter and compiler.\footnote{The most recent version of the Erlang interpreter can be found here: \url{http://www.erlang.org/download.html}} Apart from a few temporary files and compilation artefacts, every file I created was checked into some branch of the project's Git repository. See \autoref{tab:branches} for a list of the main long-running branches created.
+The entire project was developed on my private laptop running Arch Linux, using the Vim text editor.\footnote{Vim is an extensible open source text editor for programmers. \url{http://www.vim.org}} I used version R16B03 of the Erlang interpreter and compiler.\footnote{The most recent version of the Erlang interpreter can be found here: \url{http://www.erlang.org/download.html}} Apart from a few temporary files and compilation artefacts, every file I created was checked into some branch of the project's Git repository. See \cref{tab:branches} for a list of the main long-running branches created.
 
 I used a public GitHub repository at \url{https://github.com/curiousleo/rafter} as a backup and a way to share files with my project supervisors; I \enquote{pushed} my changes to this repository after every significant change, but at least every few hours while I was working on the project. I took daily backups of my home directory, which contained the project repository, to an external hard drive.
 
@@ -495,17 +496,17 @@ In the second stage, I set up the benchmarking environment. This included adding
 
 % also: how much of the code is mine? -- \texttt{git diff master --stat src/}
 
-\section{Voting algorithm and data types}
+\section{Voting algorithm and data types\label{sc:voting-algo}}
 
 I started the implementation of the project by defining the data structures used to represent voting structures and election states. These would be passed around between different components, and designing them well was therefore a high priority.
 
 The data structure which represents a \emph{voting structure} has two components:
 
 \begin{itemize}
-    \item The voting structure itself. It is a tree whose nodes are annotated with the number of votes and, in the case of virtual nodes, the threshold (see \autoref{fig:majority5-defs} for an annotated example.)
+    \item The voting structure itself. It is a tree whose nodes are annotated with the number of votes and, in the case of virtual nodes, the threshold (see \cref{fig:majority5-defs} for an annotated example.)
     \item Some way of locating a physical node in that tree, given its identifier. This was done using a dictionary mapping identifiers to sets of paths.\footnote{As noted in the Introduction, voting schemes are by their nature directed acyclic graphs. In order to transform them into trees, we must occasionally duplicate nodes. This is why identifiers are mapped to \emph{sets} of paths.} Each path is a list of integers; starting at the root and descending into the child in its child list specified by the head of the list, the path leads to the physical node which represents that identifier in the tree.
 
-        As an example, the identifier \texttt{C} in \autoref{fig:grid4-state} has paths [0, 0, 1] and [1, 0, 1] associated with it: \texttt{C} can be reached by going left (0), left (0), centre (1) from the root, or via right (1), left (0), centre (1).
+        As an example, the identifier \texttt{C} in \cref{fig:grid4-state} has paths [0, 0, 1] and [1, 0, 1] associated with it: \texttt{C} can be reached by going left (0), left (0), centre (1) from the root, or via right (1), left (0), centre (1).
 \end{itemize}
 
 \begin{figure}[p]
@@ -515,7 +516,7 @@ The data structure which represents a \emph{voting structure} has two components
     \label{fig:grid4-state}
 \end{figure}
 
-Another data type is used in the structured voting code to represent the \emph{state of an election}. Both are implemented as record types in Erlang, and are called \texttt{vstruct} and \texttt{vstate}, respectively; their internal structure is very similar (see \autoref{lst:voting-types} for the full definition.) \texttt{vstate} additionally contains information about what a physical node has voted for (\texttt{true}, \texttt{false} or \texttt{pending}), and a summary of the children's votes in case of a virtual node (represented as integer fields \texttt{yes\_nodes} and \texttt{no\_nodes}.) They are used as follows:
+Another data type is used in the structured voting code to represent the \emph{state of an election}. Both are implemented as record types in Erlang, and are called \texttt{vstruct} and \texttt{vstate}, respectively; their internal structure is very similar (see \cref{lst:voting-types} for the full definition.) \texttt{vstate} additionally contains information about what a physical node has voted for (\texttt{true}, \texttt{false} or \texttt{pending}), and a summary of the children's votes in case of a virtual node (represented as integer fields \texttt{yes\_nodes} and \texttt{no\_nodes}.) They are used as follows:
 
 \begin{enumerate}
     \item A voting structure generator creates a \texttt{vstruct}.
@@ -523,7 +524,7 @@ Another data type is used in the structured voting code to represent the \emph{s
     \item The election state is updated by the voting algorithm whenever new votes arrive until the election succeeds or fails.
 \end{enumerate}
 
-The core voting algorithm as illustrated in \autoref{fig:grid4-state}, in combination with the \texttt{vstate} data structure described above, lends itself well to a recursive implementation: After looking up the paths in the identifier--path dictionary, the function recurses into the tree along the path and updates the vote at the leaf. After the recursive call, it updates the \texttt{yes\_votes} and \texttt{no\_votes} fields of the virtual nodes along the path. The resulting \texttt{vstate} is then returned.
+The core voting algorithm as illustrated in \cref{fig:grid4-state}, in combination with the \texttt{vstate} data structure described above, lends itself well to a recursive implementation: After looking up the paths in the identifier--path dictionary, the function recurses into the tree along the path and updates the vote at the leaf. After the recursive call, it updates the \texttt{yes\_votes} and \texttt{no\_votes} fields of the virtual nodes along the path. The resulting \texttt{vstate} is then returned.
 
 An election is finished when it either succeeds or fails. It succeeds when the root node of the tree-shaped voting structure votes \enquote{yes}; it fails when the root vote \enquote{no}. The voting algorithm I implemented uses a small optimisation to fail early, that is, to vote \enquote{no} as soon as a quorum for \enquote{yes} cannot be reached. This works as follows: when a child node votes \enquote{no}, its parent node check whether the threshold is greater than the maximum number of \enquote{yes} votes that can still be cast: \[ \text{threshold} \overset{?}{>} \text{possible \enquote{yes} votes} = \text{number of children} - \text{\enquote{no} votes} \] If that is the case, then a quorum cannot be formed and the node votes \enquote{no}.
 
@@ -558,11 +559,11 @@ To simplify this translation, I will now introduce two common patterns that will
     \label{fig:tsvs-patterns}
 \end{figure}
 
-Any-nodes have a threshold of one. This means that they pass their vote to their parent as soon as any of their children vote. In logical terms, any-nodes express a logical \emph{or}: In \autoref{fig:any}, the root votes if and only if \texttt{A} \emph{or} \texttt{B} \emph{or} \texttt{C} vote. More formally, if for a process \(p\), \(p = \text{true}\) denotes that \(p\) votes \enquote{yes},
+Any-nodes have a threshold of one. This means that they pass their vote to their parent as soon as any of their children vote. In logical terms, any-nodes express a logical \emph{or}: In \cref{fig:any}, the root votes if and only if \texttt{A} \emph{or} \texttt{B} \emph{or} \texttt{C} vote. More formally, if for a process \(p\), \(p = \text{true}\) denotes that \(p\) votes \enquote{yes},
 
 \[ \text{any-node} = \bigvee_{p\,\in\,\text{Children}(\text{any-node})} p \]
 
-In contrast, all-nodes have a threshold equal to the number of children they have, so they vote when all their children have voted. In this sense, all-nodes are the tree-shaped voting structure equivalent of the logical \emph{and}: The root in \autoref{fig:all} votes if and only if \texttt{A} \emph{and} \texttt{B} \emph{and} \texttt{C} vote. Taking the same mapping between truth assignments and voting as above,
+In contrast, all-nodes have a threshold equal to the number of children they have, so they vote when all their children have voted. In this sense, all-nodes are the tree-shaped voting structure equivalent of the logical \emph{and}: The root in \cref{fig:all} votes if and only if \texttt{A} \emph{and} \texttt{B} \emph{and} \texttt{C} vote. Taking the same mapping between truth assignments and voting as above,
 
 \[ \text{all-node} = \bigwedge_{p\,\in\,\text{Children}(\text{all-node})} p \]
 
@@ -579,22 +580,22 @@ The Majority Protocol (also know as Majority Consensus Voting\autocite{majority}
     \label{fig:majority5-struct}
 \end{figure}
 
-This voting structure has a rigid format, which allows for a straightforward implementation: It consists of \(n\) physical nodes, all sharing the same virtual parent node (which also acts as the root of the tree-shaped voting structure). Each physical node has one vote, and the threshold of the root node is \(\left\lceil (n + 1) / 2 \right\rceil\), so the election is won as soon as this many physical nodes vote \enquote{yes}. An example for a Majority Protocol voting structure with five processes and a corresponding threshold of three is given in \autoref{fig:majority5-struct}.
+This voting structure has a rigid format, which allows for a straightforward implementation: It consists of \(n\) physical nodes, all sharing the same virtual parent node (which also acts as the root of the tree-shaped voting structure). Each physical node has one vote, and the threshold of the root node is \(\left\lceil (n + 1) / 2 \right\rceil\), so the election is won as soon as this many physical nodes vote \enquote{yes}. An example for a Majority Protocol voting structure with five processes and a corresponding threshold of three is given in \cref{fig:majority5-struct}.
 
-\subsection{Grid Protocol}
+\subsection{Grid Protocol\label{ssc:grid}}
 
-The Grid Protocol was introduced in the Preparation chapter as an example for a structured voting scheme (see \autoref{voting-example}). It arranges processes in a logical rectangular grid \autocite{grid}; a quorum consists of all processes from a complete column plus one process from each column.
+The Grid Protocol was introduced in the Preparation chapter as an example for a structured voting scheme (see \cref{voting-example}). It arranges processes in a logical rectangular grid \autocite{grid}; a quorum consists of all processes from a complete column plus one process from each column.
 
 Assuming for now that our nodes fit into a rectangular \(c \times r\) grid so that \(n = c r\) we can translate the requirements of this specification into a voting structure as follows:
 
 \begin{description}
     \item[\enquote{all processes from a complete column}] This means that there must be one column such that every process in that column has voted. The literature calls this the \textsc{cc}-cover, for \emph{complete column cover}. In logical terms, it can be expressed as \(\bigvee_c \bigwedge_{p\,\in\,c} p \), where \(c\) ranges over the columns.
 
-        Using the analogy between logic and tree-shaped voting structures introduced at the beginning of this section, we can translate this formula into a voting substructure as follows: for each column \(c\), there is an all-node whose children are the processes in that column (this models \(\bigwedge_{p\,\in\,c} p \).) The root of the substructure is an any-node, which has the all-nodes as its children, giving \(\bigvee_c \bigwedge_{p\,\in\,c} p \) altogether. It is the \enquote{\textsc{cc}-cover subroot} in \autoref{fig:grid4-covers}.
+        Using the analogy between logic and tree-shaped voting structures introduced at the beginning of this section, we can translate this formula into a voting substructure as follows: for each column \(c\), there is an all-node whose children are the processes in that column (this models \(\bigwedge_{p\,\in\,c} p \).) The root of the substructure is an any-node, which has the all-nodes as its children, giving \(\bigvee_c \bigwedge_{p\,\in\,c} p \) altogether. It is the \enquote{\textsc{cc}-cover subroot} in \cref{fig:grid4-covers}.
 
     \item[\enquote{one process from each column}] Translating this requirement (called \textsc{c}-cover for \emph{column cover}) into logic, we have \(\bigwedge_c \bigvee_{p\,\in\,c} p \).
 
-        We model this expression as a tree-shaped voting structure as follows: for each column \(c\), we add an any-node whose children are the processes in that column (giving us \(\bigvee_{p\,\in\,c} p \).) These any-nodes are given an all-node as their parent, modelling \(\bigwedge_c \bigvee_{p\,\in\,c} p \). This node is called \enquote{\textsc{c}-cover subroot} in \autoref{fig:grid4-covers}.
+        We model this expression as a tree-shaped voting structure as follows: for each column \(c\), we add an any-node whose children are the processes in that column (giving us \(\bigvee_{p\,\in\,c} p \).) These any-nodes are given an all-node as their parent, modelling \(\bigwedge_c \bigvee_{p\,\in\,c} p \). This node is called \enquote{\textsc{c}-cover subroot} in \cref{fig:grid4-covers}.
 \end{description}
 
 \begin{figure}[h]
@@ -604,7 +605,7 @@ Assuming for now that our nodes fit into a rectangular \(c \times r\) grid so th
     \label{fig:grid4-covers}
 \end{figure}
 
-The Grid Protocol specification demands that both requirements must be fulfilled in order to reach a quorum. We thus make the \textsc{cc}-cover root and the \textsc{c}-cover root the children of an all-node as in \autoref{fig:grid4-covers}, giving \( \left[ \bigwedge_c \bigvee_{p\,\in\,c} p \right] \wedge \left[ \bigvee_c \bigwedge_{p\,\in\,c} p \right] \) as required -- note how the tree-shaped voting structure resembles the abstract syntax tree of the logical expression.
+The Grid Protocol specification demands that both requirements must be fulfilled in order to reach a quorum. We thus make the \textsc{cc}-cover root and the \textsc{c}-cover root the children of an all-node as in \cref{fig:grid4-covers}, giving \( \left[ \bigwedge_c \bigvee_{p\,\in\,c} p \right] \wedge \left[ \bigvee_c \bigwedge_{p\,\in\,c} p \right] \) as required -- note how the tree-shaped voting structure resembles the abstract syntax tree of the logical expression.
 
 \minisec{Dealing with incomplete grids}
 
@@ -643,7 +644,7 @@ In this protocol, the processes are logically arranged in a tree of degree \(d\)
     \label{fig:grid3_13}
 \end{figure}
 
-Take the tree in the top left-hand corner of \autoref{fig:grid3_13} as an example. Building the voting structure bottom-up, we start by assembling a substructure representing the subtree with root \texttt{B}. This substructure should only vote if \texttt{B} and one of \texttt{C}, \texttt{D} or \texttt{E} have voted: \( \texttt{B} \wedge \bigvee_{p\,\in\,\text{Children}(\texttt{B})} p \). We can model this easily in terms of any-nodes and all-nodes: \texttt{C}, \texttt{D} and \texttt{E} are given an any-node as their parent, and this any-node and \texttt{B} are made the children of an all-node.
+Take the tree in the top left-hand corner of \cref{fig:grid3_13} as an example. Building the voting structure bottom-up, we start by assembling a substructure representing the subtree with root \texttt{B}. This substructure should only vote if \texttt{B} and one of \texttt{C}, \texttt{D} or \texttt{E} have voted: \( \texttt{B} \wedge \bigvee_{p\,\in\,\text{Children}(\texttt{B})} p \). We can model this easily in terms of any-nodes and all-nodes: \texttt{C}, \texttt{D} and \texttt{E} are given an any-node as their parent, and this any-node and \texttt{B} are made the children of an all-node.
 
 We proceed in the same way for the subtrees rooted in \texttt{F} and \texttt{J}, and then for the entire tree with \texttt{A} at its root and \texttt{B}, \texttt{F} and \texttt{J} as its children.
 
@@ -658,7 +659,7 @@ Considering incomplete trees takes us from the Tree Quorum Protocol to the Gener
 Having written and tested the structured voting code, I integrated it into Rafter. This process took place in rougly the following steps:
 
 \begin{enumerate}
-    \item Integrating my code with Rafter meant reading and understanding its source code first: 1,500 lines of code,\footnote{That's 1,500 actual lines of code as measured by \texttt{cloc} (\url{http://cloc.sourceforge.net}). See \autoref{sc:fp-note} for a discussion of Erlang's code density.} spread over 11 modules and undocumented except for a few comments, in a language I was still learning. Using module and function names as a guide, I found the relevant pieces of code that needed changing. Andrew Stone, the developer of Rafter, helped me understand the purpose of a few functions whose task I could not figure out myself.
+    \item Integrating my code with Rafter meant reading and understanding its source code first: 1,500 lines of code,\footnote{That's 1,500 actual lines of code as measured by \texttt{cloc} (\url{http://cloc.sourceforge.net}). See \cref{sc:fp-note} for a discussion of Erlang's code density.} spread over 11 modules and undocumented except for a few comments, in a language I was still learning. Using module and function names as a guide, I found the relevant pieces of code that needed changing. Andrew Stone, the developer of Rafter, helped me understand the purpose of a few functions whose task I could not figure out myself.
     \item I renamed my modules and moved them into the appropriate directory to fit into the naming scheme and directory structure of Rafter. Also, the type specifications had to be pasted into the appropriate include file.
     \item In order to use my structured voting code, the node configuration had to be changed from a list of peers (which is all that is needed when only the Majority Protocol is used) to a voting structure (enabling Rafter to use other protocols as well.) This required updating every line of code that made use of this field from the configuration record.
     \item All the places in the code which implicitely assumed that the Majority Protocol was being used had to be rewritten. In most cases, this meant making them wrappers around my generalised structured voting code.
@@ -672,9 +673,9 @@ My implementation of a Memcached frontend for Rafter amounts to a slight abuse o
 
 I added a Memcached frontend to Rafter for two reasons: to showcase a useful application that could be built on top of it, and to be able to use Memcached's benchmarking tool, \texttt{memaslap}.\footnote{\texttt{memaslap} is part of libMemcached (\url{http://libmemcached.org/libMemcached.html}), an open source library and toolset for Memcached.}
 
-Newer versions of Memcached support a binary protocol,\footnote{Memcached's new binary protocol is described in this document: \url{https://code.google.com/p/memcached/wiki/BinaryProtocolRevamped}.} which I found less ambiguous than the standard text-based protocol. Decoding and encoding binary protocols being a particular strength of Erlang, the decision over which protocol to implement was easy. \autoref{lst:request-header} shows part of the code the implements the decoding of a Memcached request.
+Newer versions of Memcached support a binary protocol,\footnote{Memcached's new binary protocol is described in this document: \url{https://code.google.com/p/memcached/wiki/BinaryProtocolRevamped}.} which I found less ambiguous than the standard text-based protocol. Decoding and encoding binary protocols being a particular strength of Erlang, the decision over which protocol to implement was easy. \Cref{lst:request-header} shows part of the code the implements the decoding of a Memcached request.
 
-Next, I picked the commands and features I wanted the frontend to support. Since it was meant to be a proof-of-concept, I decided to stick to the minimal set of commands required for a key-value store: \texttt{get}, \texttt{set}, and \texttt{noop}, with the obvious meaning. For simplicity, I also decided not to support the data version check feature (the \textsc{cas} header field in \autoref{fig:request-header}.)
+Next, I picked the commands and features I wanted the frontend to support. Since it was meant to be a proof-of-concept, I decided to stick to the minimal set of commands required for a key-value store: \texttt{get}, \texttt{set}, and \texttt{noop}, with the obvious meaning. For simplicity, I also decided not to support the data version check feature (the \textsc{cas} header field in \cref{fig:request-header}.)
 
 \minisec{Implementing Memcached}
 
@@ -714,7 +715,7 @@ case Packet of
         end
 end
     \end{erlangcode}
-    \caption[Request decoding in Erlang]{This listing shows the relevant part of the function which decodes Memcached requests from the binary protocol described in \autoref{fig:request-header}. The structure of the \texttt{case Packet of} statement reflects the structure of the packet header. Note how we can use the variable \texttt{BodyLen} captured in the case statement to specify the size of the \texttt{Body} variable within the same case statement. Variables preceded by an underscore are not used.}
+    \caption[Request decoding in Erlang]{This listing shows the relevant part of the function which decodes Memcached requests from the binary protocol described in \cref{fig:request-header}. The structure of the \texttt{case Packet of} statement reflects the structure of the packet header. Note how we can use the variable \texttt{BodyLen} captured in the case statement to specify the size of the \texttt{Body} variable within the same case statement. Variables preceded by an underscore are not used.}
     \label{lst:request-header}
 \end{listing}
 
@@ -811,7 +812,7 @@ The voting structures for the Majority Protocol, the Grid Protocol and the Tree 
 
 \section{Testing}
 
-\autoref{tab:coverage} shows a screenshot of the test coverage report generated by the EUnit library. I modified four out the five original test modules and added another four to cover my structured voting code. Of the modules shown, I edited \texttt{rafter\_config}, \texttt{rafter\_consensus\_fsm} and \texttt{rafter\_consensus\_sup} and wrote the bottom four modules (all starting with \texttt{rafter\_voting}) from scratch.
+\Cref{tab:coverage} shows a screenshot of the test coverage report generated by the EUnit library. I modified four out the five original test modules and added another four to cover my structured voting code. Of the modules shown, I edited \texttt{rafter\_config}, \texttt{rafter\_consensus\_fsm} and \texttt{rafter\_consensus\_sup} and wrote the bottom four modules (all starting with \texttt{rafter\_voting}) from scratch.
 
 \begin{table}[h]
     \centering
@@ -875,7 +876,7 @@ Later in the proof, the intersection property is used multiple times. One exampl
 
 Most of the code written for this project is in Erlang. Being a functional programming language, Erlang supports a very dense programming style. Its core libraries (which are imported by default) include modules for working with lists, dictionaries (hashmaps), sets, string, timers, \textsc{i/o} and databases as well as random values, each of which is used in my code at some point, among others.
 
-Just to illustrate this point, I picked a typical line of Erlang code (\autoref{lst:erlang-majority}) and \enquote{translated} it into relatively idiomatic \textsc{c}++03 (\autoref{lst:cpp-majority}.) Note that the Erlang code only makes use of the built-in module \texttt{dict}, so no imports are required. As a dynamically typed language, Erlang does not need type declarations either, although they \emph{can} be added as annotations to functions for clarity. Thus, the code in \autoref{lst:erlang-majority} really does stand on its own, as long as it is wrapped in a function.
+Just to illustrate this point, I picked a typical line of Erlang code (\cref{lst:erlang-majority}) and \enquote{translated} it into relatively idiomatic \textsc{c}++03 (\cref{lst:cpp-majority}.) Note that the Erlang code only makes use of the built-in module \texttt{dict}, so no imports are required. As a dynamically typed language, Erlang does not need type declarations either, although they \emph{can} be added as annotations to functions for clarity. Thus, the code in \cref{lst:erlang-majority} really does stand on its own, as long as it is wrapped in a function.
 
 \begin{listing}[h]
     \begin{erlangcode}
@@ -904,7 +905,7 @@ for(std::map<id, paths_t>::iterator indices_it = indices.begin();
     }
 }
     \end{cppcode}
-    \caption{The Erlang code from \autoref{lst:erlang-majority}, translated into relatively idiomatic \textsc{c}++.}
+    \caption{The Erlang code from \cref{lst:erlang-majority}, translated into relatively idiomatic \textsc{c}++.}
     \label{lst:cpp-majority}
 \end{listing}
 
