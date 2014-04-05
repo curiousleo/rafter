@@ -21,15 +21,13 @@ from awsfabrictasks.ec2.api import ec2_rsync_download
 from awsfabrictasks.ec2.api import wait_for_running_state
 
 @task
-def benchmark(structured=True):
+def benchmark(branch='benchmark',structured=True):
     '''
     Start benchmarks.
 
     Sweeps over the configuration space, starting and stopping instances as
     appropriate.
     '''
-    branch = if structured: 'benchmark' else: 'benchmark-original'
-
     leader = Ec2InstanceWrapper.get_by_nametag('leader')
     leader.instance.start()
     wait_for_running_state(leader['id'])
@@ -174,7 +172,7 @@ def memaslap(leader_address, runtime=120):
             --servers={leader_address}:11211 --binary \
             --stat_freq={runtime}s --time={runtime}s \
             --execute_number=10000 \
-            --verify=0.01 --exp_verify=0.01 \
+            --verify=1.0 --exp_verify=1.0 \
             --cfg_cmd={conf} \
             | tee /tmp/rafter_memcached.log'
             .format(**locals()))
@@ -198,7 +196,7 @@ def deploy(branch='benchmark'):
         with hide('stdout'):
             run('git fetch {remote}'.format(**locals()))
             run('git reset --hard {remote}/{branch}'.format(**locals()))
-            run('rm ebin/*')
+          # run('rm ebin/*')
             run('make')
 
 @task

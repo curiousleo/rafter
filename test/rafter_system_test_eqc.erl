@@ -34,7 +34,7 @@
     eqc:on_output(fun(Str, Args) ->
                 io:format(user, Str, Args) end, P)).
 
--define(logdir, "./rafter_logs").
+-define(logdir, "/tmp/rafter_logs").
 
 %% ====================================================================
 %% Tests
@@ -47,7 +47,7 @@ eqc_test_() ->
        fun setup/0,
        fun cleanup/1,
        [%% Run the quickcheck tests
-        {timeout, 120,
+        {timeout, 360,
          ?_assertEqual(true,
              eqc:quickcheck(
                  ?QC_OUT(eqc:numtests(50, prop_rafter()))))}
