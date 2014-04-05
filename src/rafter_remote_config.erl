@@ -14,4 +14,4 @@ generate(Peers, grid) ->
 generate(Peers, {tree, D}) ->
     {rafter_voting_tree:tree(Peers, D), "tree" ++ integer_to_list(D)};
 generate(Peers, plain) ->
-    {Peers, plain}.
+    {Peers, "plain"}.
