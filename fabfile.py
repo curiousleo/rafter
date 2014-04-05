@@ -172,7 +172,7 @@ def memaslap(leader_address, runtime=120):
             --servers={leader_address}:11211 --binary \
             --stat_freq={runtime}s --time={runtime}s \
             --execute_number=10000 \
-            --verify=0.01 --exp_verify=0.01 \
+            --verify=1.0 --exp_verify=1.0 \
             --cfg_cmd={conf} \
             | tee /tmp/rafter_memcached.log'
             .format(**locals()))
