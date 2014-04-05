@@ -29,7 +29,11 @@ init([NameAtom, Me, Opts]) ->
                     {rafter_memcached_sup, start_link, [NameAtom, Opts]},
                     permanent, 5000, supervisor, [rafter_memcached_sup]},
 
-    {ok, {{one_for_all, 5, 10}, [LogServer, ConsensusFsm, MemcachedTcp]}}.
+    TTCLogger = { rafter_ttc_log,
+                  {rafter_ttc_log, start_link, []},
+                  permanent, 5000, worker, [rafter_ttc_log]},
+
+    {ok, {{one_for_all, 5, 10}, [LogServer, ConsensusFsm, MemcachedTcp, TTCLogger]}}.
 
 %% ===================================================================
 %% Private Functions

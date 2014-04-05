@@ -5,6 +5,9 @@
     index :: non_neg_integer(),
     term :: non_neg_integer(),
 
+    %% only for benchmarking
+    started :: erlang:timestamp(),
+
     %% only used during read_only commands
     cmd :: term()}).
 
@@ -45,6 +48,8 @@
     me :: string(),
 
     config :: term(),
+
+    failure_tref :: timer:tref(),
 
     %% We allow pluggable backend state machine modules.
     state_machine :: atom(),

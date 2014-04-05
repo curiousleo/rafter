@@ -22,6 +22,9 @@
 %% States
 -export([follower/2, follower/3, candidate/2, candidate/3, leader/2, leader/3]).
 
+%% Failure simulation
+-export([failed/2, failed/3]).
+
 %% Testing outputs
 -export([set_term/2, candidate_log_up_to_date/4]).
 
@@ -86,16 +89,60 @@ format_status(_, [_, State]) ->
 
 handle_event(stop, _, State) ->
     {stop, normal, State};
+
+handle_event(restart, failed, {StateName, State=#state{failure_tref=undefined}}) ->
+    {next_state, StateName, State};
+handle_event(restart, failed, {StateName, State=#state{failure_tref=Tref}}) ->
+    timer:cancel(Tref),
+    {next_state, StateName, State#state{failure_tref=undefined}};
+handle_event(restart, StateName, State=#state{failure_tref=undefined}) ->
+    {next_state, StateName, State};
+handle_event(restart, StateName, State=#state{failure_tref=Tref}) ->
+    timer:cancel(Tref),
+    {next_state, StateName, State#state{failure_tref=undefined}};
+
+handle_event({fail_once, T}, follower, State=#state{me=Me}) ->
+    {ok, Tref} = timer:send_after(T, Me, restart),
+    {next_state, failed, {follower, State#state{failure_tref=Tref}}};
+handle_event({fail_once, _T}, failed, State) ->
+    % this should not happen ..
+    {next_state, failed, State};
+
+handle_event({send_start_repeated_failures, Lambda, Up}, leader, State=#state{me=Me, config=Config, failure_tref=undefined}) ->
+    Msg = {start_repeated_failures, Lambda, Up},
+    lists:map(fun(Peer) -> gen_fsm:send_all_state_event(Peer, Msg) end,
+              list_servers([Me], Config)),
+    {next_state, leader, State};
+handle_event(send_restart, leader, State=#state{me=Me, config=Config, failure_tref=Tref}) ->
+    case Tref of undefined -> ok; _ -> timer:cancel(Tref) end,
+    lists:map(fun(Peer) -> gen_fsm:send_all_state_event(Peer, restart) end,
+              list_servers([Me], Config)),
+    {next_state, leader, State#state{failure_tref=undefined}};
+
+handle_event({start_repeated_failures, Lambda, Up}, follower, State=#state{me=Me, failure_tref=undefined}) ->
+    RunFor = exponential(Lambda),
+    {ok, Tref} = timer:send_after(RunFor, Me, {repeated_failure_timeout, RunFor, Lambda, Up}),
+    {next_state, follower, State#state{failure_tref=Tref}};
+
+handle_event({start_oneoff_failures, Lambda, T}, leader, State=#state{me=Me, failure_tref=undefined}) ->
+    {ok, Tref} = timer:send_after(exponential(Lambda), Me, {oneoff_failure_timeout, Lambda, T}),
+    {next_state, leader, State#state{failure_tref=Tref}};
+handle_event(stop_oneoff_failures, leader, State=#state{failure_tref=Tref}) ->
+    timer:cancel(Tref),
+    {next_state, leader, State#state{failure_tref=undefined}};
+
 handle_event(_Event, _StateName, State) ->
     {stop, {error, badmsg}, State}.
 
-handle_sync_event(get_leader, _, StateName, State=#state{leader=Leader}) ->
+handle_sync_event(get_leader, _, StateName, State=#state{leader=Leader})
+  when StateName =/= failed ->
     {reply, Leader, StateName, State};
 handle_sync_event(_Event, _From, _StateName, State) ->
     {stop, badmsg, State}.
 
 handle_info({client_read_timeout, Clock, Id}, StateName,
-    #state{read_reqs=Reqs}=State) ->
+    #state{read_reqs=Reqs}=State)
+  when StateName =/= failed ->
         ClientRequests = orddict:fetch(Clock, Reqs),
         {ok, ClientReq} = find_client_req(Id, ClientRequests),
         send_client_timeout_reply(ClientReq),
@@ -104,7 +151,8 @@ handle_info({client_read_timeout, Clock, Id}, StateName,
         NewState = State#state{read_reqs=NewReqs},
         {next_state, StateName, NewState};
 
-handle_info({client_timeout, Id}, StateName, #state{client_reqs=Reqs}=State) ->
+handle_info({client_timeout, Id}, StateName, #state{client_reqs=Reqs}=State)
+  when StateName =/= failed ->
     case find_client_req(Id, Reqs) of
         {ok, ClientReq} ->
             send_client_timeout_reply(ClientReq),
@@ -113,7 +161,37 @@ handle_info({client_timeout, Id}, StateName, #state{client_reqs=Reqs}=State) ->
         not_found ->
             {next_state, StateName, State}
     end;
-handle_info(_, _, State) ->
+
+handle_info({repeated_failure_timeout, RanFor, Lambda, Up}, follower, State=#state{me=Me}) ->
+    FailFor = trunc((1 - Up) * RanFor / Up + 0.5),
+    {ok, Tref} = timer:send_after(FailFor, Me, {repeated_failure_timeout, Lambda, Up}),
+    {next_state, failed, {follower, State#state{failure_tref=Tref}}};
+handle_info({repeated_failure_timeout, Lambda, Up}, failed, {StateName, State=#state{me=Me}}) ->
+    RunFor = exponential(Lambda),
+    {ok, Tref} = timer:send_after(RunFor, Me, {repeated_failure_timeout, RunFor, Lambda, Up}),
+    {next_state, StateName, State#state{failure_tref=Tref}};
+
+handle_info({oneoff_failure_timeout, Lambda, T}, leader, State=#state{me=Me, config=Config}) ->
+    case pick_random(list_servers([Me], Config)) of
+        Victim ->
+            Msg = {oneoff_failure_timeout, Lambda, T},
+            gen_fsm:send_all_state_event(Victim, {fail_once, T}),
+            {ok, Tref} = timer:send_after(exponential(Lambda), Me, Msg),
+            {next_state, leader, State#state{failure_tref=Tref}}
+    end;
+
+handle_info(restart, failed, {StateName, State=#state{failure_tref=undefined}}) ->
+    {next_state, StateName, State};
+handle_info(restart, failed, {StateName, State=#state{failure_tref=Tref}}) ->
+    timer:cancel(Tref),
+    {next_state, StateName, State#state{failure_tref=undefined}};
+handle_info(restart, StateName, State=#state{failure_tref=undefined}) ->
+    {next_state, StateName, State};
+handle_info(restart, StateName, State=#state{failure_tref=Tref}) ->
+    timer:cancel(Tref),
+    {next_state, StateName, State#state{failure_tref=undefined}};
+
+handle_info(_Event, _StateName, State) ->
     {stop, badmsg, State}.
 
 terminate(_, _, _) ->
@@ -128,6 +206,13 @@ code_change(_OldVsn, StateName, State, _Extra) ->
 %% Note: All RPC's and client requests get answered in State/3 functions.
 %% RPC Responses get handled in State/2 functions.
 %%=============================================================================
+
+%% Simulate process failure: ignore incoming messages
+failed(_, S) ->
+    {next_state, failed, S}.
+
+failed(_, _, S) ->
+    {next_state, failed, S}.
 
 %% Election timeout has expired. Go to candidate state iff we are a voter.
 follower(timeout, #state{config=Config, me=Me}=State0) ->
@@ -515,7 +600,8 @@ append(Id, From, Entry,
                                 from=From,
                                 index=Index,
                                 term=Term,
-                                timer=Timer},
+                                timer=Timer,
+                                started=now()},
     State#state{client_reqs=[ClientRequest | Reqs]}.
 
 setup_read_request(Id, From, Command, #state{send_clock=Clock,
@@ -527,7 +613,8 @@ setup_read_request(Id, From, Command, #state{send_clock=Clock,
                               from=From,
                               term=Term,
                               cmd=Command,
-                              timer=Timer},
+                              timer=Timer,
+                              started=now()},
     NewState = save_read_request(ReadRequest, State),
     send_append_entries(NewState).
 
@@ -545,7 +632,12 @@ save_read_request(ReadRequest, #state{send_clock=Clock,
 send_client_timeout_reply(#client_req{from=From}) ->
     gen_fsm:reply(From, {error, timeout}).
 
-send_client_reply(#client_req{timer=Timer, from=From}, Result) ->
+send_client_reply(#client_req{timer=Timer, started=Started, cmd=Cmd, from=From}, Result) ->
+    case Cmd of
+        undefined -> rafter_ttc_log ! {log_write, timer:now_diff(now(), Started)};
+        _ -> rafter_ttc_log ! {log_read, timer:now_diff(now(), Started)}
+    end,
+    % io:format("TTC: ~pms~n", [timer:now_diff(now(), Started) / 1000]),
     {ok, cancel} = timer:cancel(Timer),
     gen_fsm:reply(From, Result).
 
@@ -950,6 +1042,28 @@ reset_timer(Duration, State=#state{timer=Timer}) ->
     _ = gen_fsm:cancel_timer(Timer),
     NewTimer = gen_fsm:send_event_after(Duration, timeout),
     State#state{timer=NewTimer}.
+
+-spec exponential(float()) -> pos_integer().
+exponential(Lambda) ->
+    U = random:uniform(),
+    trunc(-1000 * math:log(U) / Lambda).
+
+-spec pick_random([term()|list()]) -> term()
+               ; ([]) -> undefined.
+pick_random([]) ->
+    undefined;
+pick_random(List) ->
+    U = random:uniform(),
+    Pos = 1 + trunc(U * length(List)),
+    lists:nth(Pos, List).
+
+-spec list_servers([peer()], #config{}) -> [peer()].
+list_servers(Exclude, #config{state=stable, oldservers=Old}) ->
+    Old -- Exclude;
+list_servers(Exclude, #config{state=staging, oldservers=Old}) ->
+    Old -- Exclude;
+list_servers(Exclude, #config{state=transitional, newservers=New, oldservers=Old}) ->
+    lists:merge(lists:sort(Old), lists:sort(New)) -- Exclude.
 
 %%=============================================================================
 %% Tests
