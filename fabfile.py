@@ -21,15 +21,13 @@ from awsfabrictasks.ec2.api import ec2_rsync_download
 from awsfabrictasks.ec2.api import wait_for_running_state
 
 @task
-def benchmark(structured=True):
+def benchmark(branch='benchmark',structured=True):
     '''
     Start benchmarks.
 
     Sweeps over the configuration space, starting and stopping instances as
     appropriate.
     '''
-    branch = if structured: 'benchmark' else: 'benchmark-original'
-
     leader = Ec2InstanceWrapper.get_by_nametag('leader')
     leader.instance.start()
     wait_for_running_state(leader['id'])
@@ -198,7 +196,7 @@ def deploy(branch='benchmark'):
         with hide('stdout'):
             run('git fetch {remote}'.format(**locals()))
             run('git reset --hard {remote}/{branch}'.format(**locals()))
-            run('rm ebin/*')
+          # run('rm ebin/*')
             run('make')
 
 @task
