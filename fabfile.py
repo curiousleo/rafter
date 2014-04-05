@@ -21,20 +21,22 @@ from awsfabrictasks.ec2.api import ec2_rsync_download
 from awsfabrictasks.ec2.api import wait_for_running_state
 
 @task
-def benchmark():
+def benchmark(structured=True):
     '''
     Start benchmarks.
 
     Sweeps over the configuration space, starting and stopping instances as
     appropriate.
     '''
+    branch = if structured: 'benchmark' else: 'benchmark-original'
+
     leader = Ec2InstanceWrapper.get_by_nametag('leader')
     leader.instance.start()
     wait_for_running_state(leader['id'])
     leader = Ec2InstanceWrapper.get_by_nametag('leader')
     leader.add_instance_to_env()
 
-    execute(deploy, host=leader.get_ssh_uri())
+    execute(deploy, host=leader.get_ssh_uri(), branch=branch)
     execute(start_erlang_node, host=leader.get_ssh_uri(), name='leader')
 
     cluster_sizes = [3, 5, 7, 9, 11, 12, 13, 15, 16, 17, 19, 20]
@@ -61,13 +63,23 @@ def benchmark():
 
         for follower in new_followers: follower.add_instance_to_env()
 
-        execute(deploy, hosts=new_followers_uris)
+        execute(deploy, hosts=new_followers_uris, branch=branch)
         for (name, uri) in zip(new_followers_names, new_followers_uris):
             execute(start_erlang_node, host=uri, name=name)
 
         followers += new_followers
 
-        for protocol in protocols:
+        if structured:
+            for protocol in protocols:
+                for failure_mode in failure_modes:
+                    configure(leader, followers, protocol, failure_mode)
+                    memaslap(leader['private_ip_address'])
+                    execute(collect_results, host=leader.get_ssh_uri(),
+                                cluster_size=cluster_size, protocol=protocol,
+                                failure_mode=failure_mode)
+
+        else:
+            protocol = 'plain'
             for failure_mode in failure_modes:
                 configure(leader, followers, protocol, failure_mode)
                 memaslap(leader['private_ip_address'])
