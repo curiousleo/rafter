@@ -13,6 +13,7 @@ from fabric.api import run
 from fabric.api import task
 from fabric.context_managers import hide
 from fabric.context_managers import settings
+from fabric.context_managers import quiet
 
 from awsfabrictasks.decorators import ec2instance
 from awsfabrictasks.ec2.api import Ec2InstanceWrapper
@@ -75,12 +76,21 @@ def benchmark(branch='benchmark',structured=True):
         for (name, uri) in zip(new_followers_names, new_followers_uris):
             execute(start_erlang_node, host=uri, name=name)
 
-        followers += new_followers
+        followers += zip(new_followers_names, new_followers)
 
         if structured:
             for protocol in protocols:
                 for failure_mode in failure_modes:
-                    configure(leader, followers, protocol, failure_mode)
+                    with quiet():
+                        for (_, inst) in followers:
+                            execute(stop_erlang_node, host=inst.get_ssh_uri())
+                        execute(stop_erlang_node, host=leader.get_ssh_uri())
+                        execute(start_erlang_node, host=leader.get_ssh_uri(),
+                                name='leader')
+                        for (name, inst) in followers:
+                            execute(start_erlang_node, host=inst.get_ssh_uri(),
+                                    name=name)
+                    configure(leader, zip(*followers)[1], protocol, failure_mode)
                     memaslap(leader['private_ip_address'])
                     execute(collect_results, host=leader.get_ssh_uri(),
                                 cluster_size=cluster_size, protocol=protocol,
@@ -89,7 +99,16 @@ def benchmark(branch='benchmark',structured=True):
         else:
             protocol = 'plain'
             for failure_mode in failure_modes:
-                configure(leader, followers, protocol, failure_mode)
+                with quiet():
+                    for (_, inst) in followers:
+                        execute(stop_erlang_node, host=inst.get_ssh_uri())
+                    execute(stop_erlang_node, host=leader.get_ssh_uri())
+                    execute(start_erlang_node, host=leader.get_ssh_uri(),
+                            name='leader')
+                    for (name, inst) in followers:
+                        execute(start_erlang_node, host=inst.get_ssh_uri(),
+                                name=name)
+                configure(leader, zip(*followers)[1], protocol, failure_mode)
                 memaslap(leader['private_ip_address'])
                 execute(collect_results, host=leader.get_ssh_uri(),
                             cluster_size=cluster_size, protocol=protocol,
