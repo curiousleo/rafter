@@ -90,6 +90,17 @@ def benchmark(branch='benchmark',structured=True):
     execute(ec2_stop_instance, hosts=uris)
 
 @task
+def rename():
+    '''
+    Rename instances.
+    '''
+    instancewrapper = Ec2InstanceWrapper.get_from_host_string()
+    new_name = raw_input(
+            'Rename instance {}: '.format(instancewrapper.prettyname()))
+    new_name = new_name if new_name != '' else name
+    instancewrapper.instance.add_tag('Name', new_name)
+
+@task
 def start_followers(num, config='arch-configured-micro', environment='benchmark'):
     '''
     Start a number of instances and set them up for benchmarking.
