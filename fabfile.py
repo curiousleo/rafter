@@ -30,13 +30,22 @@ def benchmark(branch='benchmark',structured=True):
     '''
     structured = not structured == 'False'
     leader = Ec2InstanceWrapper.get_by_nametag('leader')
+    runner = Ec2InstanceWrapper.get_by_nametag('runner')
+
     leader.instance.start()
     wait_for_running_state(leader['id'])
+    runner.instance.start()
+    wait_for_running_state(runner['id'])
+
     leader = Ec2InstanceWrapper.get_by_nametag('leader')
+    runner = Ec2InstanceWrapper.get_by_nametag('runner')
+
     leader.add_instance_to_env()
+    runner.add_instance_to_env()
 
     execute(deploy, host=leader.get_ssh_uri(), branch=branch)
     execute(start_erlang_node, host=leader.get_ssh_uri(), name='leader')
+    execute(deploy, host=runner.get_ssh_uri(), branch=branch)
 
     cluster_sizes = [3, 5, 7, 9, 11, 12, 13, 15, 16, 17, 19, 20]
     protocols = ['majority', 'grid', ('tree', 2), ('tree', 3)]
