@@ -28,6 +28,7 @@ def benchmark(branch='benchmark',structured=True):
     Sweeps over the configuration space, starting and stopping instances as
     appropriate.
     '''
+    structured = not structured == 'False'
     leader = Ec2InstanceWrapper.get_by_nametag('leader')
     leader.instance.start()
     wait_for_running_state(leader['id'])
@@ -207,7 +208,7 @@ def stop_erlang_node():
     '''
     with cd(awsfab_settings.RAFTER_DIR):
         with settings(warn_only=True):
-            run('killall beam')
+            run('killall beam; killall beam.smp')
         run('rm -rf data')
         run('mkdir data')
 
@@ -228,7 +229,7 @@ def start_erlang_node(name):
     with cd(awsfab_settings.RAFTER_DIR):
         # kill it first
         with settings(warn_only=True):
-            run('killall beam')
+            run('killall beam; killall beam.smp')
         run('rm -rf data')
         run('mkdir data')
         run('sh bin/start-ec2-node {name}; sleep 1'.format(**locals()))
