@@ -10,7 +10,7 @@
 -define(ELECTION_TIMEOUT_MIN, 5000).
 -define(ELECTION_TIMEOUT_MAX, 25000).
 -define(HEARTBEAT_TIMEOUT, 125).
--define(SEND_EVENT_TIMEOUT, 20000).
+-define(SEND_EVENT_TIMEOUT, 200000).
 
 %% API
 -export([start_link/3, stop/1, get_leader/1, read_op/2, op/2,
