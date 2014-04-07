@@ -13,6 +13,7 @@ from fabric.api import run
 from fabric.api import task
 from fabric.context_managers import hide
 from fabric.context_managers import settings
+from fabric.context_managers import quiet
 
 from awsfabrictasks.decorators import ec2instance
 from awsfabrictasks.ec2.api import Ec2InstanceWrapper
@@ -21,23 +22,31 @@ from awsfabrictasks.ec2.api import ec2_rsync_download
 from awsfabrictasks.ec2.api import wait_for_running_state
 
 @task
-def benchmark(structured=True):
+def benchmark(branch='benchmark',structured=True):
     '''
     Start benchmarks.
 
     Sweeps over the configuration space, starting and stopping instances as
     appropriate.
     '''
-    branch = if structured: 'benchmark' else: 'benchmark-original'
-
+    structured = not structured == 'False'
     leader = Ec2InstanceWrapper.get_by_nametag('leader')
+    runner = Ec2InstanceWrapper.get_by_nametag('runner')
+
     leader.instance.start()
     wait_for_running_state(leader['id'])
+    runner.instance.start()
+    wait_for_running_state(runner['id'])
+
     leader = Ec2InstanceWrapper.get_by_nametag('leader')
+    runner = Ec2InstanceWrapper.get_by_nametag('runner')
+
     leader.add_instance_to_env()
+    runner.add_instance_to_env()
 
     execute(deploy, host=leader.get_ssh_uri(), branch=branch)
     execute(start_erlang_node, host=leader.get_ssh_uri(), name='leader')
+    execute(deploy, host=runner.get_ssh_uri(), branch=branch)
 
     cluster_sizes = [3, 5, 7, 9, 11, 12, 13, 15, 16, 17, 19, 20]
     protocols = ['majority', 'grid', ('tree', 2), ('tree', 3)]
@@ -67,12 +76,21 @@ def benchmark(structured=True):
         for (name, uri) in zip(new_followers_names, new_followers_uris):
             execute(start_erlang_node, host=uri, name=name)
 
-        followers += new_followers
+        followers += zip(new_followers_names, new_followers)
 
         if structured:
             for protocol in protocols:
                 for failure_mode in failure_modes:
-                    configure(leader, followers, protocol, failure_mode)
+                    with quiet():
+                        for (_, inst) in followers:
+                            execute(stop_erlang_node, host=inst.get_ssh_uri())
+                        execute(stop_erlang_node, host=leader.get_ssh_uri())
+                        execute(start_erlang_node, host=leader.get_ssh_uri(),
+                                name='leader')
+                        for (name, inst) in followers:
+                            execute(start_erlang_node, host=inst.get_ssh_uri(),
+                                    name=name)
+                    configure(leader, zip(*followers)[1], protocol, failure_mode)
                     memaslap(leader['private_ip_address'])
                     execute(collect_results, host=leader.get_ssh_uri(),
                                 cluster_size=cluster_size, protocol=protocol,
@@ -81,7 +99,16 @@ def benchmark(structured=True):
         else:
             protocol = 'plain'
             for failure_mode in failure_modes:
-                configure(leader, followers, protocol, failure_mode)
+                with quiet():
+                    for (_, inst) in followers:
+                        execute(stop_erlang_node, host=inst.get_ssh_uri())
+                    execute(stop_erlang_node, host=leader.get_ssh_uri())
+                    execute(start_erlang_node, host=leader.get_ssh_uri(),
+                            name='leader')
+                    for (name, inst) in followers:
+                        execute(start_erlang_node, host=inst.get_ssh_uri(),
+                                name=name)
+                configure(leader, zip(*followers)[1], protocol, failure_mode)
                 memaslap(leader['private_ip_address'])
                 execute(collect_results, host=leader.get_ssh_uri(),
                             cluster_size=cluster_size, protocol=protocol,
@@ -89,6 +116,17 @@ def benchmark(structured=True):
 
     uris = [node.get_ssh_uri() for node in [leader] ++ followers]
     execute(ec2_stop_instance, hosts=uris)
+
+@task
+def rename():
+    '''
+    Rename instances.
+    '''
+    instancewrapper = Ec2InstanceWrapper.get_from_host_string()
+    new_name = raw_input(
+            'Rename instance {}: '.format(instancewrapper.prettyname()))
+    new_name = new_name if new_name != '' else name
+    instancewrapper.instance.add_tag('Name', new_name)
 
 @task
 def start_followers(num, config='arch-configured-micro', environment='benchmark'):
@@ -174,7 +212,7 @@ def memaslap(leader_address, runtime=120):
             --servers={leader_address}:11211 --binary \
             --stat_freq={runtime}s --time={runtime}s \
             --execute_number=10000 \
-            --verify=0.01 --exp_verify=0.01 \
+            --verify=1.0 --exp_verify=1.0 \
             --cfg_cmd={conf} \
             | tee /tmp/rafter_memcached.log'
             .format(**locals()))
@@ -198,7 +236,7 @@ def deploy(branch='benchmark'):
         with hide('stdout'):
             run('git fetch {remote}'.format(**locals()))
             run('git reset --hard {remote}/{branch}'.format(**locals()))
-            run('rm ebin/*')
+          # run('rm ebin/*')
             run('make')
 
 @task
@@ -209,7 +247,7 @@ def stop_erlang_node():
     '''
     with cd(awsfab_settings.RAFTER_DIR):
         with settings(warn_only=True):
-            run('killall beam')
+            run('killall beam; killall beam.smp')
         run('rm -rf data')
         run('mkdir data')
 
@@ -230,7 +268,7 @@ def start_erlang_node(name):
     with cd(awsfab_settings.RAFTER_DIR):
         # kill it first
         with settings(warn_only=True):
-            run('killall beam')
+            run('killall beam; killall beam.smp')
         run('rm -rf data')
         run('mkdir data')
         run('sh bin/start-ec2-node {name}; sleep 1'.format(**locals()))
