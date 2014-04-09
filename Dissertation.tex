@@ -848,7 +848,33 @@ All the success criteria listed in my project proposal have been met, and in som
 
 \section{Benchmarking}
 
+In order to compare the performance of my voting algorithms with those used in the original Rafter code, and to see how different voting schemes scale with the number of nodes, I designed, scripted and ran a series of benchmarks in the Amazon Elastic Compute Cloud. Overall, it took me over a month to set everything up in a way such that useful data could be acquired.
+
 \subsection{Amazon \ECC set-up}
+
+New instances in the Amazon Elastic Compute Cloud are created from virtual appliances called \enquote{Amazon Machine Images} (\textsc{ami}s). Amazon's own default \textsc{ami} does not have the latest version of the Erlang platform in its package sources, so I based my custom \textsc{ami} on an Arch Linux image instead.\footnote{Project \enquote{Arch Linux on \ECC}: \url{https://www.uplinklabs.net/projects/arch-linux-on-ec2/}} I created an instance of the Arch \textsc{ami}, installed Erlang and a few standard tools and built libMemcached from source, as all distributions I checked had building \texttt{memaslap} disabled by default.
+
+Users of the Amazon Elastic Compute Cloud currently have the choice between many different instance types. Preliminary experiments using a cluster of (free) \enquote{micro} instances were useful for learning how to use the Amazon \ECC administration tools, but their performance turned out to be too low, and \textsc{ssh} connections were flaky. At the recommendation of my project supervisors, I switched to \enquote{m1.xlarge} general-purpose instances for running the benchmarks (see \cref{tab:instance-types} for a comparison.)
+
+The m1.xlarge instances provided enough compute power and much more network bandwidth than the micro instances. Connections to them were reliable once established. Occasionally, \textsc{dns} lookup errors occurred. This was a major annoyance, but the problems were always fixed within a few hours.
+
+\begin{table}[h]
+    \centering
+    {\fontfamily{jkpxk}\selectfont
+    \begin{tabularx}{\textwidth}{X c c S c c}
+        \toprule
+        \textit{Name} & \textit{\textsc{ecu}s} &
+        \textit{v\textsc{cpu}s} & \textit{Memory (\textsc{g}i\textsc{b})} &
+        \textit{Storage (\textsc{gb})} & \textit{Network performance} \\
+        \midrule
+        {\fontfamily{jkpxkosn}\selectfont t1.micro } & up to 2 & 1 & 0.613 & \textsc{ebs} only & very low \\
+        {\fontfamily{jkpxkosn}\selectfont m1.xlarge } & 8 & 4 & 15 & 4 \(\times\) 420 & high \\
+        \bottomrule
+    \end{tabularx}
+    }
+    \caption[Comparison of Amazon \ECC instance types]{Comparison of the two Amazon \ECC instance types used. \textsc{ecu} stands for \enquote{Elastic Compute Unit}, roughly equivalent to one 1.0 \textsc{gh}z 2007 Opteron; a v\textsc{cpu} is a virtual \textsc{cpu}; \textsc{ebs} means \enquote{Amazon Elastic Block Storage}.}
+    \label{tab:instance-types}
+\end{table}
 
 \subsection{Benchmarking scripts}
 
