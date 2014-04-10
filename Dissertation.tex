@@ -930,6 +930,8 @@ The Tree Quorum Protocol graphs show a similar behaviour. A cluster of 15 nodes 
 
 All cumulative histograms (\cref{fig:plain-maj-tree-grid-ttc} show the one for a cluster of size 7) of the time to consensus measurements I took exhibit one or more \enquote{dents} between the 75th and the 100th percentile. These show up as large upper error bars in \cref{fig:ttc} as well. Where do they come from?
 
+Preliminary experiments showed that the time to consensus increases by orders of magnitude when the load on the system is high. The system load is primarily a function of the frequency at which the client -- \texttt{memaslap} for the purposes of the benchmarks -- sends requests. By carefully reducing this throughput by varying the \texttt{--tps=X} command line parameter, I made sure to operate the system in a regime just below overloading for most of the requests. This is the part of the curves below the dents, roughly the region below the 75th percentile.
+
 \begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth, keepaspectratio]{Images/ttc_7_plain-maj-tree-grid.pdf}
