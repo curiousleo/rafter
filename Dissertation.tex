@@ -880,26 +880,61 @@ The m1.xlarge instances provided enough compute power and much more network band
 
 \subsection{Choice of parameters}
 
-XXX
+Due to time constraints, benchmarking every combination of parameters was impossible. For this reason, I turned off failure simulation for the benchmarks and instead analysed the behaviour under different failure modes theoretically (see XXX.) I benchmarked all voting structures. The Grid Protocol was tested with the \enquote{favouring rows} option set; benchmarks were also run on binary and tertiary trees created by the Tree Quorum Protocol.
 
-- voting schemes and parameters
+As for cluster sizes, I tried to find configurations for which at least one protocol was optimal in some way. My Amazon \ECC account allowed me to run experiments with up to 19 nodes.
 
-- cluster sizes
+\begin{description}
+    \item[Majority Protocol] Any uneven number of nodes is optimal.
+    \item[Grid Protocol] Clusters of size 4, 9 and 16 are square; 6 and 12 form full almost-square rectangles. However, grids of size 4 and 6 require more nodes than the Majority Protocol for a quorum, which makes them less interesting for this analysis.
+    \item[Tree Quorum Protocol] Trees of degree \(d\) and height \(h\) with \(n = \sum^h_{i=0} d^i\) nodes are full. Considering cluster sizes less than 20, binary trees of size 3, 7 and 15 are full, and so are ternary trees with 4 or 13 nodes.
+\end{description}
+
+Taking the union of the \enquote{interesting} optimal cases, we get 3, 4, 5, 7, 9, 11, 12, 13, 15, and~17 as the cluster sizes to benchmark.
 
 \subsection{Results}
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=\textwidth, keepaspectratio]{Images/ttc_plain-maj.pdf}
-    \caption[\textsc{ttc} for original Rafter and Majority Voting]{Time to consensus measurements for original Rafter (\enquote{plain}) and the Majority Protocol developed as part of this project (\enquote{majority}).}
-    \label{fig:plain-maj-ttc}
+The purpose of the benchmarks was twofold: to find the overhead caused by adding additional complexity in the form of the structured voting layer, and to compare the performance of different structured voting schemes.
+
+\minisec{Comparison with the original Rafter implementation}
+
+\Cref{fig:plain-maj-ttc} shows time to consensus (\textsc{ttc}, y-axis) as a function of the cluster size (x-axis). The two curves have the same shape: this is to be expected, since the quorum finding mechanism works in precisely the same way. The time to consensus for the original Rafter implementation without structured voting schemes (the \enquote{plain} curve in the graph) is consistently smaller, and the difference between the two curves increases with the number of nodes in the cluster. In other words, for clusters with less than 20 nodes at least, computing quorums under the Majority Protocol takes roughly \SI{300}{\micro\second} longer per node than with the original Rafter implementation.
+
+\minisec{Comparison between different structured voting schemes}
+
+\begin{figure}[p]
+    \begin{subfigure}{1\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth, keepaspectratio]{Images/ttc_plain-maj.pdf}
+        \caption{Time to consensus results for original Rafter and the Majority Protocol.}
+        \label{fig:plain-maj-ttc}
+    \end{subfigure}
+
+    \begin{subfigure}{1\textwidth}
+        \centering
+        \includegraphics[width=0.8\textwidth, keepaspectratio]{Images/ttc_maj-tree-grid.pdf}
+        \caption{\textsc{ttc} measurements for different structured voting schemes}
+        \label{fig:maj-tree-grid-ttc}
+    \end{subfigure}
+    \caption{Time to consensus measurements for the original Rafter implementation (\enquote{plain}), the Majority Protocol (\enquote{majority}), the Tree Quorum protocol (\enquote{tree2} and \enquote{tree3} with branching factors \(d = 2\) and \(d = 3\), respectively), and the Grid Protocol (\enquote{grid}). The lines connect the median measurements and the error bars indicate the 25th and the 75th percentile.}
+    \label{fig:ttc}
 \end{figure}
+
+The time to consensus versus cluster size graph for all four structured voting schemes implemented in this project in \cref{fig:maj-tree-grid-ttc} has some interesting features.
+
+Consider the graph of the Grid Protocol time to consensus (the \enquote{grid} dataset in \cref{fig:maj-tree-grid-ttc}). The \textsc{ttc} measurements increase by about \SI{3.5}{\milli\second} between 12 and 13 nodes but then stay within about \SI{1}{\milli\second} until the cluster size reaches 16; then there is a jump by \SI{7.5}{\milli\second} as the cluster size hits 17. Why the plateau between 13 and 16? By \cref{eq:grid-dims}, cluster sizes 13, 14, 15, and 16 all generate quadratic 4\,\(\times\)\,4 grids. Clusters with 12 nodes fit into a 4\,\(\times\)\,3 grid, and those with 17 nodes require a 5\,\(\times\)\,4 grid. The explanation for the plateau, therefore, is that \textsc{ttc} times change mainly when the grid shape changes.
+
+The Tree Quorum Protocol graphs show a similar behaviour. A cluster of 15 nodes exactly fills a binary tree of height 3. Add one more node, and a non-full binary tree of height 4 is required to hold all nodes. Analogously, 13 nodes fit exactly into a ternary tree of height 2; more nodes require at least height 3. This helps explain the rapid increase in time to consensus between 15 and 16 nodes in the binary (\enquote{tree2}) case and the similar effect between 13 and 15 nodes in the ternary (\enquote{tree3}) case.
+
+\minisec{The dent in the cumulative histogram}
+
+All cumulative histograms (\cref{fig:plain-maj-tree-grid-ttc} show the one for a cluster of size 7) of the time to consensus measurements I took exhibit one or more \enquote{dents} between the 75th and the 100th percentile. These show up as large upper error bars in \cref{fig:ttc} as well. Where do they come from?
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\textwidth, keepaspectratio]{Images/ttc_maj-tree-grid.pdf}
-    \caption[\textsc{ttc} for different structured voting schemes]{Time to consensus measurements for the Majority Protocol (\enquote{majority}), the Tree Quorum protocol (\enquote{tree2} and \enquote{tree3} with branching factors \(d = 2\) and \(d = 3\), respectively), and the Grid Protocol (\enquote{grid}).}
-    \label{fig:plain-maj-ttc}
+    \includegraphics[width=\textwidth, keepaspectratio]{Images/ttc_7_plain-maj-tree-grid.pdf}
+    \caption{Cumulative histogram of time to consensus measurements for a cluster with seven nodes, under original Rafter, the Majority Protocol, the Tree Quorum Protocol and the Grid Protocol (legend as for \cref{fig:ttc}).}
+    \label{fig:plain-maj-tree-grid-ttc}
 \end{figure}
 
 XXX
