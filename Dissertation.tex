@@ -68,6 +68,8 @@
 
 \captionsetup{labelfont=bf, format=plain}
 
+\sisetup{detect-all}
+
 % custom commands
 \newcommand{\requestVoteRPC}[0]{\texttt{requestVote} \textsc{rpc}}
 \newcommand{\appendEntriesRPC}[0]{\texttt{appendEntries} \textsc{rpc}}
@@ -860,18 +862,16 @@ The m1.xlarge instances provided enough compute power and much more network band
 
 \begin{table}[h]
     \centering
-    {\fontfamily{jkpxk}\selectfont
     \begin{tabularx}{\textwidth}{X c c S c c}
         \toprule
         \textit{Name} & \textit{\textsc{ecu}s} &
         \textit{v\textsc{cpu}s} & \textit{Memory (\textsc{g}i\textsc{b})} &
         \textit{Storage (\textsc{gb})} & \textit{Network performance} \\
         \midrule
-        {\fontfamily{jkpxkosn}\selectfont t1.micro } & up to 2 & 1 & 0.613 & \textsc{ebs} only & very low \\
-        {\fontfamily{jkpxkosn}\selectfont m1.xlarge } & 8 & 4 & 15 & 4 \(\times\) 420 & high \\
+        t1.micro & up to 2 & 1 & 0.613 & \textsc{ebs} only & very low \\
+        m1.xlarge & 8 & 4 & 15 & 4 \(\times\) 420 & high \\
         \bottomrule
     \end{tabularx}
-    }
     \caption[Comparison of Amazon \ECC instance types]{Comparison of the two Amazon \ECC instance types used. \textsc{ecu} stands for \enquote{Elastic Compute Unit}, roughly equivalent to one 1.0 \textsc{gh}z 2007 Opteron; a v\textsc{cpu} is a virtual \textsc{cpu}; \textsc{ebs} means \enquote{Amazon Elastic Block Storage}.}
     \label{tab:instance-types}
 \end{table}
