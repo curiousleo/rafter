@@ -517,7 +517,7 @@ The data structure which represents a \emph{voting structure} has two components
     \label{fig:grid4-state}
 \end{figure}
 
-Another data type is used in the structured voting code to represent the \emph{state of an election}. Both are implemented as record types in Erlang, and are called \texttt{vstruct} and \texttt{vstate}, respectively; their internal structure is very similar (see \cref{lst:voting-types} for the full definition.) \texttt{vstate} additionally contains information about what a physical node has voted for (\texttt{true}, \texttt{false} or \texttt{pending}), and a summary of the children's votes in case of a virtual node (represented as integer fields \texttt{yes\_nodes} and \texttt{no\_nodes}.) They are used as follows:
+Another data type is used in the structured voting code to represent the \emph{state of an election}. Both are implemented as record types in Erlang, and are called \texttt{vstruct} and \texttt{vstate}, respectively; their internal structure is very similar (see \cref{lst:voting-types} for the full definition.) \texttt{vstate} additionally contains information about what a physical node has voted for (\texttt{true}, \texttt{false} or \texttt{pending}), and a summary of the children's votes in case of a virtual node (represented as integer fields \texttt{yes\_nodes} and \texttt{no\_nodes}). They are used as follows:
 
 \begin{enumerate}
     \item A voting structure generator creates a \texttt{vstruct}.
@@ -596,7 +596,7 @@ Assuming for now that our nodes fit into a rectangular \(c \times r\) grid so th
 
     \item[\enquote{one process from each column}] Translating this requirement (called \textsc{c}-cover for \emph{column cover}) into logic, we have \(\bigwedge_c \bigvee_{p\,\in\,c} p \).
 
-        We model this expression as a tree-shaped voting structure as follows: for each column \(c\), we add an any-node whose children are the processes in that column (giving us \(\bigvee_{p\,\in\,c} p \).) These any-nodes are given an all-node as their parent, modelling \(\bigwedge_c \bigvee_{p\,\in\,c} p \). This node is called \enquote{\textsc{c}-cover subroot} in \cref{fig:grid4-covers}.
+        We model this expression as a tree-shaped voting structure as follows: for each column \(c\), we add an any-node whose children are the processes in that column (giving us \(\bigvee_{p\,\in\,c} p \)). These any-nodes are given an all-node as their parent, modelling \(\bigwedge_c \bigvee_{p\,\in\,c} p \). This node is called \enquote{\textsc{c}-cover subroot} in \cref{fig:grid4-covers}.
 \end{description}
 
 \begin{figure}[h]
@@ -662,7 +662,7 @@ Having written and tested the structured voting code, I integrated it into Rafte
 \begin{enumerate}
     \item Integrating my code with Rafter meant reading and understanding its source code first: 1,500 lines of code,\footnote{That's 1,500 actual lines of code as measured by \texttt{cloc} (\url{http://cloc.sourceforge.net}). See \cref{sc:fp-note} for a discussion of Erlang's code density.} spread over 11 modules and undocumented except for a few comments, in a language I was still learning. Using module and function names as a guide, I found the relevant pieces of code that needed changing. Andrew Stone, the developer of Rafter, helped me understand the purpose of a few functions whose task I could not figure out myself.
     \item I renamed my modules and moved them into the appropriate directory to fit into the naming scheme and directory structure of Rafter. Also, the type specifications had to be pasted into the appropriate include file.
-    \item In order to use my structured voting code, the node configuration had to be changed from a list of peers (which is all that is needed when only the Majority Protocol is used) to a voting structure (enabling Rafter to use other protocols as well.) This required updating every line of code that made use of this field from the configuration record.
+    \item In order to use my structured voting code, the node configuration had to be changed from a list of peers (which is all that is needed when only the Majority Protocol is used) to a voting structure (enabling Rafter to use other protocols as well). This required updating every line of code that made use of this field from the configuration record.
     \item All the places in the code which implicitely assumed that the Majority Protocol was being used had to be rewritten. In most cases, this meant making them wrappers around my generalised structured voting code.
 \end{enumerate}
 
@@ -676,7 +676,7 @@ I added a Memcached frontend to Rafter for two reasons: to showcase a useful app
 
 Newer versions of Memcached support a binary protocol,\footnote{Memcached's new binary protocol is described in this document: \url{https://code.google.com/p/memcached/wiki/BinaryProtocolRevamped}.} which I found less ambiguous than the standard text-based protocol. Decoding and encoding binary protocols being a particular strength of Erlang, the decision over which protocol to implement was easy. \Cref{lst:request-header} shows part of the code the implements the decoding of a Memcached request.
 
-Next, I picked the commands and features I wanted the frontend to support. Since it was meant to be a proof-of-concept, I decided to stick to the minimal set of commands required for a key-value store: \texttt{get}, \texttt{set}, and \texttt{noop}, with the obvious meaning. For simplicity, I also decided not to support the data version check feature (the \textsc{cas} header field in \cref{fig:request-header}.)
+Next, I picked the commands and features I wanted the frontend to support. Since it was meant to be a proof-of-concept, I decided to stick to the minimal set of commands required for a key-value store: \texttt{get}, \texttt{set}, and \texttt{noop}, with the obvious meaning. For simplicity, I also decided not to support the data version check feature (the \textsc{cas} header field in \cref{fig:request-header}).
 
 \minisec{Implementing Memcached}
 
@@ -779,7 +779,7 @@ As mentioned before, the benchmarks were automated using Fabric and the awsfabri
     \item[collect\_results] Uses \texttt{rsync} to download the Memcached and time to consensus log files to the machine running the benchmarks.\footnote{rsync is a file transfer program providing compression and encryption. \url{http://rsync.samba.org}}
 \end{description}
 
-The \textit{benchmark} task uses these helper functions as follows: For each combination of cluster size, protocol and failure mode that is to be tested, the procedure starts by deploying the latest version of the project source code to all instances as required and compiling it (using the \texttt{deploy} task.) It then starts up an Erlang node with a fresh name on each of them. These nodes start in follower state and with an empty initial configuration.
+The \textit{benchmark} task uses these helper functions as follows: For each combination of cluster size, protocol and failure mode that is to be tested, the procedure starts by deploying the latest version of the project source code to all instances as required and compiling it (using the \texttt{deploy} task). It then starts up an Erlang node with a fresh name on each of them. These nodes start in follower state and with an empty initial configuration.
 
 Next, the leader is reconfigured using the \texttt{configure} task. Then \texttt{memaslap} is run, its results as well as the time to consensus measurements are downloaded by the \texttt{collect\_results} task.
 
@@ -876,7 +876,29 @@ The m1.xlarge instances provided enough compute power and much more network band
     \label{tab:instance-types}
 \end{table}
 
+\subsection{Choice of parameters}
+
+XXX
+
+- voting schemes and parameters
+
+- cluster sizes
+
 \subsection{Results}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth, keepaspectratio]{Images/ttc_plain-maj.pdf}
+    \caption[\textsc{ttc} for original Rafter and Majority Voting]{Time to consensus measurements for original Rafter (\enquote{plain}) and the Majority Protocol developed as part of this project (\enquote{majority}).}
+    \label{fig:plain-maj-ttc}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=\textwidth, keepaspectratio]{Images/ttc_maj-tree-grid.pdf}
+    \caption[\textsc{ttc} for different structured voting schemes]{Time to consensus measurements for the Majority Protocol (\enquote{majority}), the Tree Quorum protocol (\enquote{tree2} and \enquote{tree3} with branching factors \(d = 2\) and \(d = 3\), respectively), and the Grid Protocol (\enquote{grid}).}
+    \label{fig:plain-maj-ttc}
+\end{figure}
 
 XXX
 
@@ -927,7 +949,7 @@ Later in the proof, the intersection property is used multiple times. One exampl
 
 Most of the code written for this project is in Erlang. Being a functional programming language, Erlang supports a very dense programming style. Its core libraries (which are imported by default) include modules for working with lists, dictionaries (hashmaps), sets, string, timers, \textsc{i/o} and databases as well as random values, each of which is used in my code at some point, among others.
 
-Just to illustrate this point, I picked a typical line of Erlang code (\cref{lst:erlang-majority}) and \enquote{translated} it into relatively idiomatic \textsc{c}++03 (\cref{lst:cpp-majority}.) Note that the Erlang code only makes use of the built-in module \texttt{dict}, so no imports are required. As a dynamically typed language, Erlang does not need type declarations either, although they \emph{can} be added as annotations to functions for clarity. Thus, the code in \cref{lst:erlang-majority} really does stand on its own, as long as it is wrapped in a function.
+Just to illustrate this point, I picked a typical line of Erlang code (\cref{lst:erlang-majority}) and \enquote{translated} it into relatively idiomatic \textsc{c}++03 (\cref{lst:cpp-majority}). Note that the Erlang code only makes use of the built-in module \texttt{dict}, so no imports are required. As a dynamically typed language, Erlang does not need type declarations either, although they \emph{can} be added as annotations to functions for clarity. Thus, the code in \cref{lst:erlang-majority} really does stand on its own, as long as it is wrapped in a function.
 
 \begin{listing}[h]
     \begin{erlangcode}
