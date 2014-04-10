@@ -621,14 +621,16 @@ In the description of the Grid Protocol above, we assumed that the number of pro
 
 This is clearly not desirable. Instead, the grid structure we impose on the processes is the smallest almost-square grid that all processes can fit in.\footnote{Almost-square here means that \(c\) and \(r\) differ by at most one, so \(|\,c - r\,| \leq 1\).} Specifically, we let \( r = \left\lceil \sqrt{n} \right\rceil \) and
 
-\[ c =
+\begin{equation}
+    c =
     \begin{cases}
         \;\left\lfloor \sqrt{n} \right\rfloor
                  & \text{if } \left\lceil \sqrt{n} \right\rceil
                         \cdot \left\lfloor \sqrt{n} \right\rfloor \geq n \\[0.5em]
         \;\left\lceil \sqrt{n} \right\rceil & \text{otherwise}
     \end{cases}
-\]
+    \label{eq:grid-dims}
+\end{equation}
 
 Note that this implies \(r \geq c\); we are said to be \enquote{favouring rows}. Swapping \(r\) and \(c\) lets us construct grids \enquote{favouring columns}.
 
