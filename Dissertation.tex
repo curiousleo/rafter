@@ -306,7 +306,7 @@ Each client request to a leader contains a command to be executed by the replica
 
 In order to guarantee overall correctness, different components of Raft are designed to make sure certain well-defined safety properties are true at all times (see \cref{sc:rafter-safety} for the complete list.) These properties are shown to hold and then used to prove correctness in the separate correctness proof \autocite{raftproof}.
 
-Since my project involved changing the way in which quorums\footnote{A \emph{quorum} is a minimal subset of the cluster that an operation has to obtain \enquote{yes} votes from in order to be performed. Majority voting, for example, specifies that any set of servers containing at least half the servers in the entire cluster constitutes a quorum.} are constructed, I had to pay special attention to the Election Safety property (stating that there can be at most one leader at any given time) and all the steps in the proof to do with quorums, in order to make sure all the desired properties still hold (see \cref{sc:rafter-proof} for a justification.)
+Since my project involved changing the way in which quorums\footnote{A \emph{quorum} is a minimal subset of the cluster that an operation has to obtain \enquote{Yes} votes from in order to be performed. Majority voting, for example, specifies that any set of servers containing at least half the servers in the entire cluster constitutes a quorum.} are constructed, I had to pay special attention to the Election Safety property (stating that there can be at most one leader at any given time) and all the steps in the proof to do with quorums, in order to make sure all the desired properties still hold (see \cref{sc:rafter-proof} for a justification.)
 
 \section{Introduction to structured voting schemes\label{ssc:structured-voting-schemes}}
 
@@ -512,7 +512,7 @@ Another data type is used in the structured voting code to represent the \emph{s
 
 The core voting algorithm as illustrated in \cref{fig:grid4-state}, in combination with the \texttt{vstate} data structure described above, lends itself well to a recursive implementation: After looking up the paths in the identifier--path dictionary, the function recurses into the tree along the path and updates the vote at the leaf. After the recursive call, it updates the \texttt{yes\_votes} and \texttt{no\_votes} fields of the virtual nodes along the path. The resulting \texttt{vstate} is then returned.
 
-An election is finished when it either succeeds or fails. It succeeds when the root node of the tree-shaped voting structure votes \enquote{yes}; it fails when the root vote \enquote{no}. The voting algorithm I implemented uses a small optimisation to fail early, that is, to vote \enquote{no} as soon as a quorum for \enquote{yes} cannot be reached. This works as follows: when a child node votes \enquote{no}, its parent node check whether the threshold is greater than the maximum number of \enquote{yes} votes that can still be cast: \[ \text{threshold} \overset{?}{>} \text{possible \enquote{yes} votes} = \text{number of children} - \text{\enquote{no} votes} \] If that is the case, then a quorum cannot be formed and the node votes \enquote{no}.
+An election is finished when it either succeeds or fails. It succeeds when the root node of the tree-shaped voting structure votes \enquote{Yes}; it fails when the root vote \enquote{No}. The voting algorithm I implemented uses a small optimisation to fail early, that is, to vote \enquote{No} as soon as a quorum for \enquote{Yes} cannot be reached. This works as follows: when a child node votes \enquote{No}, its parent node check whether the threshold is greater than the maximum number of \enquote{Yes} votes that can still be cast: \[ \text{threshold} \overset{?}{>} \text{possible \enquote{Yes} votes} = \text{number of children} - \text{\enquote{No} votes} \] If that is the case, then a quorum cannot be formed and the node votes \enquote{No}.
 
 \section{Voting structure and election state visualiser\label{sc:visualiser}}
 
@@ -545,7 +545,7 @@ To simplify this translation, I will now introduce two common patterns that will
     \label{fig:tsvs-patterns}
 \end{figure}
 
-Any-nodes have a threshold of one. This means that they pass their vote to their parent as soon as any of their children vote. In logical terms, any-nodes express a logical \emph{or}: In \cref{fig:any}, the root votes if and only if \texttt{A} \emph{or} \texttt{B} \emph{or} \texttt{C} vote. More formally, if for a process \(p\), \(p = \text{true}\) denotes that \(p\) votes \enquote{yes},
+Any-nodes have a threshold of one. This means that they pass their vote to their parent as soon as any of their children vote. In logical terms, any-nodes express a logical \emph{or}: In \cref{fig:any}, the root votes if and only if \texttt{A} \emph{or} \texttt{B} \emph{or} \texttt{C} vote. More formally, if for a process \(p\), \(p = \text{true}\) denotes that \(p\) votes \enquote{Yes},
 
 \[ \text{any-node} = \bigvee_{p\,\in\,\text{Children}(\text{any-node})} p \]
 
@@ -566,7 +566,7 @@ The Majority Protocol (also know as Majority Consensus Voting\autocite{majority}
     \label{fig:majority5-struct}
 \end{figure}
 
-This voting structure has a rigid format, which allows for a straightforward implementation: It consists of \(n\) physical nodes, all sharing the same virtual parent node (which also acts as the root of the tree-shaped voting structure). Each physical node has one vote, and the threshold of the root node is \(\left\lceil (n + 1) / 2 \right\rceil\), so the election is won as soon as this many physical nodes vote \enquote{yes}. An example for a Majority Protocol voting structure with five processes and a corresponding threshold of three is given in \cref{fig:majority5-struct}.
+This voting structure has a rigid format, which allows for a straightforward implementation: It consists of \(n\) physical nodes, all sharing the same virtual parent node (which also acts as the root of the tree-shaped voting structure). Each physical node has one vote, and the threshold of the root node is \(\left\lceil (n + 1) / 2 \right\rceil\), so the election is won as soon as this many physical nodes vote \enquote{Yes}. An example for a Majority Protocol voting structure with five processes and a corresponding threshold of three is given in \cref{fig:majority5-struct}.
 
 \subsection{Grid Protocol\label{ssc:grid}}
 
