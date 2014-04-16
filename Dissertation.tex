@@ -843,7 +843,7 @@ The QuickCheck tests, in their simplest form, consist of \emph{generators} (not 
 
 In order to compare the performance of my voting algorithms with those used in the original Rafter code, and to see how different voting schemes scale with the number of nodes, I designed, scripted and ran a series of benchmarks in the Amazon Elastic Compute Cloud. Overall, it took me over a month to set everything up in a way such that useful data could be acquired.
 
-\subsection{Amazon \ECC set-up}
+\subsection[Amazon EC2 set-up]{Amazon \ECC set-up}
 
 New instances in the Amazon Elastic Compute Cloud are created from virtual appliances called \enquote{Amazon Machine Images} (\textsc{ami}s). Amazon's own default \textsc{ami} does not have the latest version of the Erlang platform in its package sources, so I based my custom \textsc{ami} on an Arch Linux image instead.\footnote{Project \enquote{Arch Linux on \ECC}: \url{https://www.uplinklabs.net/projects/arch-linux-on-ec2/}} I created an instance of the Arch \textsc{ami}, installed Erlang and a few standard tools and built libMemcached from source, as all distributions I checked had building \texttt{memaslap} disabled by default.
 
