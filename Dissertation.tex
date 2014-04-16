@@ -279,6 +279,12 @@ At its core, Raft uses a replicated state machine architecture, implemented usin
 
 Raft implements this replicated log architecture using a collections of servers (a cluster) communicating via remote procedure calls (\textsc{rpc}s), of which there are two: \texttt{appendEntries} and \texttt{requestVote}. At any given time each server is either a \emph{leader}, \emph{follower}, or \emph{candidate} (see \cref{fig:consensus-fsm}). In normal operation, there is exactly one leader and all other servers are followers.
 
+This requirement for each server to be in a specific state at any time makes it an \emph{asymmetric} consensus algorithm, as opposed to Paxos, which is \emph{symmetric} since it has no concept of \enquote{roles}. The designers of Raft made a conscious decision to build an asymmetric voting algorithm since it suits their philosophy of decomposition well:
+
+\begin{quote}
+    Raft implements consensus by first electing a distinguished leader, then giving the leader complete responsibility for managing the replicated log.\autocite[section 5]{raft}
+\end{quote}
+
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.5\textwidth, keepaspectratio]{Images/Consensus_FSM.pdf}
