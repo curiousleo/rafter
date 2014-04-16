@@ -439,13 +439,15 @@ The choice of Erlang and Rafter then determined my primary programming toolkit f
     \item[Dialyzer] The \enquote{Discrepancy Analyzer for Erlang programs} is used to statically type check Erlang programs.
 \end{description}
 
-\subsection{Amazon \ECC and benchmarking\label{ssc:ec2-benchmarking}}
+\subsection{Benchmarking in the Amazon Elastic Compute Cloud\label{ssc:ec2-benchmarking}}
 
-Orchestrating a cluster of Amazon Elastic Compute Cloud instances and running benchmarks required an altogether different set of tools.
+In order to test and benchmark my code in a real-world environment, it was decided early on that I would run the project on a cluster of servers in the Amazon Elastic Compute Cloud (Amazon \textsc{ec2}). This allowed me to execute Rafter on up to twenty instances within the same data centre.
+
+Orchestrating a cluster of Amazon \ECC instances and running benchmarks required its own set of tools.
 
 \begin{description}
-    \item[Fabric] is a Python library and command-line tool for streamlining the use of \textsc{ssh} for application deployment or systems administration tasks.\footnote{Fabric: \url{http://fabfile.org}}. Administrative functions like starting an Erlang node on an instance or compiling Rafter were defined as \emph{tasks} within the Fabric framework, which could then be executed on arbitrary \ECC instances with the help of the \enquote{awsfabrictasks} plugin.\footnote{awsfabrictasks: \url{https://awsfabrictasks.readthedocs.org/en/latest/}}
-    \item[Boto] is a Python interface to Amazon Web Services. Awsfabrictasks is built on top of Boto, but sometimes I had to use it directly to accomplish more complex tasks.
+    \item[Fabric] is a Python library and command-line tool for streamlining the use of \textsc{ssh} for application deployment or systems administration tasks.\footnote{Fabric: \url{http://fabfile.org}} Administrative functions like starting an Erlang node on an instance or compiling Rafter were defined as \emph{tasks} within the Fabric framework, which could then be executed on arbitrary \ECC instances with the help of the \enquote{awsfabrictasks} plugin.\footnote{awsfabrictasks: \url{https://awsfabrictasks.readthedocs.org/en/latest/}}
+    \item[Boto] is a Python interface to Amazon Web Services. Awsfabrictasks is built on top of Boto, but I occasionally needed to use Boto's lower-level functionality directly.
     \item[Memaslap] was used to generate a test load on the cluster. It is part of libMemcached, an open source client library and toolset for the Memcached server.\footnote{libMemcached: \url{http://libmemcached.org}} It is highly configurable, but still in an early phase of development, which required me to patch its Makefile in order to get it to compile.
 \end{description}
 
