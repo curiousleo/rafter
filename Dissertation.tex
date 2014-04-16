@@ -841,7 +841,7 @@ The benchmarks were automated using Fabric and the awsfabrictasks plugin. A task
 
 The \textit{benchmark} task uses these helper functions as follows: For each combination of cluster size, protocol and failure mode that is to be tested, the procedure starts by deploying the latest version of the project source code to all instances as required and compiling it (using the \texttt{deploy} task). It then starts up an Erlang node with a fresh name on each of them. These nodes start in follower state and with an empty initial configuration.
 
-Next, the leader is reconfigured using the \texttt{configure} task. Then \texttt{memaslap} is run, its results as well as the time to consensus measurements are downloaded by the \texttt{collect\_results} task.
+Next, the leader is reconfigured using the \texttt{configure} task. Then \texttt{memaslap} is run, and its results as well as the time to consensus measurements are downloaded by the \texttt{collect\_results} task.
 
 \subsection[Amazon EC2 set-up]{Amazon \ECC set-up}
 
