@@ -484,7 +484,7 @@ In the second stage, I set up the benchmarking environment. This included adding
 
 \section{Voting algorithm and data types\label{sc:voting-algo}}
 
-I started the implementation of the project by defining the data structures used to represent voting structures and election states. These would be passed around between different components, and designing them well was therefore a high priority.
+I started the implementation of the project by defining the data structures used to represent voting structures and voting states. These would be passed around between different components, and designing them well was therefore a high priority.
 
 The data structure which represents a \emph{voting structure} has two components:
 
@@ -498,25 +498,25 @@ The data structure which represents a \emph{voting structure} has two components
 \begin{figure}[p]
     \centering
     \includegraphics[height=\dimexpr \textheight - 9\baselineskip \relax, keepaspectratio]{Images/Grid4-state.pdf}
-    \caption[An election using the Grid Protocol]{An election using the Grid Protocol. Each node has one vote. \texttt{A} votes first (maroon). \(V_4\) has a threshold of one, so it votes as well. \(V_2\) and \(V_6\) both have threshold two, so their votes are pending. Then \texttt{B} votes (blue), triggering a vote from \(V_5\). Now both \(V_4\) and \(V_5\) have voted, so \(V_2\)'s threshold of two is reached and it votes, too. At this stage, \(V_1\) and \(V_7\) each require one more vote. Lastly, \texttt{C} votes (green). \(V_4\) has already voted, so nothing happens in this branch. \(V_6\) receives a second vote, so it passes its vote to \(V_3\), immediately triggering it to vote to the root node \(V_1\), where the threshold is now reached, ending the election.}
+    \caption[A vote using the Grid Protocol]{A vote using the Grid Protocol. Each node has one vote. \texttt{A} votes first (maroon). \(V_4\) has a threshold of one, so it votes as well. \(V_2\) and \(V_6\) both have threshold two, so their votes are pending. Then \texttt{B} votes (blue), triggering a vote from \(V_5\). Now both \(V_4\) and \(V_5\) have voted, so \(V_2\)'s threshold of two is reached and it votes, too. At this stage, \(V_1\) and \(V_7\) each require one more vote. Lastly, \texttt{C} votes (green). \(V_4\) has already voted, so nothing happens in this branch. \(V_6\) receives a second vote, so it passes its vote to \(V_3\), immediately triggering it to vote to the root node \(V_1\), where the threshold is now reached, ending the vote.}
     \label{fig:grid4-state}
 \end{figure}
 
-Another data type is used in the structured voting code to represent the \emph{state of an election}. Both are implemented as record types in Erlang, and are called \texttt{vstruct} and \texttt{vstate}, respectively; their internal structure is very similar (see \cref{lst:voting-types} for the full definition.) \texttt{vstate} additionally contains information about what a physical node has voted for (\texttt{true}, \texttt{false} or \texttt{pending}), and a summary of the children's votes in case of a virtual node (represented as integer fields \texttt{yes\_nodes} and \texttt{no\_nodes}). They are used as follows:
+Another data type is used in the structured voting code to represent the \emph{state of a vote}. Both are implemented as record types in Erlang, and are called \texttt{vstruct} and \texttt{vstate}, respectively; their internal structure is very similar (see \cref{lst:voting-types} for the full definition.) \texttt{vstate} additionally contains information about what a physical node has voted for (\texttt{true}, \texttt{false} or \texttt{pending}), and a summary of the children's votes in case of a virtual node (represented as integer fields \texttt{yes\_nodes} and \texttt{no\_nodes}). They are used as follows:
 
 \begin{enumerate}
     \item A voting structure generator creates a \texttt{vstruct}.
-    \item This voting structure is used to initialise a new election state \texttt{vstate}.
-    \item The election state is updated by the voting algorithm whenever new votes arrive until the election succeeds or fails.
+    \item This voting structure is used to initialise a new voting state \texttt{vstate}.
+    \item The voting state is updated by the voting algorithm whenever new votes arrive until the vote succeeds or fails.
 \end{enumerate}
 
 The core voting algorithm as illustrated in \cref{fig:grid4-state}, in combination with the \texttt{vstate} data structure described above, lends itself well to a recursive implementation: After looking up the paths in the identifier--path dictionary, the function recurses into the tree along the path and updates the vote at the leaf. After the recursive call, it updates the \texttt{yes\_votes} and \texttt{no\_votes} fields of the virtual nodes along the path. The resulting \texttt{vstate} is then returned.
 
-An election is finished when it either succeeds or fails. It succeeds when the root node of the tree-shaped voting structure votes \enquote{Yes}; it fails when the root vote \enquote{No}. The voting algorithm I implemented uses a small optimisation to fail early, that is, to vote \enquote{No} as soon as a quorum for \enquote{Yes} cannot be reached. This works as follows: when a child node votes \enquote{No}, its parent node check whether the threshold is greater than the maximum number of \enquote{Yes} votes that can still be cast: \[ \text{threshold} \overset{?}{>} \text{possible \enquote{Yes} votes} = \text{number of children} - \text{\enquote{No} votes} \] If that is the case, then a quorum cannot be formed and the node votes \enquote{No}.
+A vote is finished when it either succeeds or fails. It succeeds when the root node of the tree-shaped voting structure votes \enquote{Yes}; it fails when the root vote \enquote{No}. The voting algorithm I implemented uses a small optimisation to fail early, that is, to vote \enquote{No} as soon as a quorum for \enquote{Yes} cannot be reached. This works as follows: when a child node votes \enquote{No}, its parent node check whether the threshold is greater than the maximum number of \enquote{Yes} votes that can still be cast: \[ \text{threshold} \overset{?}{>} \text{possible \enquote{Yes} votes} = \text{number of children} - \text{\enquote{No} votes} \] If that is the case, then a quorum cannot be formed and the node votes \enquote{No}.
 
-\section{Voting structure and election state visualiser\label{sc:visualiser}}
+\section{Voting structure and voting state visualiser\label{sc:visualiser}}
 
-Once the Erlang representation of voting structures and election states was fixed, I wrote a visualiser module for them. This allowed me to visually debug my voting algorithm and the voting structure generators.
+Once the Erlang representation of voting structures and voting states was fixed, I wrote a visualiser module for them. This allowed me to visually debug my voting algorithm and the voting structure generators.
 
 The visualiser module generates output in the \textsc{dot} graph description language. A \textsc{dot} node is written out for each node in the tree, and edges connect parents and their children. The \texttt{dot} program, which is part of the Graphviz package from \textsc{at\&t} Labs Research, was then used to create \textsc{pdf} or \textsc{svg} files for display.\footnote{Graphviz (short for Graph Visualisation Software): \url{http://graphviz.org}}
 
@@ -566,7 +566,7 @@ The Majority Protocol (also know as Majority Consensus Voting\autocite{majority}
     \label{fig:majority5-struct}
 \end{figure}
 
-This voting structure has a rigid format, which allows for a straightforward implementation: It consists of \(n\) physical nodes, all sharing the same virtual parent node (which also acts as the root of the tree-shaped voting structure). Each physical node has one vote, and the threshold of the root node is \(\left\lceil (n + 1) / 2 \right\rceil\), so the election is won as soon as this many physical nodes vote \enquote{Yes}. An example for a Majority Protocol voting structure with five processes and a corresponding threshold of three is given in \cref{fig:majority5-struct}.
+This voting structure has a rigid format, which allows for a straightforward implementation: It consists of \(n\) physical nodes, all sharing the same virtual parent node (which also acts as the root of the tree-shaped voting structure). Each physical node has one vote, and the threshold of the root node is \(\left\lceil (n + 1) / 2 \right\rceil\), so the vote is decided as soon as this many physical nodes vote \enquote{Yes}. An example for a Majority Protocol voting structure with five processes and a corresponding threshold of three is given in \cref{fig:majority5-struct}.
 
 \subsection{Grid Protocol\label{ssc:grid}}
 
@@ -780,7 +780,7 @@ The second larger issue I found was a problem with a very common use case that w
 
 \section{Summary}
 
-In this chapter, I described the implementation of the structured voting extension for Rafter, and the set-up required for benchmarking. The chapter started with a description of the data types used to represent voting structures and election state. I briefly talked about the visualiser, which was used to visually debug the voting algorithms and the voting structure generators.
+In this chapter, I described the implementation of the structured voting extension for Rafter, and the set-up required for benchmarking. The chapter started with a description of the data types used to represent voting structures and voting state. I briefly talked about the visualiser, which was used to visually debug the voting algorithms and the voting structure generators.
 
 The voting structures for the Majority Protocol, the Grid Protocol and the Tree Quorum Protocol were derived and explained. I described the process of integrating my structured voting code into Rafter before detailing the two extensions to Rafter I implemented to make benchmarking possible: the Memcached frontend and failure simulation. Finally, I mentioned the bug reports and pull requests I created for various pieces of software I used in this project.
 
@@ -1012,7 +1012,7 @@ for(std::map<id, paths_t>::iterator indices_it = indices.begin();
 
 \newpage
 
-\section{Voting structure and election state type specifications\label{sc:voting-types}}
+\section{Voting structure and voting state type specifications\label{sc:voting-types}}
 
 \begin{listing}[h]
     \begin{erlangcode}
@@ -1034,7 +1034,7 @@ for(std::map<id, paths_t>::iterator indices_it = indices.begin();
           indices :: dict()
 }).
 
-% election state records
+% voting state records
 -record(vstate_p, {
           votes = 1 :: pos_integer(),
           vote = pending :: vote()
@@ -1072,7 +1072,7 @@ This generator function is used wherever a test requires a voting structure. As 
 
 \subsection{Property example\label{ssc:property}}
 
-The file \texttt{test/rafter\_voting\_majority\_eqc.erl} defines a property of the Majority Protocol in the function \texttt{prop\_majority\_quorum()}. In essence, this property states that an election succeeds if and only if more than half of the nodes agree (\(v \ge \left\lceil n \, / \, 2 \right\rceil \), where \(v\) is the number of votes and \(n\) the total number of processes.)
+The file \texttt{test/rafter\_voting\_majority\_eqc.erl} defines a property of the Majority Protocol in the function \texttt{prop\_majority\_quorum()}. In essence, this property states that a vot succeeds if and only if more than half of the nodes agree (\(v \ge \left\lceil n \, / \, 2 \right\rceil \), where \(v\) is the number of votes and \(n\) the total number of processes.)
 
 
 % \listoffigures
