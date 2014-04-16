@@ -196,7 +196,7 @@ As ever-increasing amounts of data are being handled in commercial settings as w
 
 According to Eric Brewer's famous \textsc{cap} theorem \autocite{cap}, a partition tolerant system cannot be both strictly consistent and maximally available.\footnote{The terms consistency, availability and partition tolerance are defined in \cref{ssc:cap-acid-and-base}.} Many recent distributed data stores sacrifice consistency for availability. Some applications, however, require strong consistency guarantees -- data backup and configuration management systems, for example. Consensus protocols like Paxos \autocite{paxos} and Raft \autocite{raft} guarantee consistency at the cost of decreased availability.
 
-In this project, I added support for structured voting schemes to an existing implementation of Raft. My aim was increase the availability and scalability of data storage systems built on top of this implementation while still providing the same consistency guarantees as the original Raft algorithm.
+In this project, I added support for structured voting schemes to an existing implementation of Raft. My aim was increase the availability and scalability of data storage systems built on top of this implementation while still providing the same consistency guarantees as the original Raft algorithm. Regarding availability, structured voting schemes are more flexible than unstructured voting schemes like the Majority Protocol, and can in some cases be tailored to resist certain failure modes. Concerning scalability, the number of nodes involved in an election is always \(O(n)\) for any reasonable unstructured voting scheme. Structured voting schemes, on the other hand, can allow for elections with fewer nodes.
 
 \section{Challenges\label{sc:challenges}}
 
