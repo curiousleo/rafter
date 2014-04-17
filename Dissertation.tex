@@ -572,18 +572,18 @@ This voting structure has a rigid format, which allows for a straightforward imp
 
 \subsection{Grid Protocol\label{ssc:grid}}
 
-The Grid Protocol was introduced in the Preparation chapter as an example for a structured voting scheme (see \cref{voting-example}). It arranges processes in a logical rectangular grid \autocite{grid}; a quorum consists of all processes from a complete column plus one process from each column.
+The Grid Protocol was introduced in the Preparation chapter as an example for a structured voting scheme (see \cref{voting-example}). It arranges processes in a logical rectangular grid \autocite{grid}; a quorum consists of one process from each column plus all processes from a complete column.
 
 Assuming for now that our nodes fit into a rectangular \(c \times r\) grid so that \(n = c r\) we can translate the requirements of this specification into a voting structure as follows:
 
 \begin{description}
-    \item[\enquote{all processes from a complete column}] This means that there must be one column such that every process in that column has voted. The literature calls this the \textsc{cc}-cover, for \emph{complete column cover}. In logical terms, it can be expressed as \(\bigvee_c \bigwedge_{p\,\in\,c} p \), where \(c\) ranges over the columns.
+    \item[\enquote{one process from each column}] This means that for each column, there must be one process which has voted. The literature calls this the \textsc{c}-cover, for \emph{column cover}. In logical terms, it can be expressed as \(\bigwedge_c \bigvee_{p\,\in\,c} p \), where \(c\) ranges over the columns.
 
-        Using the analogy between logic and tree-shaped voting structures introduced at the beginning of this section, we can translate this formula into a voting substructure as follows: for each column \(c\), there is an all-node whose children are the processes in that column (this models \(\bigwedge_{p\,\in\,c} p \).) The root of the substructure is an any-node, which has the all-nodes as its children, giving \(\bigvee_c \bigwedge_{p\,\in\,c} p \) altogether. It is the \enquote{\textsc{cc}-cover subroot} in \cref{fig:grid4-covers}.
+        Using the analogy between logic and tree-shaped voting structures introduced at the beginning of this section, we can translate this formula into a voting substructure as follows: for each column \(c\), there is an any-node whose children are the processes in that column (this models \(\bigvee_{p\,\in\,c} p \)). The root of the substructure is an all-node, which has the any-nodes as its children, giving \(\bigwedge_c \bigvee_{p\,\in\,c} p \) altogether. It is the \enquote{\textsc{c}-cover subroot} in \cref{fig:grid4-covers}.
 
-    \item[\enquote{one process from each column}] Translating this requirement (called \textsc{c}-cover for \emph{column cover}) into logic, we have \(\bigwedge_c \bigvee_{p\,\in\,c} p \).
+    \item[\enquote{all processes from a complete column}] Translating this requirement (called \textsc{cc}-cover for \emph{complete column cover}) into logic, we have \(\bigvee_c \bigwedge_{p\,\in\,c} p \).
 
-        We model this expression as a tree-shaped voting structure as follows: for each column \(c\), we add an any-node whose children are the processes in that column (giving us \(\bigvee_{p\,\in\,c} p \)). These any-nodes are given an all-node as their parent, modelling \(\bigwedge_c \bigvee_{p\,\in\,c} p \). This node is called \enquote{\textsc{c}-cover subroot} in \cref{fig:grid4-covers}.
+        We transform this expression into a tree-shaped voting structure as follows: for each column \(c\), we add an all-node whose children are the processes in that column (giving \(\bigwedge_{p\,\in\,c} p \)). These all-nodes are given an any-node as their parent, modelling \(\bigvee_c \bigwedge_{p\,\in\,c} p \). This node is called \enquote{\textsc{cc}-cover subroot} in \cref{fig:grid4-covers}.
 \end{description}
 
 \begin{figure}[h]
