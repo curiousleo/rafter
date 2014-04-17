@@ -623,14 +623,14 @@ The slots in the grid that are not taken up by a process are then considered to 
 
 \subsection{(Generalised) Tree Quorum Protocol\label{ssc:tree}}
 
-The Tree Quorum Protocol \autocite{tree} comes in many flavours which allows for different trade-offs between read and write quorum size to be made.\footnote{Remember that \emph{read quorums} are minimal subsets of the cluster that have to vote \enquote{Yes} in order for a \emph{read} operation to be performed; \emph{write quorums} are defined analogously.} For my voting structure generator, I picked the variant with the smallest write quorum called \enquote{log write protocol}.\footnote{The complete \enquote{log write protocol} comes with the smallest write quorums and the largest read quorums. The latter should generally to be avoided, but for the purposes of this project, they do not matter since we're only using write quorums for the leader elections.}
+The Tree Quorum Protocol \autocite{tree} comes in many flavours which allows for different trade-offs between read and write quorum size to be made.\footnote{Remember that \emph{read quorums} are minimal subsets of the cluster that have to vote \enquote{Yes} in order for a \emph{read} operation to be performed; \emph{write quorums} are defined analogously.} For my voting structure generator, I picked the variant with the smallest write quorum called \enquote{log write protocol}.\footnote{The complete \enquote{log write protocol} comes with the smallest write quorums and the largest read quorums. The latter should generally to be avoided, but for the purposes of this project, the size of write quorums does not matter since read quorums are disregarded: only write quorums are used for the leader elections.}
 
 In this protocol, the processes are logically arranged in a tree of degree \(d\) (meaning that every parent has \(d\) children). For now, we assume that the tree is complete, that is, it has the maximum number of nodes. A quorum is then defined as any set of nodes forming a path from the root to any leaf of the tree.
 
 \begin{figure}[h]
     \centering
     \includegraphics[scale=.75]{Images/Tree3_13.pdf}
-    \caption{Voting structure for the Tree Quorum Protocol based on a ternary tree with 13 processes. Processes \texttt{A}, \texttt{F} and \texttt{G} have voted. They lie on a path from the root (\texttt{A}) to a leaf (\texttt{G}), so they form a quorum. The dotted grey lines are not part of the voting structure proper; they only indicate how the original tree is preserved in the voting structure.}
+    \caption{Voting structure for the Tree Quorum Protocol based on a ternary tree with 13 processes. Processes \texttt{A}, \texttt{F} and \texttt{G} have voted \enquote{Yes}. They lie on a path from the root (\texttt{A}) to a leaf (\texttt{G}), so they form a quorum.}
     \label{fig:grid3_13}
 \end{figure}
 
