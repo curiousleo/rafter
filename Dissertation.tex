@@ -745,11 +745,30 @@ Since \(t\) is an inter-event time, generating it using an exponential distribut
 In order to collect benchmarking data, I created a simple logging module. This module implements the \emph{gen\_server} behaviour defined in the \textsc{otp}. It runs in a separate process under its own supervisor. The logger receives messages in a certain format from other components of the system, and writes the values out in a comma-separated values (\textsc{csv}) file. The fields recorded in the \textsc{csv} file are
 
 \begin{description}
-    \item[experiment] the voting scheme used and its parameters, if any;
-    \item[cluster] the number of nodes in the cluster;
-    \item[operation] \texttt{R} for read or \texttt{W} for write;
+    \item[Experiment] the voting scheme used and its parameters, if any;
+    \item[Cluster] the number of nodes in the cluster;
+    \item[Operation] \texttt{Read} or \texttt{Write};
     \item[\textsc{ttc}] time to consensus: the time taken between receiving the request and returning its result to the client.
 \end{description}
+
+\begin{table}[h]
+    \centering
+    \begin{tabularx}{.5\textwidth}{X r l r}
+        \toprule
+        \textit{Experiment} & \textit{Cluster} & \textit{Operation} & \textit{\textsc{ttc}} \\
+        \midrule
+        \multicolumn{4}{c}{\(\vdots\)} \\
+        Majority & 3 & Write & 2920 \\
+        Majority & 3 & Read & 2166 \\
+        \multicolumn{4}{c}{\(\vdots\)} \\
+        Grid & 11 & Write & 9801 \\
+        Grid & 11 & Read & 7269 \\
+        \multicolumn{4}{c}{\(\vdots\)} \\
+        \bottomrule
+    \end{tabularx}
+    \caption[Example TTC log snippet]{Example \textsc{ttc} log snippet}
+    \label{tab:csv}
+\end{table}
 
 Rafter puts information related to a specific request in a record of type \texttt{client\_req}. For logging purposes, I added a field \texttt{started} to it, which is initialised to the current system time whenever a new client request record is created.
 
