@@ -926,6 +926,10 @@ The purpose of the benchmarks was twofold: to find the overhead caused by adding
 
 \Cref{fig:plain-maj-ttc} shows time to consensus (\textsc{ttc}, y-axis) as a function of the cluster size (x-axis). The two curves have the same shape: this is to be expected, since the quorum finding mechanism works in precisely the same way. The time to consensus for the original Rafter implementation without structured voting schemes (the \enquote{plain} curve in the graph) is consistently smaller, and the difference between the two curves increases with the number of nodes in the cluster. In other words, for clusters with less than 20 nodes at least, computing quorums under the Majority Protocol takes roughly \SI{300}{\micro\second} longer per node than with the original Rafter implementation.
 
+This was to be expected: the voting scheme which is implemented by original Rafter is the same as the Majority Protocol, but the implementation is very different. In the original Rafter code, checking if a quorum has been found amounts to checking whether or not the number of \enquote{Yes} votes received is greater than half the number of servers. With the Majority Protocol, on the other hand, a new voting state is created whenever a new vote takes place, and a tree-walking algorithm updates it whenever a new vote comes in. It should come as no surprise that this takes longer.
+
+A more interesting aspect is the seemingly linear relationship between the size of the cluster and the difference in time to consensus between the Majority Protocol and original Rafter. This can be explained as follows: whenever a new vote comes in, the root node \enquote{accumulates} all votes, that is, it updates the number of \enquote{Yes} and \enquote{No} votes it has seen by looking at its children. But the number of children of the root node in the Majority Protocol voting structure is precisely the size of the cluster, which means that for every incoming node, updating the voting state takes \(O(n)\) time.
+
 \minisec{Comparison between different structured voting schemes}
 
 \begin{figure}[p]
