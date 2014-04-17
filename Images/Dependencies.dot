@@ -1,5 +1,5 @@
 digraph vstruct {
-node [shape=Mrecord];
+node [shape=Mrecord, fontname="Kp"];
 edge [dir=back];
 
 typ [label="Voting structure and state type specification"];

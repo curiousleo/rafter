@@ -12,27 +12,27 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="721.375"
-   height="418.25"
-   viewBox="0 0 577.1 334.6"
-   id="svg2"
+   width="645pt"
+   height="342pt"
+   viewBox="0.00 0.00 645.00 342.00"
+   id="svg5007"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="Dependencies.svg">
+   sodipodi:docname="Dependencies2.svg">
   <metadata
-     id="metadata188">
+     id="metadata5193">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <defs
-     id="defs186" />
+     id="defs5191" />
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -42,564 +42,329 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1366"
-     inkscape:window-height="702"
-     id="namedview184"
+     inkscape:window-width="835"
+     inkscape:window-height="694"
+     id="namedview5189"
      showgrid="false"
-     inkscape:zoom="0.83156089"
-     inkscape:cx="342.13508"
-     inkscape:cy="174.19735"
+     inkscape:zoom="0.76155039"
+     inkscape:cx="362.55935"
+     inkscape:cy="225.99091"
      inkscape:window-x="0"
      inkscape:window-y="27"
-     inkscape:window-maximized="1"
-     inkscape:current-layer="svg2"
-     fit-margin-top="0"
-     fit-margin-left="0"
-     fit-margin-right="0"
-     fit-margin-bottom="0" />
+     inkscape:window-maximized="0"
+     inkscape:current-layer="svg5007" />
   <g
-     id="g3266-1"
-     transform="translate(-1.9,-2.4)"
-     style="fill:#747474;fill-opacity:1;stroke:none">
-    <g
-       transform="translate(4,338)"
-       id="node1-4"
-       class="node"
-       style="fill:#747474;fill-opacity:1;stroke:none">
-      <title
-         id="title10-3">typ</title>
-      <path
-         d="m 87.5,-297 c 0,0 233,0 233,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -233,0 -233,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-         id="path12-9"
-         inkscape:connector-curvature="0"
-         style="fill:#747474;fill-opacity:1;stroke:none" />
-      <text
-         x="204"
-         y="-311.29999"
-         font-size="14.00"
-         id="text14-4"
-         style="font-size:14px;text-anchor:middle;fill:#747474;fill-opacity:1;stroke:none;font-family:'Times,serif'">Voting structure and state type specification</text>
-    </g>
-    <g
-       transform="translate(4,338)"
-       id="node2-1"
-       class="node"
-       style="fill:#747474;fill-opacity:1;stroke:none">
-      <title
-         id="title17-8">vot</title>
-      <path
-         d="m 12,-223 c 0,0 114,0 114,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -114,0 -114,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-         id="path19-8"
-         inkscape:connector-curvature="0"
-         style="fill:#747474;fill-opacity:1;stroke:none" />
-      <text
-         x="69"
-         y="-237.3"
-         font-size="14.00"
-         id="text21-3"
-         style="font-size:14px;text-anchor:middle;fill:#747474;fill-opacity:1;stroke:none;font-family:'Times,serif'">Core voting algorithm</text>
-    </g>
-    <g
-       transform="translate(4,338)"
-       id="node3-6"
-       class="node"
-       style="fill:#747474;fill-opacity:1;stroke:none">
-      <title
-         id="title31-3">viz</title>
-      <path
-         d="m 244.5,-223 c 0,0 137,0 137,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -137,0 -137,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-         id="path33-7"
-         inkscape:connector-curvature="0"
-         style="fill:#747474;fill-opacity:1;stroke:none" />
-      <text
-         x="313"
-         y="-237.3"
-         font-size="14.00"
-         id="text35-8"
-         style="font-size:14px;text-anchor:middle;fill:#747474;fill-opacity:1;stroke:none;font-family:'Times,serif'">Voting structure visualiser</text>
-    </g>
-    <g
-       transform="translate(4,338)"
-       id="node4-7"
-       class="node"
-       style="fill:#747474;fill-opacity:1;stroke:none">
-      <title
-         id="title45-8">maj</title>
-      <path
-         d="m 109.5,-149 c 0,0 95,0 95,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -95,0 -95,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-         id="path47-9"
-         inkscape:connector-curvature="0"
-         style="fill:#747474;fill-opacity:1;stroke:none" />
-      <text
-         x="157"
-         y="-163.3"
-         font-size="14.00"
-         id="text49-0"
-         style="font-size:14px;text-anchor:middle;fill:#747474;fill-opacity:1;stroke:none;font-family:'Times,serif'">Majority generator</text>
-    </g>
-    <g
-       transform="translate(4,338)"
-       id="node5-8"
-       class="node"
-       style="fill:#747474;fill-opacity:1;stroke:none">
-      <title
-         id="title59-8">grd</title>
-      <path
-         d="m 247,-149 c 0,0 72,0 72,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -72,0 -72,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-         id="path61-0"
-         inkscape:connector-curvature="0"
-         style="fill:#747474;fill-opacity:1;stroke:none" />
-      <text
-         x="283"
-         y="-163.3"
-         font-size="14.00"
-         id="text63-2"
-         style="font-size:14px;text-anchor:middle;fill:#747474;fill-opacity:1;stroke:none;font-family:'Times,serif'">Grid generator</text>
-    </g>
-    <g
-       transform="translate(4,338)"
-       id="node6-1"
-       class="node"
-       style="fill:#747474;fill-opacity:1;stroke:none">
-      <title
-         id="title73-2">tri</title>
-      <path
-         d="m 361,-149 c 0,0 122,0 122,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -122,0 -122,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-         id="path75-2"
-         inkscape:connector-curvature="0"
-         style="fill:#747474;fill-opacity:1;stroke:none" />
-      <text
-         x="422"
-         y="-163.3"
-         font-size="14.00"
-         id="text77-6"
-         style="font-size:14px;text-anchor:middle;fill:#747474;fill-opacity:1;stroke:none;font-family:'Times,serif'">Tree Quorum generator</text>
-    </g>
-    <g
-       transform="translate(4,338)"
-       id="node7-0"
-       class="node"
-       style="fill:#747474;fill-opacity:1;stroke:none">
-      <title
-         id="title87-1">raf</title>
-      <path
-         d="m 175.5,-75 c 0,0 89,0 89,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -89,0 -89,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-         id="path89-5"
-         inkscape:connector-curvature="0"
-         style="fill:#747474;fill-opacity:1;stroke:none" />
-      <text
-         x="220"
-         y="-89.300003"
-         font-size="14.00"
-         id="text91-4"
-         style="font-size:14px;text-anchor:middle;fill:#747474;fill-opacity:1;stroke:none;font-family:'Times,serif'">Rafter integration</text>
-    </g>
-    <g
-       transform="translate(4,338)"
-       id="node10-2"
-       class="node"
-       style="fill:#747474;fill-opacity:1;stroke:none">
-      <title
-         id="title143-9">ana</title>
-      <path
-         d="m 290.5,-1 c 0,0 143,0 143,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -143,0 -143,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-         id="path145-7"
-         inkscape:connector-curvature="0"
-         style="fill:#747474;fill-opacity:1;stroke:none" />
-      <text
-         x="362"
-         y="-15.3"
-         font-size="14.00"
-         id="text147-9"
-         style="font-size:14px;text-anchor:middle;fill:#747474;fill-opacity:1;stroke:none;font-family:'Times,serif'">Benchmarking and analysis</text>
-    </g>
-    <g
-       transform="translate(4,338)"
-       id="node8-4"
-       class="node"
-       style="fill:#747474;fill-opacity:1;stroke:none">
-      <title
-         id="title157-7">mem</title>
-      <path
-         d="m 307,-75 c 0,0 110,0 110,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -110,0 -110,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-         id="path159-3"
-         inkscape:connector-curvature="0"
-         style="fill:#747474;fill-opacity:1;stroke:none" />
-      <text
-         x="362"
-         y="-89.300003"
-         font-size="14.00"
-         id="text161-7"
-         style="font-size:14px;text-anchor:middle;fill:#747474;fill-opacity:1;stroke:none;font-family:'Times,serif'">Memcached frontend</text>
-    </g>
-    <g
-       transform="translate(4,338)"
-       id="node9-7"
-       class="node"
-       style="fill:#747474;fill-opacity:1;stroke:none">
-      <title
-         id="title171-3">ec2</title>
-      <path
-         d="m 459,-75 c 0,0 104,0 104,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -104,0 -104,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-         id="path173-1"
-         inkscape:connector-curvature="0"
-         style="fill:#747474;fill-opacity:1;stroke:none" />
-      <text
-         x="511"
-         y="-89.300003"
-         font-size="14.00"
-         id="text175-3"
-         style="font-size:14px;text-anchor:middle;fill:#747474;fill-opacity:1;stroke:none;font-family:'Times,serif'">Amazon EC2 set-up</text>
-    </g>
-  </g>
-  <g
-     class="edge"
-     id="edge2"
-     transform="translate(0.5,333.5)">
-    <title
-       id="title24">typ-&gt;vot</title>
+     id="g5391"
+     transform="translate(235.35798,-167.52866)">
     <path
-       style="fill:none;stroke:#000000"
+       style="fill:#808080;stroke:none"
        inkscape:connector-curvature="0"
-       id="path26"
-       d="m 163.175,-292.226 c -19.853,10.588 -43.374,23.132 -61.944,33.036" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon28"
-       points="172.007,-296.937 164.83,-289.143 161.536,-295.319 161.536,-295.319 " />
-  </g>
-  <g
-     class="edge"
-     id="edge1"
-     transform="translate(0.5,333.5)">
-    <title
-       id="title38">typ-&gt;viz</title>
+       id="path5017-3"
+       d="m -143.70847,209.89902 c 0,0 275,0 275,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -275,0 -275,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
     <path
-       style="fill:none;stroke:#000000"
+       style="fill:#808080;stroke:none"
        inkscape:connector-curvature="0"
-       id="path40"
-       d="m 238.269,-291.364 c 15.747,10.402 34.119,22.538 48.707,32.174" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon42"
-       points="229.831,-296.937 240.105,-294.346 236.246,-288.505 236.246,-288.505 " />
-  </g>
-  <g
-     class="edge"
-     id="edge3"
-     transform="translate(0.5,333.5)">
-    <title
-       id="title52">typ-&gt;maj</title>
+       id="path5024-2"
+       d="m -217.70847,283.89902 c 0,0 133.000001,0 133.000001,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -133.000001,0 -133.000001,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
     <path
-       style="fill:none;stroke:#000000"
+       style="fill:#808080;stroke:none"
        inkscape:connector-curvature="0"
-       id="path54"
-       d="m 195.392,-287.262 c -9.548,29.662 -24.676,76.654 -32.798,101.884" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon56"
-       points="198.517,-296.966 198.784,-286.375 192.121,-288.52 192.121,-288.52 " />
-  </g>
-  <g
-     class="edge"
-     id="edge5"
-     transform="translate(0.5,333.5)">
-    <title
-       id="title66">typ-&gt;grd</title>
+       id="path5038-3"
+       d="m 33.791531,283.89902 c 0,0 161.999999,0 161.999999,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -161.999999,0 -161.999999,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
     <path
-       style="fill:none;stroke:#000000"
+       style="fill:#808080;stroke:none"
        inkscape:connector-curvature="0"
-       id="path68"
-       d="m 205.16,-286.754 c 1.845,19.197 6.458,44.912 17.84,64.754 8.368,14.587 22.075,27.364 34.276,36.823" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon70"
-       points="204.378,-296.939 208.633,-287.236 201.653,-286.701 201.653,-286.701 " />
-  </g>
-  <g
-     class="edge"
-     id="edge7"
-     transform="translate(0.5,333.5)">
-    <title
-       id="title80">typ-&gt;tri</title>
+       id="path5052-0"
+       d="m -110.70847,357.89902 c 0,0 111.00000099,0 111.00000099,0 6.00000001,0 12.00000001,-6 12.00000001,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12.00000001,-12 0,0 -111.00000099,0 -111.00000099,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
     <path
-       style="fill:none;stroke:#000000"
+       style="fill:#808080;stroke:none"
        inkscape:connector-curvature="0"
-       id="path82"
-       d="m 342.267,-297.208 c 22.363,8.199 43.475,20.079 59.733,37.208 19.129,20.154 21.672,54.111 21.222,74.652" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon84"
-       points="332.617,-300.501 343.212,-300.584 340.951,-293.959 340.951,-293.959 " />
-  </g>
-  <g
-     class="edge"
-     id="edge12"
-     transform="translate(0.5,333.5)">
-    <title
-       id="title94">vot-&gt;raf</title>
+       id="path5066-7"
+       d="m 42.791531,357.89902 c 0,0 85.999999,0 85.999999,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -85.999999,0 -85.999999,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
     <path
-       style="fill:none;stroke:#000000"
+       style="fill:#808080;stroke:none"
        inkscape:connector-curvature="0"
-       id="path96"
-       d="m 68.1239,-212.643 c 0.7783,20.003 4.949,46.67 19.8761,64.643 18.825,22.667 48.671,35.929 75.224,43.632" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon98"
-       points="67.9902,-222.692 71.623,-212.74 64.6236,-212.647 64.6236,-212.647 " />
-  </g>
-  <g
-     class="edge"
-     id="edge4"
-     transform="translate(0.5,333.5)">
-    <title
-       id="title101">viz-&gt;maj</title>
+       id="path5080-8"
+       d="m 171.29153,357.89902 c 0,0 143,0 143,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -143,0 -143,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
     <path
-       style="fill:none;stroke:#000000;stroke-dasharray:5, 2"
+       style="fill:#808080;stroke:none"
        inkscape:connector-curvature="0"
-       id="path103"
-       d="m 266.717,-218.638 c -23.222,10.717 -50.965,23.521 -72.743,33.573" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon105"
-       points="276.03,-222.937 268.417,-215.569 265.484,-221.924 265.484,-221.924 " />
-  </g>
-  <g
-     class="edge"
-     id="edge6"
-     transform="translate(0.5,333.5)">
-    <title
-       id="title108">viz-&gt;grd</title>
+       id="path5094-8"
+       d="m -38.708469,431.89902 c 0,0 107,0 107,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -107,0 -107,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
     <path
-       style="fill:none;stroke:#000000;stroke-dasharray:5, 2"
+       style="fill:#808080;stroke:none"
        inkscape:connector-curvature="0"
-       id="path110"
-       d="m 302.005,-213.612 c -3.912,9.389 -8.217,19.72 -11.738,28.171" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon112"
-       points="305.89,-222.937 305.275,-212.36 298.813,-215.052 298.813,-215.052 " />
-  </g>
-  <g
-     class="edge"
-     id="edge8"
-     transform="translate(0.5,333.5)">
-    <title
-       id="title115">viz-&gt;tri</title>
+       id="path5150-8"
+       d="m 90.791531,505.89902 c 0,0 165.999999,0 165.999999,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -165.999999,0 -165.999999,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
     <path
-       style="fill:none;stroke:#000000;stroke-dasharray:5, 2"
+       style="fill:#808080;stroke:none"
        inkscape:connector-curvature="0"
-       id="path117"
-       d="m 347.269,-217.364 c 15.747,10.402 34.119,22.538 48.707,32.174" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon119"
-       points="338.831,-222.937 349.105,-220.346 345.246,-214.505 345.246,-214.505 " />
-  </g>
-  <g
-     class="edge"
-     id="edge9"
-     transform="translate(0.5,333.5)">
-    <title
-       id="title122">maj-&gt;raf</title>
+       id="path5164-8"
+       d="m 110.29153,431.89902 c 0,0 127,0 127,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -127,0 -127,0 -6,0 -11.999999,6 -11.999999,12 0,0 0,12 0,12 0,6 5.999999,12 11.999999,12" />
     <path
-       style="fill:none;stroke:#000000"
+       style="fill:#808080;stroke:none"
        inkscape:connector-curvature="0"
-       id="path124"
-       d="m 178.544,-141.379 c 8.613,9.844 18.333,20.953 26.195,29.938" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon126"
-       points="171.93,-148.937 181.149,-143.716 175.881,-139.106 175.881,-139.106 " />
-  </g>
-  <g
-     class="edge"
-     id="edge10"
-     transform="translate(0.5,333.5)">
-    <title
-       id="title129">grd-&gt;raf</title>
-    <path
-       style="fill:none;stroke:#000000;stroke-dasharray:5, 2"
-       inkscape:connector-curvature="0"
-       id="path131"
-       d="m 261.456,-141.379 c -8.613,9.844 -18.333,20.953 -26.195,29.938" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon133"
-       points="268.07,-148.937 264.119,-139.106 258.851,-143.716 258.851,-143.716 " />
-  </g>
-  <g
-     class="edge"
-     id="edge11"
-     transform="translate(0.5,333.5)">
-    <title
-       id="title136">tri-&gt;raf</title>
-    <path
-       style="fill:none;stroke:#000000;stroke-dasharray:5, 2"
-       inkscape:connector-curvature="0"
-       id="path138"
-       d="m 364.462,-145.491 c -30.541,10.885 -67.633,24.106 -96.585,34.426" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon140"
-       points="374.129,-148.937 365.884,-142.283 363.534,-148.876 363.534,-148.876 " />
-  </g>
-  <g
-     class="edge"
-     id="edge15"
-     transform="translate(0.5,333.5)">
-    <title
-       id="title150">raf-&gt;ana</title>
-    <path
-       style="fill:none;stroke:#000000"
-       inkscape:connector-curvature="0"
-       id="path152"
-       d="m 262.66,-70.3694 c 20.941,10.618 45.817,23.2311 65.437,33.1794" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon154"
-       points="253.652,-74.937 264.154,-73.5363 260.988,-67.293 260.988,-67.293 " />
-  </g>
-  <g
-     class="edge"
-     id="edge14"
-     transform="translate(0.5,333.5)">
-    <title
-       id="title164">mem-&gt;ana</title>
-    <path
-       style="fill:none;stroke:#000000"
-       inkscape:connector-curvature="0"
-       id="path166"
-       d="m 362,-64.7193 c 0,9.1473 0,19.0938 0,27.2786" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon168"
-       points="362,-74.937 365.5,-64.937 358.5,-64.937 358.5,-64.937 " />
+       id="path5178-8"
+       d="m 279.29153,431.89902 c 0,0 117,0 117,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -117,0 -117,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
   </g>
   <path
-     d="m 88,36.5 c 0,0 233,0 233,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -233,0 -233,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-     id="path12"
+     d="m 89.5,41 c 0,0 275,0 275,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -275,0 -275,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
+     id="path5017"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;fill-opacity:1;stroke:#000000" />
+     style="fill:#ffffff;stroke:#000000" />
   <text
-     x="204.5"
-     y="22.200012"
+     x="227"
+     y="26.700012"
      font-size="14.00"
-     id="text14"
-     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;font-family:Myriad Pro;-inkscape-font-specification:Myriad Pro Italic">Voting structure and state type specification</text>
+     id="text5019"
+     style="font-size:14px;text-anchor:middle;font-family:Kp">Voting structure and state type specification</text>
   <path
-     d="m 12.5,110.5 c 0,0 114,0 114,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -114,0 -114,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-     id="path19"
+     d="m 15.5,115 c 0,0 133,0 133,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -133,0 -133,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
+     id="path5024"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;fill-opacity:1;stroke:#000000" />
+     style="fill:#ffffff;stroke:#000000" />
   <text
-     x="69.5"
-     y="96.199997"
+     x="82"
+     y="100.7"
      font-size="14.00"
-     id="text21"
-     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;font-family:Myriad Pro;-inkscape-font-specification:Myriad Pro Italic">Core voting algorithm</text>
+     id="text5026"
+     style="font-size:14px;text-anchor:middle;font-family:Kp">Core voting algorithm</text>
   <path
-     d="m 245,110.5 c 0,0 137,0 137,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -137,0 -137,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-     id="path33"
+     d="M 183.404,45.648 C 161.938,56.307 136.43,68.973 116.367,78.935"
+     id="path5031"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;fill-opacity:1;stroke:#000000" />
-  <text
-     x="313.5"
-     y="96.199997"
-     font-size="14.00"
-     id="text35"
-     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;font-family:Myriad Pro;-inkscape-font-specification:Myriad Pro Italic">Voting structure visualiser</text>
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="178.124,-295.624 188.637,-296.937 181.237,-289.355 178.124,-295.624 "
+     id="polygon5033"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(4,338)" />
   <path
-     d="m 110,184.5 c 0,0 95,0 95,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -95,0 -95,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-     id="path47"
+     d="m 267,115 c 0,0 162,0 162,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -162,0 -162,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
+     id="path5038"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;fill-opacity:1;stroke:#000000" />
+     style="fill:#ffffff;stroke:#000000" />
   <text
-     x="157.5"
-     y="170.2"
+     x="348"
+     y="100.7"
      font-size="14.00"
-     id="text49"
-     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;font-family:Myriad Pro;-inkscape-font-specification:Myriad Pro Italic">Majority generator</text>
+     id="text5040"
+     style="font-size:14px;text-anchor:middle;font-family:Kp">Voting structure visualiser</text>
   <path
-     d="m 247.5,184.5 c 0,0 72,0 72,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -72,0 -72,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-     id="path61"
+     d="m 264.557,46.348 c 17.587,10.465 38.211,22.737 54.554,32.462"
+     id="path5045"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;fill-opacity:1;stroke:#000000" />
-  <text
-     x="283.5"
-     y="170.2"
-     font-size="14.00"
-     id="text63"
-     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;font-family:Myriad Pro;-inkscape-font-specification:Myriad Pro Italic">Grid generator</text>
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="258.479,-288.816 251.675,-296.937 262.059,-294.831 258.479,-288.816 "
+     id="polygon5047"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(4,338)" />
   <path
-     d="m 361.5,184.5 c 0,0 122,0 122,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -122,0 -122,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-     id="path75"
+     d="m 122.5,189 c 0,0 111,0 111,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -111,0 -111,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
+     id="path5052"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;fill-opacity:1;stroke:#000000" />
+     style="fill:#ffffff;stroke:#000000" />
   <text
-     x="422.5"
-     y="170.2"
+     x="178"
+     y="174.7"
      font-size="14.00"
-     id="text77"
-     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;font-family:Myriad Pro;-inkscape-font-specification:Myriad Pro Italic">Tree Quorum generator</text>
+     id="text5054"
+     style="font-size:14px;text-anchor:middle;font-family:Kp">Majority generator</text>
   <path
-     d="m 176,258.5 c 0,0 89,0 89,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -89,0 -89,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-     id="path89"
+     d="M 218.026,50.738 C 208.071,80.4 192.3,127.392 183.832,152.622"
+     id="path5059"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;fill-opacity:1;stroke:#000000" />
-  <text
-     x="220.5"
-     y="244.2"
-     font-size="14.00"
-     id="text91"
-     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;font-family:Myriad Pro;-inkscape-font-specification:Myriad Pro Italic">Rafter integration</text>
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="210.783,-288.6 217.283,-296.966 217.419,-286.372 210.783,-288.6 "
+     id="polygon5061"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(4,338)" />
   <path
-     d="m 291,332.5 c 0,0 143,0 143,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -143,0 -143,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-     id="path145"
+     d="m 276,189 c 0,0 86,0 86,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -86,0 -86,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
+     id="path5066"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;fill-opacity:1;stroke:#000000" />
+     style="fill:#ffffff;stroke:#000000" />
   <text
-     x="362.5"
-     y="318.20001"
+     x="319"
+     y="174.7"
      font-size="14.00"
-     id="text147"
-     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;font-family:Myriad Pro;-inkscape-font-specification:Myriad Pro Italic">Benchmarking and analysis</text>
+     id="text5068"
+     style="font-size:14px;text-anchor:middle;font-family:Kp">Grid generator</text>
   <path
-     d="m 307.5,258.5 c 0,0 110,0 110,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -110,0 -110,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-     id="path159"
+     d="m 227.563,51.325 c 1.551,19.393 6.059,45.312 18.437,64.675 9.764,15.275 25.487,27.723 39.845,36.802"
+     id="path5073"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;fill-opacity:1;stroke:#000000" />
-  <text
-     x="362.5"
-     y="244.2"
-     font-size="14.00"
-     id="text161"
-     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;font-family:Myriad Pro;-inkscape-font-specification:Myriad Pro Italic">Memcached frontend</text>
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="220.067,-286.506 222.973,-296.694 227.054,-286.917 220.067,-286.506 "
+     id="polygon5075"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(4,338)" />
   <path
-     d="m 459.5,258.5 c 0,0 104,0 104,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -104,0 -104,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-     id="path173"
+     d="m 404.5,189 c 0,0 143,0 143,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -143,0 -143,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
+     id="path5080"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;fill-opacity:1;stroke:#000000" />
+     style="fill:#ffffff;stroke:#000000" />
   <text
-     x="511.5"
-     y="244.2"
+     x="476"
+     y="174.7"
      font-size="14.00"
-     id="text175"
-     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;font-family:Myriad Pro;-inkscape-font-specification:Myriad Pro Italic">Amazon EC2 set-up</text>
-  <g
-     class="edge"
-     id="edge13"
-     transform="translate(0.5,333.5)">
-    <title
-       id="title178">ec2-&gt;ana</title>
-    <path
-       style="fill:none;stroke:#000000"
-       inkscape:connector-curvature="0"
-       id="path180"
-       d="m 466.498,-70.4954 c -22.12,10.6885 -48.474,23.4236 -69.183,33.4303" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon182"
-       points="475.689,-74.937 468.208,-67.4347 465.162,-73.7374 465.162,-73.7374 " />
-  </g>
+     id="text5082"
+     style="font-size:14px;text-anchor:middle;font-family:Kp">Tree Quorum generator</text>
+  <path
+     d="M 350.956,43.004 C 393.298,51.787 433.825,63.52 449,78 c 20.593,19.65 25.722,54.098 26.858,74.807"
+     id="path5087"
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="346.151,-291.588 337.04,-296.995 347.534,-298.45 346.151,-291.588 "
+     id="polygon5089"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(4,338)" />
+  <path
+     d="m 194.5,263 c 0,0 107,0 107,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -107,0 -107,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
+     id="path5094"
+     inkscape:connector-curvature="0"
+     style="fill:#ffffff;stroke:#000000" />
+  <text
+     x="248"
+     y="248.7"
+     font-size="14.00"
+     id="text5096"
+     style="font-size:14px;text-anchor:middle;font-family:Kp">Rafter integration</text>
+  <path
+     d="M 80.9239,125.161 C 81.5688,145.285 85.6592,172.196 101,190 c 20.498,23.79 52.422,37.105 81.29,44.555"
+     id="path5101"
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="73.4234,-212.919 76.8648,-222.939 80.4233,-212.96 73.4234,-212.919 "
+     id="polygon5103"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(4,338)" />
+  <path
+     d="m 298.237,119.076 c -25.442,10.775 -56.001,23.718 -79.944,33.859"
+     id="path5108"
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000;stroke-dasharray:5, 2" />
+  <polygon
+     points="293.139,-222.26 303.712,-222.937 295.869,-215.814 293.139,-222.26 "
+     id="polygon5110"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(4,338)" />
+  <path
+     d="m 337.371,124.388 c -3.781,9.389 -7.942,19.72 -11.346,28.171"
+     id="path5115"
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000;stroke-dasharray:5, 2" />
+  <polygon
+     points="330.145,-214.969 337.127,-222.937 336.638,-212.353 330.145,-214.969 "
+     id="polygon5117"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(4,338)" />
+  <path
+     d="m 387.218,120.06 c 18.715,10.527 40.774,22.936 58.222,32.75"
+     id="path5122"
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000;stroke-dasharray:5, 2" />
+  <polygon
+     points="381.334,-214.984 374.334,-222.937 384.766,-221.085 381.334,-214.984 "
+     id="polygon5124"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(4,338)" />
+  <path
+     d="m 201.654,196.329 c 9.64,9.916 20.567,21.156 29.39,30.23"
+     id="path5129"
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="195.05,-139.327 190.589,-148.937 200.069,-144.207 195.05,-139.327 "
+     id="polygon5131"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(4,338)" />
+  <path
+     d="m 295.008,196.329 c -9.777,9.916 -20.861,21.156 -29.81,30.23"
+     id="path5136"
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000;stroke-dasharray:5, 2" />
+  <polygon
+     points="288.66,-144.274 298.174,-148.937 293.645,-139.359 288.66,-144.274 "
+     id="polygon5138"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(4,338)" />
+  <path
+     d="m 412.395,192.086 c -34.722,10.965 -77.253,24.395 -110.355,34.849"
+     id="path5143"
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000;stroke-dasharray:5, 2" />
+  <polygon
+     points="407.377,-149.263 417.967,-148.937 409.485,-142.588 407.377,-149.263 "
+     id="polygon5145"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(4,338)" />
+  <path
+     d="m 324,337 c 0,0 166,0 166,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -166,0 -166,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
+     id="path5150"
+     inkscape:connector-curvature="0"
+     style="fill:#ffffff;stroke:#000000" />
+  <text
+     x="407"
+     y="322.70001"
+     font-size="14.00"
+     id="text5152"
+     style="font-size:14px;text-anchor:middle;font-family:Kp">Benchmarking and analysis</text>
+  <path
+     d="m 294.858,267.2188 c 23.732,10.7466 52.161,23.62 74.456,33.7161"
+     id="path5157"
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="289.347,-67.6235 281.681,-74.937 292.234,-74.0002 289.347,-67.6235 "
+     id="polygon5159"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(4,338)" />
+  <path
+     d="m 343.5,263 c 0,0 127,0 127,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -127,0 -127,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
+     id="path5164"
+     inkscape:connector-curvature="0"
+     style="fill:#ffffff;stroke:#000000" />
+  <text
+     x="407"
+     y="248.7"
+     font-size="14.00"
+     id="text5166"
+     style="font-size:14px;text-anchor:middle;font-family:Kp">Memcached frontend</text>
+  <path
+     d="m 407,273.2807 c 0,9.1473 0,19.0938 0,27.2786"
+     id="path5171"
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="399.5,-64.937 403,-74.937 406.5,-64.937 399.5,-64.937 "
+     id="polygon5173"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(4,338)" />
+  <path
+     d="m 512.5,263 c 0,0 117,0 117,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -117,0 -117,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
+     id="path5178"
+     inkscape:connector-curvature="0"
+     style="fill:#ffffff;stroke:#000000" />
+  <text
+     x="571"
+     y="248.7"
+     font-size="14.00"
+     id="text5180"
+     style="font-size:14px;text-anchor:middle;font-family:Kp">Amazon EC2 set-up</text>
+  <path
+     d="m 522.668,267.2188 c -24.478,10.7466 -53.801,23.62 -76.797,33.7161"
+     id="path5185"
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="517.571,-74.1218 528.134,-74.937 520.385,-67.7123 517.571,-74.1218 "
+     id="polygon5187"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(4,338)" />
 </svg>

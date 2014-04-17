@@ -12,9 +12,9 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="296.25"
-   height="148.205"
-   viewBox="0 0 237 118.564"
+   width="297.37631"
+   height="121.41622"
+   viewBox="0 0 237.90105 97.132976"
    id="svg4047"
    version="1.1"
    inkscape:version="0.48.4 r9939"
@@ -31,22 +31,7 @@
     </rdf:RDF>
   </metadata>
   <defs
-     id="defs4137">
-    <marker
-       inkscape:stockid="DotM"
-       orient="auto"
-       refY="0"
-       refX="0"
-       id="DotM"
-       style="overflow:visible">
-      <path
-         inkscape:connector-curvature="0"
-         id="path6317"
-         d="m -2.5,-1 c 0,2.76 -2.24,5 -5,5 -2.76,0 -5,-2.24 -5,-5 0,-2.76 2.24,-5 5,-5 2.76,0 5,2.24 5,5 z"
-         style="fill-rule:evenodd;stroke:#000000;stroke-width:1pt"
-         transform="matrix(0.4,0,0,0.4,2.96,0.4)" />
-    </marker>
-  </defs>
+     id="defs4137" />
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -64,109 +49,132 @@
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:zoom="1.4234871"
-     inkscape:cx="96.328674"
-     inkscape:cy="42.042854"
+     inkscape:zoom="2.8469742"
+     inkscape:cx="157.28376"
+     inkscape:cy="49.311557"
      inkscape:window-x="0"
      inkscape:window-y="27"
      inkscape:window-maximized="0"
-     inkscape:current-layer="node1" />
+     inkscape:current-layer="svg4047" />
   <g
-     class="node"
-     id="node1"
-     transform="translate(0.5,95.5)">
-    <title
-       id="title4055">[]</title>
+     id="g12515"
+     transform="translate(252.53308,-132.99904)">
     <path
-       style="fill:none;stroke:#000000"
+       style="fill:#808080;stroke:none"
        inkscape:connector-curvature="0"
-       id="path4057"
-       d="m 103,-59 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
-    <text
-       style="font-size:14px;text-anchor:middle;font-family:Kp"
-       id="text4059"
-       font-size="14.00"
-       y="-73.300003"
-       x="105">V</text>
-    <polyline
-       style="fill:none;stroke:#000000"
-       id="polyline4061"
-       points="119,-59 119,-95 " />
-    <text
-       style="font-size:14px;text-anchor:middle;font-family:Kp"
-       id="text4063"
-       font-size="14.00"
-       y="-73.300003"
-       x="132">3</text>
-    <text
-       xml:space="preserve"
-       style="font-size:12.80000019000000044px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Kp;-inkscape-font-specification:Kp Medium Italic"
-       x="76.273201"
-       y="19.736006"
-       id="text4188"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan4190"
-         x="76.273201"
-         y="19.736006"
-         style="font-size:12.80000019000000044px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Kp;-inkscape-font-specification:Kp Medium Italic">Physical nodes</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:12.80000019000000044px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Kp;-inkscape-font-specification:Kp Medium Italic"
-       x="161.79005"
-       y="-73.4552"
-       id="text4192"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan4194"
-         x="161.79005"
-         y="-73.4552">Threshold</tspan></text>
-    <text
-       xml:space="preserve"
-       style="font-size:12.80000019px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Kp;-inkscape-font-specification:Kp Medium Italic"
-       x="11.822004"
-       y="-73.4552"
-       id="text4196"
-       sodipodi:linespacing="125%"><tspan
-         sodipodi:role="line"
-         id="tspan4198"
-         x="11.822004"
-         y="-73.4552">Virtual node</tspan></text>
-    <path
-       style="opacity:0.58367345;fill:none;stroke:#000000;stroke-width:0.80000001;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:none;marker-start:url(#DotM);marker-end:none"
-       d="m 139.45144,-77.555282 19.34945,0"
-       id="path6245"
-       inkscape:connector-curvature="0" />
-  </g>
-  <g
-     class="node"
-     id="node2"
-     transform="translate(0.5,95.5)">
-    <title
-       id="title4066">[1]</title>
+       id="path4057-3"
+       d="m -147.63204,171.13202 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
     <ellipse
-       style="fill:none;stroke:#000000"
+       transform="translate(-250.63204,230.13202)"
+       style="fill:#808080;stroke:none"
        sodipodi:ry="18"
        sodipodi:rx="18"
        sodipodi:cy="-18"
        sodipodi:cx="18"
        d="M 36,-18 C 36,-8.0588745 27.941125,0 18,0 8.0588745,0 0,-8.0588745 0,-18 c 0,-9.941125 8.0588745,-18 18,-18 9.941125,0 18,8.058875 18,18 z"
-       id="ellipse4068"
+       id="ellipse4068-2"
        ry="18"
        rx="18"
        cy="-18"
        cx="18" />
-    <text
-       style="font-size:14px;text-anchor:middle;font-family:Tt-Kp"
-       id="text4070"
-       font-size="14.00"
-       y="-14.3"
-       x="18">A</text>
+    <ellipse
+       transform="translate(-250.63204,230.13202)"
+       style="fill:#808080;stroke:none"
+       sodipodi:ry="18"
+       sodipodi:rx="18"
+       sodipodi:cy="-18"
+       sodipodi:cx="68"
+       d="M 86,-18 C 86,-8.0588745 77.941125,0 68,0 58.058875,0 50,-8.0588745 50,-18 c 0,-9.941125 8.058875,-18 18,-18 9.941125,0 18,8.058875 18,18 z"
+       id="ellipse4082-4"
+       ry="18"
+       rx="18"
+       cy="-18"
+       cx="68" />
+    <ellipse
+       transform="translate(-250.63204,230.13202)"
+       style="fill:#808080;stroke:none"
+       sodipodi:ry="18"
+       sodipodi:rx="18"
+       sodipodi:cy="-18"
+       sodipodi:cx="118"
+       d="m 136,-18 c 0,9.9411255 -8.05887,18 -18,18 -9.94113,0 -18,-8.0588745 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+       id="ellipse4096-3"
+       ry="18"
+       rx="18"
+       cy="-18"
+       cx="118" />
+    <ellipse
+       transform="translate(-250.63204,230.13202)"
+       style="fill:#808080;stroke:none"
+       sodipodi:ry="18"
+       sodipodi:rx="18"
+       sodipodi:cy="-18"
+       sodipodi:cx="168"
+       d="m 186,-18 c 0,9.9411255 -8.05887,18 -18,18 -9.94113,0 -18,-8.0588745 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+       id="ellipse4110-1"
+       ry="18"
+       rx="18"
+       cy="-18"
+       cx="168" />
+    <ellipse
+       transform="translate(-250.63204,230.13202)"
+       style="fill:#808080;stroke:none"
+       sodipodi:ry="18"
+       sodipodi:rx="18"
+       sodipodi:cy="-18"
+       sodipodi:cx="218"
+       d="m 236,-18 c 0,9.9411255 -8.05887,18 -18,18 -9.94113,0 -18,-8.0588745 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+       id="ellipse4124-4"
+       ry="18"
+       rx="18"
+       cy="-18"
+       cx="218" />
   </g>
+  <path
+     d="m 103.5,36.499999 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-5.9999997 -6,-11.99999973 -12,-11.99999973 0,0 -30,0 -30,0 -6,0 -12,6.00000003 -12,11.99999973 0,0 0,12 0,12 0,6 6,12 12,12"
+     id="path4057"
+     inkscape:connector-curvature="0"
+     style="fill:#ffffff;stroke:#000000" />
+  <text
+     x="105.5"
+     y="22.199997"
+     font-size="14.00"
+     id="text4059"
+     style="font-size:14px;text-anchor:middle;font-family:Kp">V</text>
+  <polyline
+     points="119,-59 119,-95 "
+     id="polyline4061"
+     style="fill:none;stroke:#000000"
+     transform="translate(0.5,95.499999)" />
+  <text
+     x="132.5"
+     y="22.199997"
+     font-size="14.00"
+     id="text4063"
+     style="font-size:14px;text-anchor:middle;font-family:Kp">3</text>
+  <ellipse
+     cx="18"
+     cy="-18"
+     rx="18"
+     ry="18"
+     id="ellipse4068"
+     d="M 36,-18 C 36,-8.0588745 27.941125,0 18,0 8.0588745,0 0,-8.0588745 0,-18 c 0,-9.941125 8.0588745,-18 18,-18 9.941125,0 18,8.058875 18,18 z"
+     sodipodi:cx="18"
+     sodipodi:cy="-18"
+     sodipodi:rx="18"
+     sodipodi:ry="18"
+     style="fill:#ffffff;stroke:#000000"
+     transform="translate(0.5,95.499999)" />
+  <text
+     x="18.5"
+     y="81.199997"
+     font-size="14.00"
+     id="text4070"
+     style="font-size:14px;text-anchor:middle;font-family:Tt-Kp">A</text>
   <g
      class="edge"
      id="edge1"
-     transform="translate(0.5,95.5)">
+     transform="translate(0.5,95.499999)">
     <title
        id="title4073">[]-&gt;[1]</title>
     <path
@@ -177,37 +185,31 @@
     <polygon
        style="fill:#000000;stroke:#000000"
        id="polygon4077"
-       points="90.8831,-62.4302 85.8007,-57.0291 83.5418,-61.3774 83.5418,-61.3774 " />
+       points="83.5418,-61.3774 90.8831,-62.4302 85.8007,-57.0291 83.5418,-61.3774 " />
   </g>
-  <g
-     class="node"
-     id="node3"
-     transform="translate(0.5,95.5)">
-    <title
-       id="title4080">[2]</title>
-    <ellipse
-       style="fill:none;stroke:#000000"
-       sodipodi:ry="18"
-       sodipodi:rx="18"
-       sodipodi:cy="-18"
-       sodipodi:cx="68"
-       d="M 86,-18 C 86,-8.0588745 77.941125,0 68,0 58.058875,0 50,-8.0588745 50,-18 c 0,-9.941125 8.058875,-18 18,-18 9.941125,0 18,8.058875 18,18 z"
-       id="ellipse4082"
-       ry="18"
-       rx="18"
-       cy="-18"
-       cx="68" />
-    <text
-       style="font-size:14px;text-anchor:middle;font-family:Tt-Kp"
-       id="text4084"
-       font-size="14.00"
-       y="-14.3"
-       x="68">B</text>
-  </g>
+  <ellipse
+     cx="68"
+     cy="-18"
+     rx="18"
+     ry="18"
+     id="ellipse4082"
+     d="M 86,-18 C 86,-8.0588745 77.941125,0 68,0 58.058875,0 50,-8.0588745 50,-18 c 0,-9.941125 8.058875,-18 18,-18 9.941125,0 18,8.058875 18,18 z"
+     sodipodi:cx="68"
+     sodipodi:cy="-18"
+     sodipodi:rx="18"
+     sodipodi:ry="18"
+     style="fill:#ffffff;stroke:#000000"
+     transform="translate(0.5,95.499999)" />
+  <text
+     x="68.5"
+     y="81.199997"
+     font-size="14.00"
+     id="text4084"
+     style="font-size:14px;text-anchor:middle;font-family:Tt-Kp">B</text>
   <g
      class="edge"
      id="edge2"
-     transform="translate(0.5,95.5)">
+     transform="translate(0.5,95.499999)">
     <title
        id="title4087">[]-&gt;[2]</title>
     <path
@@ -218,37 +220,31 @@
     <polygon
        style="fill:#000000;stroke:#000000"
        id="polygon4091"
-       points="102.998,-58.8981 100.224,-52.0201 96.5404,-55.2514 96.5404,-55.2514 " />
+       points="96.5404,-55.2514 102.998,-58.8981 100.224,-52.0201 96.5404,-55.2514 " />
   </g>
-  <g
-     class="node"
-     id="node4"
-     transform="translate(0.5,95.5)">
-    <title
-       id="title4094">[3]</title>
-    <ellipse
-       style="fill:none;stroke:#000000"
-       sodipodi:ry="18"
-       sodipodi:rx="18"
-       sodipodi:cy="-18"
-       sodipodi:cx="118"
-       d="m 136,-18 c 0,9.9411255 -8.05887,18 -18,18 -9.94113,0 -18,-8.0588745 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
-       id="ellipse4096"
-       ry="18"
-       rx="18"
-       cy="-18"
-       cx="118" />
-    <text
-       style="font-size:14px;text-anchor:middle;font-family:Tt-Kp"
-       id="text4098"
-       font-size="14.00"
-       y="-14.3"
-       x="118">C</text>
-  </g>
+  <ellipse
+     cx="118"
+     cy="-18"
+     rx="18"
+     ry="18"
+     id="ellipse4096"
+     d="m 136,-18 c 0,9.9411255 -8.05887,18 -18,18 -9.94113,0 -18,-8.0588745 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+     sodipodi:cx="118"
+     sodipodi:cy="-18"
+     sodipodi:rx="18"
+     sodipodi:ry="18"
+     style="fill:#ffffff;stroke:#000000"
+     transform="translate(0.5,95.499999)" />
+  <text
+     x="118.5"
+     y="81.199997"
+     font-size="14.00"
+     id="text4098"
+     style="font-size:14px;text-anchor:middle;font-family:Tt-Kp">C</text>
   <g
      class="edge"
      id="edge3"
-     transform="translate(0.5,95.5)">
+     transform="translate(0.5,95.499999)">
     <title
        id="title4101">[]-&gt;[3]</title>
     <path
@@ -259,37 +255,31 @@
     <polygon
        style="fill:#000000;stroke:#000000"
        id="polygon4105"
-       points="118,-58.8981 120.45,-51.8982 115.55,-51.8981 115.55,-51.8981 " />
+       points="115.55,-51.8981 118,-58.8981 120.45,-51.8982 115.55,-51.8981 " />
   </g>
-  <g
-     class="node"
-     id="node5"
-     transform="translate(0.5,95.5)">
-    <title
-       id="title4108">[4]</title>
-    <ellipse
-       style="fill:none;stroke:#000000"
-       sodipodi:ry="18"
-       sodipodi:rx="18"
-       sodipodi:cy="-18"
-       sodipodi:cx="168"
-       d="m 186,-18 c 0,9.9411255 -8.05887,18 -18,18 -9.94113,0 -18,-8.0588745 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
-       id="ellipse4110"
-       ry="18"
-       rx="18"
-       cy="-18"
-       cx="168" />
-    <text
-       style="font-size:14px;text-anchor:middle;font-family:Tt-Kp"
-       id="text4112"
-       font-size="14.00"
-       y="-14.3"
-       x="168">D</text>
-  </g>
+  <ellipse
+     cx="168"
+     cy="-18"
+     rx="18"
+     ry="18"
+     id="ellipse4110"
+     d="m 186,-18 c 0,9.9411255 -8.05887,18 -18,18 -9.94113,0 -18,-8.0588745 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+     sodipodi:cx="168"
+     sodipodi:cy="-18"
+     sodipodi:rx="18"
+     sodipodi:ry="18"
+     style="fill:#ffffff;stroke:#000000"
+     transform="translate(0.5,95.499999)" />
+  <text
+     x="168.5"
+     y="81.199997"
+     font-size="14.00"
+     id="text4112"
+     style="font-size:14px;text-anchor:middle;font-family:Tt-Kp">D</text>
   <g
      class="edge"
      id="edge4"
-     transform="translate(0.5,95.5)">
+     transform="translate(0.5,95.499999)">
     <title
        id="title4115">[]-&gt;[4]</title>
     <path
@@ -300,37 +290,31 @@
     <polygon
        style="fill:#000000;stroke:#000000"
        id="polygon4119"
-       points="133.002,-58.8981 139.46,-55.2514 135.776,-52.0201 135.776,-52.0201 " />
+       points="135.776,-52.0201 133.002,-58.8981 139.46,-55.2514 135.776,-52.0201 " />
   </g>
-  <g
-     class="node"
-     id="node6"
-     transform="translate(0.5,95.5)">
-    <title
-       id="title4122">[5]</title>
-    <ellipse
-       style="fill:none;stroke:#000000"
-       sodipodi:ry="18"
-       sodipodi:rx="18"
-       sodipodi:cy="-18"
-       sodipodi:cx="218"
-       d="m 236,-18 c 0,9.9411255 -8.05887,18 -18,18 -9.94113,0 -18,-8.0588745 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
-       id="ellipse4124"
-       ry="18"
-       rx="18"
-       cy="-18"
-       cx="218" />
-    <text
-       style="font-size:14px;text-anchor:middle;font-family:Tt-Kp"
-       id="text4126"
-       font-size="14.00"
-       y="-14.3"
-       x="218">E</text>
-  </g>
+  <ellipse
+     cx="218"
+     cy="-18"
+     rx="18"
+     ry="18"
+     id="ellipse4124"
+     d="m 236,-18 c 0,9.9411255 -8.05887,18 -18,18 -9.94113,0 -18,-8.0588745 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+     sodipodi:cx="218"
+     sodipodi:cy="-18"
+     sodipodi:rx="18"
+     sodipodi:ry="18"
+     style="fill:#ffffff;stroke:#000000"
+     transform="translate(0.5,95.499999)" />
+  <text
+     x="218.5"
+     y="81.199997"
+     font-size="14.00"
+     id="text4126"
+     style="font-size:14px;text-anchor:middle;font-family:Tt-Kp">E</text>
   <g
      class="edge"
      id="edge5"
-     transform="translate(0.5,95.5)">
+     transform="translate(0.5,95.499999)">
     <title
        id="title4129">[]-&gt;[5]</title>
     <path
@@ -341,6 +325,6 @@
     <polygon
        style="fill:#000000;stroke:#000000"
        id="polygon4133"
-       points="145.117,-62.4302 152.458,-61.3774 150.199,-57.0291 150.199,-57.0291 " />
+       points="150.199,-57.0291 145.117,-62.4302 152.458,-61.3774 150.199,-57.0291 " />
   </g>
 </svg>

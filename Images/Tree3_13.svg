@@ -12,27 +12,27 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="638pt"
-   height="382pt"
-   viewBox="0.00 0.00 638.00 382.00"
-   id="svg2"
+   width="646.67981"
+   height="346.21844"
+   viewBox="0 0 517.34385 276.97476"
+   id="svg15760"
    version="1.1"
    inkscape:version="0.48.4 r9939"
    sodipodi:docname="Tree3_13.svg">
   <metadata
-     id="metadata416">
+     id="metadata16090">
     <rdf:RDF>
       <cc:Work
          rdf:about="">
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <defs
-     id="defs414" />
+     id="defs16088" />
   <sodipodi:namedview
      pagecolor="#ffffff"
      bordercolor="#666666"
@@ -44,1138 +44,930 @@
      inkscape:pageshadow="2"
      inkscape:window-width="1366"
      inkscape:window-height="702"
-     id="namedview412"
+     id="namedview16086"
      showgrid="false"
-     inkscape:zoom="1.074625"
-     inkscape:cx="421.67115"
-     inkscape:cy="240.04662"
+     inkscape:zoom="1.3295775"
+     inkscape:cx="337.35758"
+     inkscape:cy="184.33983"
      inkscape:window-x="0"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg2" />
+     inkscape:current-layer="svg15760"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0" />
   <g
-     id="g5204"
-     style="stroke:#4d4d4d;stroke-opacity:1;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:1,3;stroke-dashoffset:0">
+     id="g16449"
+     transform="translate(89.165324,-456.81476)">
     <path
-       transform="scale(0.8,0.8)"
+       style="fill:#808080;stroke:none"
        inkscape:connector-curvature="0"
-       id="path5202"
-       d="m 501.39852,373.53548 0,57.90429"
-       style="fill:none;stroke:#4d4d4d;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:1.25,3.75;stroke-dashoffset:0" />
+       id="path15770-3"
+       d="m 234.1785,494.78952 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
     <path
-       transform="scale(0.8,0.8)"
+       style="fill:#808080;stroke:none"
        inkscape:connector-curvature="0"
-       id="path5115"
-       d="m 502.71452,161.65842 c 0,0 -119.7566,40.7962 -176.34488,163.18481"
-       style="fill:none;stroke:#4d4d4d;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:1.25,3.75;stroke-dashoffset:0" />
+       id="path15781-0"
+       d="m 205.1785,554.78952 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
+    <ellipse
+       transform="translate(-7.8214979,733.78952)"
+       style="fill:#808080;stroke:none"
+       sodipodi:ry="18"
+       sodipodi:rx="18"
+       sodipodi:cy="-197"
+       sodipodi:cx="287"
+       d="m 305,-197 c 0,9.94113 -8.05887,18 -18,18 -9.94113,0 -18,-8.05887 -18,-18 0,-9.94113 8.05887,-18 18,-18 9.94113,0 18,8.05887 18,18 z"
+       id="ellipse15799-6"
+       ry="18"
+       rx="18"
+       cy="-197"
+       cx="287" />
     <path
-       transform="scale(0.8,0.8)"
+       style="fill:#808080;stroke:none"
        inkscape:connector-curvature="0"
-       id="path5117"
-       d="m 563.25083,156.39439 c 0,0 115.80858,25.00412 155.28877,164.50082"
-       style="fill:none;stroke:#4d4d4d;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:1.25,3.75;stroke-dashoffset:0" />
+       id="path15813-7"
+       d="m 126.1785,614.78952 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
     <path
+       style="fill:#808080;stroke:none"
        inkscape:connector-curvature="0"
-       id="path5182"
-       d="M 425.33333,130.37954 406.38284,264.08581"
-       style="fill:none;stroke:#4d4d4d;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:1, 3;stroke-dashoffset:0" />
+       id="path15831-8"
+       d="m 205.1785,614.78952 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
     <path
-       transform="scale(0.8,0.8)"
+       style="fill:#808080;stroke:none"
        inkscape:connector-curvature="0"
-       id="path5184"
-       d="M 273.72937,363.00743 69.74835,432.75578"
-       style="fill:none;stroke:#4d4d4d;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:1.25,3.75;stroke-dashoffset:0" />
+       id="path15849-8"
+       d="m 329.1785,614.78952 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
     <path
+       style="fill:#808080;stroke:none"
        inkscape:connector-curvature="0"
-       id="path5186"
-       d="M 230.56436,296.72278 117.91419,346.20462"
-       style="fill:none;stroke:#4d4d4d;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:1,3;stroke-dashoffset:0" />
+       id="path15867-2"
+       d="m 56.178502,674.78952 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
+    <ellipse
+       transform="translate(-7.8214979,733.78952)"
+       style="fill:#808080;stroke:none"
+       sodipodi:ry="18"
+       sodipodi:rx="18"
+       sodipodi:cy="-77"
+       sodipodi:cx="149"
+       d="m 167,-77 c 0,9.941125 -8.05887,18 -18,18 -9.94113,0 -18,-8.058875 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+       id="ellipse15885-2"
+       ry="18"
+       rx="18"
+       cy="-77"
+       cx="149" />
+    <ellipse
+       transform="translate(-7.8214979,733.78952)"
+       style="fill:#808080;stroke:none"
+       sodipodi:ry="18"
+       sodipodi:rx="18"
+       sodipodi:cy="-18"
+       sodipodi:cx="18"
+       d="M 36,-18 C 36,-8.0588745 27.941125,0 18,0 8.0588745,0 0,-8.0588745 0,-18 c 0,-9.941125 8.0588745,-18 18,-18 9.941125,0 18,8.058875 18,18 z"
+       id="ellipse15899-0"
+       ry="18"
+       rx="18"
+       cy="-18"
+       cx="18" />
+    <ellipse
+       transform="translate(-7.8214979,733.78952)"
+       style="fill:#808080;stroke:none"
+       sodipodi:ry="18"
+       sodipodi:rx="18"
+       sodipodi:cy="-18"
+       sodipodi:cx="68"
+       d="M 86,-18 C 86,-8.0588745 77.941125,0 68,0 58.058875,0 50,-8.0588745 50,-18 c 0,-9.941125 8.058875,-18 18,-18 9.941125,0 18,8.058875 18,18 z"
+       id="ellipse15913-4"
+       ry="18"
+       rx="18"
+       cy="-18"
+       cx="68" />
+    <ellipse
+       transform="translate(-7.8214979,733.78952)"
+       style="fill:#808080;stroke:none"
+       sodipodi:ry="18"
+       sodipodi:rx="18"
+       sodipodi:cy="-18"
+       sodipodi:cx="118"
+       d="m 136,-18 c 0,9.9411255 -8.05887,18 -18,18 -9.94113,0 -18,-8.0588745 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+       id="ellipse15927-0"
+       ry="18"
+       rx="18"
+       cy="-18"
+       cx="118" />
     <path
-       transform="scale(0.8,0.8)"
+       style="fill:#808080;stroke:none"
        inkscape:connector-curvature="0"
-       id="path5188"
-       d="m 306.62954,374.85149 -63.16832,51.32425"
-       style="fill:none;stroke:#4d4d4d;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:1.25,3.75;stroke-dashoffset:0" />
+       id="path15941-7"
+       d="m 195.1785,674.78952 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
+    <ellipse
+       transform="translate(-7.8214979,733.78952)"
+       style="fill:#808080;stroke:none"
+       sodipodi:ry="18"
+       sodipodi:rx="18"
+       sodipodi:cy="-77"
+       sodipodi:cx="277"
+       d="m 295,-77 c 0,9.941125 -8.05887,18 -18,18 -9.94113,0 -18,-8.058875 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+       id="ellipse15959-7"
+       ry="18"
+       rx="18"
+       cy="-77"
+       cx="277" />
+    <ellipse
+       transform="translate(-7.8214979,733.78952)"
+       style="fill:#808080;stroke:none"
+       sodipodi:ry="18"
+       sodipodi:rx="18"
+       sodipodi:cy="-18"
+       sodipodi:cx="168"
+       d="m 186,-18 c 0,9.9411255 -8.05887,18 -18,18 -9.94113,0 -18,-8.0588745 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+       id="ellipse15973-2"
+       ry="18"
+       rx="18"
+       cy="-18"
+       cx="168" />
+    <ellipse
+       transform="translate(-7.8214979,733.78952)"
+       style="fill:#808080;stroke:none"
+       sodipodi:ry="18"
+       sodipodi:rx="18"
+       sodipodi:cy="-18"
+       sodipodi:cx="218"
+       d="m 236,-18 c 0,9.9411255 -8.05887,18 -18,18 -9.94113,0 -18,-8.0588745 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+       id="ellipse15987-7"
+       ry="18"
+       rx="18"
+       cy="-18"
+       cx="218" />
+    <ellipse
+       transform="translate(-7.8214979,733.78952)"
+       style="fill:#808080;stroke:none"
+       sodipodi:ry="18"
+       sodipodi:rx="18"
+       sodipodi:cy="-18"
+       sodipodi:cx="268"
+       d="m 286,-18 c 0,9.9411255 -8.05887,18 -18,18 -9.94113,0 -18,-8.0588745 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+       id="ellipse16001-9"
+       ry="18"
+       rx="18"
+       cy="-18"
+       cx="268" />
     <path
-       transform="scale(0.8,0.8)"
+       style="fill:#808080;stroke:none"
        inkscape:connector-curvature="0"
-       id="path5190"
-       d="m 460.60231,369.58746 -125.02063,60.5363"
-       style="fill:none;stroke:#4d4d4d;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:1.25,3.75;stroke-dashoffset:0" />
-    <path
-       inkscape:connector-curvature="0"
-       id="path5192"
-       d="m 388.48515,295.66996 -52.64026,50.53465"
-       style="fill:none;stroke:#4d4d4d;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-opacity:1;stroke-dasharray:0.99999998, 2.99999995;stroke-dashoffset:0" />
-    <path
-       transform="scale(0.8,0.8)"
-       inkscape:connector-curvature="0"
-       id="path5196"
-       d="m 693.53548,369.58746 -90.80446,56.58828"
-       style="fill:none;stroke:#4d4d4d;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:1.25,3.75;stroke-dashoffset:0" />
-    <path
-       transform="scale(0.8,0.8)"
-       inkscape:connector-curvature="0"
-       id="path5198"
-       d="m 709.32756,373.53548 -28.95215,52.64026"
-       style="fill:none;stroke:#4d4d4d;stroke-width:1.25;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:1.25,3.75;stroke-dashoffset:0" />
-    <path
-       inkscape:connector-curvature="0"
-       id="path5200"
-       d="m 586.41258,298.82838 12.63366,45.27063"
-       style="fill:none;stroke:#4d4d4d;stroke-width:1;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;stroke-miterlimit:4;stroke-dasharray:1,3;stroke-dashoffset:0" />
-  </g>
-  <g
-     id="g5036"
-     style="fill:#4d4d4d;fill-opacity:1;stroke:none"
-     transform="translate(371.32842,-12.43336)">
-    <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:none"
-       inkscape:connector-curvature="0"
-       id="path12-0"
-       d="m 6.3776887,65.566356 c 0,0 30.0000003,0 30.0000003,0 6,0 12,-6 12,-12 0,0 0,-22 0,-22 0,-6 -6,-12 -12,-12 0,0 -30.0000003,0 -30.0000003,0 -5.99999995,0 -12,6 -12,12 0,0 0,22 0,22 0,6 6.00000005,12 12,12" />
-    <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:none"
-       inkscape:connector-curvature="0"
-       id="path27-8"
-       d="m -29.622311,149.56636 c 0,0 29.99999975,0 29.99999975,0 5.99999995,0 12.00000025,-6 12.00000025,-12 0,0 0,-22 0,-22 0,-6 -6.0000003,-12 -12.00000025,-12 0,0 -29.99999975,0 -29.99999975,0 -6,0 -12,6 -12,12 0,0 0,22 0,22 0,6 6,12 12,12" />
-    <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:none"
-       inkscape:connector-curvature="0"
-       id="path49-9"
-       d="m 42.377689,144.56636 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
-    <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:none"
-       inkscape:connector-curvature="0"
-       id="path67-5"
-       d="m -137.62231,233.56636 c 0,0 30,0 30,0 6,0 11.999999,-6 11.999999,-12 0,0 0,-22 0,-22 0,-6 -5.999999,-12 -11.999999,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,22 0,22 0,6 6,12 12,12" />
-    <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:none"
-       inkscape:connector-curvature="0"
-       id="path89-5"
-       d="m -29.622311,233.56636 c 0,0 29.99999975,0 29.99999975,0 5.99999995,0 12.00000025,-6 12.00000025,-12 0,0 0,-22 0,-22 0,-6 -6.0000003,-12 -12.00000025,-12 0,0 -29.99999975,0 -29.99999975,0 -6,0 -12,6 -12,12 0,0 0,22 0,22 0,6 6,12 12,12" />
-    <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:none"
-       inkscape:connector-curvature="0"
-       id="path111-6"
-       d="m 114.37769,233.56636 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-22 0,-22 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,22 0,22 0,6 6,12 12,12" />
-    <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:none"
-       inkscape:connector-curvature="0"
-       id="path133-0"
-       d="m -245.62231,317.56636 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-22 0,-22 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,22 0,22 0,6 6,12 12,12" />
-    <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:none"
-       inkscape:connector-curvature="0"
-       id="path155-2"
-       d="m -137.62231,312.56636 c 0,0 30,0 30,0 6,0 11.999999,-6 11.999999,-12 0,0 0,-12 0,-12 0,-6 -5.999999,-12 -11.999999,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
-    <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:none"
-       inkscape:connector-curvature="0"
-       id="path173-4"
-       d="m -353.62231,391.56636 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
-    <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:none"
-       inkscape:connector-curvature="0"
-       id="path191-5"
-       d="m -281.62231,391.56636 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
-    <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:none"
-       inkscape:connector-curvature="0"
-       id="path209-3"
-       d="m -209.62231,391.56636 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
-    <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:none"
-       inkscape:connector-curvature="0"
-       id="path227-4"
-       d="m -65.622311,317.56636 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-22 0,-22 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,22 0,22 0,6 6,12 12,12" />
-    <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:none"
-       inkscape:connector-curvature="0"
-       id="path249-4"
-       d="m 6.3776887,312.56636 c 0,0 30.0000003,0 30.0000003,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30.0000003,0 -30.0000003,0 -5.99999995,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6.00000005,12 12,12" />
-    <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:none"
-       inkscape:connector-curvature="0"
-       id="path267-6"
-       d="m -137.62231,391.56636 c 0,0 30,0 30,0 6,0 11.999999,-6 11.999999,-12 0,0 0,-12 0,-12 0,-6 -5.999999,-12 -11.999999,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
-    <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:none"
-       inkscape:connector-curvature="0"
-       id="path285-0"
-       d="m -65.622311,391.56636 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
-    <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:none"
-       inkscape:connector-curvature="0"
-       id="path303-2"
-       d="m 6.3776887,391.56636 c 0,0 30.0000003,0 30.0000003,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30.0000003,0 -30.0000003,0 -5.99999995,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6.00000005,12 12,12" />
-    <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:none"
-       inkscape:connector-curvature="0"
-       id="path321-5"
-       d="m 114.37769,317.56636 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-22 0,-22 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,22 0,22 0,6 6,12 12,12" />
-    <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:none"
-       inkscape:connector-curvature="0"
-       id="path343-7"
-       d="m 186.37769,312.56636 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
-    <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:none"
-       inkscape:connector-curvature="0"
-       id="path361-0"
-       d="m 78.377689,391.56636 c 0,0 30.000001,0 30.000001,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30.000001,0 -30.000001,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
-    <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:none"
-       inkscape:connector-curvature="0"
-       id="path379-0"
-       d="m 150.37769,391.56636 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
-    <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:none"
-       inkscape:connector-curvature="0"
-       id="path397-2"
-       d="m 222.37769,391.56636 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
-  </g>
-  <path
-     d="m 376,51 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-22 0,-22 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,22 0,22 0,6 6,12 12,12"
-     id="path12"
-     inkscape:connector-curvature="0"
-     style="fill:#009fb1;stroke:#000000;fill-opacity:1" />
-  <text
-     x="378"
-     y="31.700012"
-     font-size="14.00"
-     id="text14"
-     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;font-family:Nimbus Roman No9 L;-inkscape-font-specification:Nimbus Roman No9 L Italic">all</text>
-  <polyline
-     points="388,-327 388,-373 "
-     id="polyline16"
-     style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
-  <text
-     x="405"
-     y="20.200012"
-     font-size="14.00"
-     id="text18"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">1</text>
-  <polyline
-     points="388,-350 414,-350 "
-     id="polyline20"
-     style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
-  <text
-     x="405"
-     y="43.200012"
-     font-size="14.00"
-     id="text22"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">2</text>
-  <path
-     d="m 340,135 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-22 0,-22 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,22 0,22 0,6 6,12 12,12"
-     id="path27"
-     inkscape:connector-curvature="0"
-     style="fill:#009fb1;stroke:#000000;fill-opacity:1" />
-  <text
-     x="342"
-     y="115.70001"
-     font-size="14.00"
-     id="text29"
-     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;font-family:Nimbus Roman No9 L;-inkscape-font-specification:Nimbus Roman No9 L Italic">any</text>
-  <polyline
-     points="352,-243 352,-289 "
-     id="polyline31"
-     style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
-  <text
-     x="369"
-     y="104.20001"
-     font-size="14.00"
-     id="text33"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">1</text>
-  <polyline
-     points="352,-266 378,-266 "
-     id="polyline35"
-     style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
-  <text
-     x="369"
-     y="127.2"
-     font-size="14.00"
-     id="text37"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">1</text>
-  <g
-     class="edge"
-     id="edge19"
-     transform="translate(4,378)">
-    <title
-       id="title40">[]-&gt;[1]</title>
-    <path
-       style="fill:none;stroke:#000000"
-       inkscape:connector-curvature="0"
-       id="path42"
-       d="m 377.163,-326.593 c -3.801,8.658 -8.218,18.719 -12.329,28.081" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon44"
-       points="361.516,-299.659 367.925,-296.845 367.925,-296.845 360.701,-289.096 " />
+       id="path16015-6"
+       d="m 329.1785,674.78952 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12" />
+    <ellipse
+       transform="translate(-7.8214979,733.78952)"
+       style="fill:#808080;stroke:none"
+       sodipodi:ry="18"
+       sodipodi:rx="18"
+       sodipodi:cy="-77"
+       sodipodi:cx="411"
+       d="m 429,-77 c 0,9.941125 -8.05887,18 -18,18 -9.94113,0 -18,-8.058875 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+       id="ellipse16033-3"
+       ry="18"
+       rx="18"
+       cy="-77"
+       cx="411" />
+    <ellipse
+       transform="translate(-7.8214979,733.78952)"
+       style="fill:#808080;stroke:none"
+       sodipodi:ry="18"
+       sodipodi:rx="18"
+       sodipodi:cy="-18"
+       sodipodi:cx="318"
+       d="m 336,-18 c 0,9.9411255 -8.05887,18 -18,18 -9.94113,0 -18,-8.0588745 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+       id="ellipse16047-8"
+       ry="18"
+       rx="18"
+       cy="-18"
+       cx="318" />
+    <ellipse
+       transform="translate(-7.8214979,733.78952)"
+       style="fill:#808080;stroke:none"
+       sodipodi:ry="18"
+       sodipodi:rx="18"
+       sodipodi:cy="-18"
+       sodipodi:cx="368"
+       d="m 386,-18 c 0,9.9411255 -8.05887,18 -18,18 -9.94113,0 -18,-8.0588745 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+       id="ellipse16061-0"
+       ry="18"
+       rx="18"
+       cy="-18"
+       cx="368" />
+    <ellipse
+       transform="translate(-7.8214979,733.78952)"
+       style="fill:#808080;stroke:none"
+       sodipodi:ry="18"
+       sodipodi:rx="18"
+       sodipodi:cy="-18"
+       sodipodi:cx="418"
+       d="m 436,-18 c 0,9.9411255 -8.05887,18 -18,18 -9.94113,0 -18,-8.0588745 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+       id="ellipse16075-7"
+       ry="18"
+       rx="18"
+       cy="-18"
+       cx="418" />
   </g>
   <path
-     d="m 412,130 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-     id="path49"
+     d="m 322.3573,36.5 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
+     id="path15770"
      inkscape:connector-curvature="0"
-     style="fill:#009fb1;stroke:#000000;fill-opacity:1;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:3, 3;stroke-dashoffset:0" />
+     style="fill:#009fb1;fill-opacity:1;stroke:#000000" />
   <text
-     x="414"
-     y="115.70001"
+     x="324.3573"
+     y="22.199997"
      font-size="14.00"
-     id="text51"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">A</text>
+     id="text15772"
+     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:200;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;font-family:Kp-Light;-inkscape-font-specification:Kp-Light Ultra-Light Italic"
+     sodipodi:linespacing="125%">all</text>
   <polyline
-     points="424,-248 424,-284 "
-     id="polyline53"
+     points="258,-239 258,-275 "
+     id="polyline15774"
      style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
+     transform="translate(80.357303,275.5)" />
   <text
-     x="441"
-     y="115.70001"
+     x="351.3573"
+     y="22.199997"
      font-size="14.00"
-     id="text55"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">1</text>
-  <g
-     class="edge"
-     id="edge20"
-     transform="translate(4,378)">
-    <title
-       id="title58">[]-&gt;[2]</title>
-    <path
-       style="fill:none;stroke:#000000"
-       inkscape:connector-curvature="0"
-       id="path60"
-       d="m 396.837,-326.593 c 4.495,10.238 9.851,22.439 14.543,33.126" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon62"
-       points="408.234,-291.927 414.643,-294.741 414.643,-294.741 415.459,-284.177 " />
-  </g>
+     id="text15776"
+     style="font-size:14px;text-anchor:middle;font-family:Kp">2</text>
   <path
-     d="m 232,219 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-22 0,-22 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,22 0,22 0,6 6,12 12,12"
-     id="path67"
+     d="m 293.3573,96.5 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
+     id="path15781"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;stroke:#000000;fill-opacity:1" />
+     style="fill:#009fb1;fill-opacity:1;stroke:#000000" />
   <text
-     x="234"
-     y="199.7"
+     x="295.3573"
+     y="82.199997"
      font-size="14.00"
-     id="text69"
-     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;font-family:Nimbus Roman No9 L;-inkscape-font-specification:Nimbus Roman No9 L Italic">all</text>
+     id="text15783"
+     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:200;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;font-family:Kp-Light;-inkscape-font-specification:Kp-Light Ultra-Light Italic"
+     sodipodi:linespacing="125%">any</text>
   <polyline
-     points="244,-159 244,-205 "
-     id="polyline71"
+     points="229,-179 229,-215 "
+     id="polyline15785"
      style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
+     transform="translate(80.357303,275.5)" />
   <text
-     x="261"
-     y="188.2"
+     x="322.3573"
+     y="82.199997"
      font-size="14.00"
-     id="text73"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">1</text>
-  <polyline
-     points="244,-182 270,-182 "
-     id="polyline75"
-     style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
-  <text
-     x="261"
-     y="211.2"
-     font-size="14.00"
-     id="text77"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">2</text>
-  <g
-     class="edge"
-     id="edge6"
-     transform="translate(4,378)">
-    <title
-       id="title80">[1]-&gt;[1,1]</title>
-    <path
-       style="fill:none;stroke:#000000"
-       inkscape:connector-curvature="0"
-       id="path82"
-       d="m 323.747,-244.308 c -13.686,10.391 -30.438,23.111 -45.13,34.265" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon84"
-       points="276.092,-212.52 280.325,-206.945 280.325,-206.945 270.244,-203.685 " />
-  </g>
+     id="text15787"
+     style="font-size:14px;text-anchor:middle;font-family:Kp">1</text>
   <path
-     d="m 340,219 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-22 0,-22 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,22 0,22 0,6 6,12 12,12"
-     id="path89"
+     d="m 325.5323,43.151 c -2.877,5.753 -5.899,11.796 -8.592,17.183"
+     id="path15792"
      inkscape:connector-curvature="0"
-     style="fill:#009fb1;stroke:#000000;fill-opacity:1" />
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="243.134,-233.746 243.134,-233.746 248.456,-238.912 247.517,-231.555 "
+     id="polygon15794"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
+  <ellipse
+     cx="287"
+     cy="-197"
+     rx="18"
+     ry="18"
+     id="ellipse15799"
+     d="m 305,-197 c 0,9.94113 -8.05887,18 -18,18 -9.94113,0 -18,-8.05887 -18,-18 0,-9.94113 8.05887,-18 18,-18 9.94113,0 18,8.05887 18,18 z"
+     sodipodi:cx="287"
+     sodipodi:cy="-197"
+     sodipodi:rx="18"
+     sodipodi:ry="18"
+     style="fill:#009fb1;fill-opacity:1;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
   <text
-     x="342"
-     y="199.7"
+     x="367.3573"
+     y="82.199997"
      font-size="14.00"
-     id="text91"
-     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;font-family:Nimbus Roman No9 L;-inkscape-font-specification:Nimbus Roman No9 L Italic">all</text>
-  <polyline
-     points="352,-159 352,-205 "
-     id="polyline93"
-     style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
-  <text
-     x="369"
-     y="188.2"
-     font-size="14.00"
-     id="text95"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">1</text>
-  <polyline
-     points="352,-182 378,-182 "
-     id="polyline97"
-     style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
-  <text
-     x="369"
-     y="211.2"
-     font-size="14.00"
-     id="text99"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">2</text>
-  <g
-     class="edge"
-     id="edge12"
-     transform="translate(4,378)">
-    <title
-       id="title102">[1]-&gt;[1,2]</title>
-    <path
-       style="fill:none;stroke:#000000"
-       inkscape:connector-curvature="0"
-       id="path104"
-       d="m 351,-242.593 c 0,8.475 0,18.296 0,27.489" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon106"
-       points="347.5,-215.096 354.5,-215.096 354.5,-215.096 351,-205.096 " />
-  </g>
+     id="text15801"
+     style="font-size:14px;text-anchor:middle;font-family:Tt-Kp">A</text>
   <path
-     d="m 484,219 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-22 0,-22 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,22 0,22 0,6 6,12 12,12"
-     id="path111"
+     d="m 349.4243,42.83 c 3.32,6.419 6.84,13.224 9.874,19.089"
+     id="path15806"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;stroke:#000000;fill-opacity:1" />
-  <text
-     x="486"
-     y="199.7"
-     font-size="14.00"
-     id="text113"
-     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;font-family:Nimbus Roman No9 L;-inkscape-font-specification:Nimbus Roman No9 L Italic">all</text>
-  <polyline
-     points="496,-159 496,-205 "
-     id="polyline115"
-     style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
-  <text
-     x="513"
-     y="188.2"
-     font-size="14.00"
-     id="text117"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">1</text>
-  <polyline
-     points="496,-182 522,-182 "
-     id="polyline119"
-     style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
-  <text
-     x="513"
-     y="211.2"
-     font-size="14.00"
-     id="text121"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">2</text>
-  <g
-     class="edge"
-     id="edge18"
-     transform="translate(4,378)">
-    <title
-       id="title124">[1]-&gt;[1,3]</title>
-    <path
-       style="fill:none;stroke:#000000"
-       inkscape:connector-curvature="0"
-       id="path126"
-       d="m 378.003,-247.468 c 3.017,1.875 6.061,3.731 8.997,5.468 23.546,13.931 50.558,28.687 71.678,39.958" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon128"
-       points="457.163,-198.884 460.448,-205.065 460.448,-205.065 467.636,-197.282 " />
-  </g>
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="266.879,-231.569 266.879,-231.569 265.839,-238.912 271.231,-233.82 "
+     id="polygon15808"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
   <path
-     d="m 124,303 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-22 0,-22 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,22 0,22 0,6 6,12 12,12"
-     id="path133"
+     d="m 214.3573,156.5 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
+     id="path15813"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;stroke:#000000;fill-opacity:1" />
+     style="fill:#ffffff;stroke:#000000" />
   <text
-     x="126"
-     y="283.70001"
+     x="216.3573"
+     y="142.2"
      font-size="14.00"
-     id="text135"
-     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;font-family:Nimbus Roman No9 L;-inkscape-font-specification:Nimbus Roman No9 L Italic">
-    <tspan
-       style="font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Nimbus Roman No9 L;-inkscape-font-specification:Nimbus Roman No9 L Italic"
-       id="tspan7856">any</tspan>
-  </text>
+     id="text15815"
+     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:200;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;font-family:Kp-Light;-inkscape-font-specification:Kp-Light Ultra-Light Italic"
+     sodipodi:linespacing="125%">all</text>
   <polyline
-     points="136,-75 136,-121 "
-     id="polyline137"
+     points="150,-119 150,-155 "
+     id="polyline15817"
      style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
+     transform="translate(80.357303,275.5)" />
   <text
-     x="153"
-     y="272.20001"
+     x="243.3573"
+     y="142.2"
      font-size="14.00"
-     id="text139"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">1</text>
-  <polyline
-     points="136,-98 162,-98 "
-     id="polyline141"
-     style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
-  <text
-     x="153"
-     y="295.20001"
-     font-size="14.00"
-     id="text143"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">1</text>
-  <g
-     class="edge"
-     id="edge4"
-     transform="translate(4,378)">
-    <title
-       id="title146">[1,1]-&gt;[1,1,1]</title>
-    <path
-       style="fill:none;stroke:#000000"
-       inkscape:connector-curvature="0"
-       id="path148"
-       d="m 215.747,-160.308 c -13.686,10.391 -30.438,23.111 -45.13,34.265" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon150"
-       points="168.092,-128.52 172.325,-122.945 172.325,-122.945 162.244,-119.685 " />
-  </g>
+     id="text15819"
+     style="font-size:14px;text-anchor:middle;font-family:Kp">2</text>
   <path
-     d="m 232,298 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-     id="path155"
+     d="m 279.4373,100.732 c -8.786,6.451 -18.325,13.454 -26.698,19.602"
+     id="path15824"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;stroke:#000000;fill-opacity:1" />
-  <text
-     x="234"
-     y="283.70001"
-     font-size="14.00"
-     id="text157"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">B</text>
-  <polyline
-     points="244,-80 244,-116 "
-     id="polyline159"
-     style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
-  <text
-     x="261"
-     y="283.70001"
-     font-size="14.00"
-     id="text161"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">1</text>
-  <g
-     class="edge"
-     id="edge5"
-     transform="translate(4,378)">
-    <title
-       id="title164">[1,1]-&gt;[1,1,2]</title>
-    <path
-       style="fill:none;stroke:#000000"
-       inkscape:connector-curvature="0"
-       id="path166"
-       d="m 243,-158.593 c 0,9.925 0,21.693 0,32.14" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon168"
-       points="239.5,-126.177 246.5,-126.177 246.5,-126.177 243,-116.177 " />
-  </g>
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="197.632,-176.744 197.632,-176.744 204.725,-178.912 200.532,-172.794 "
+     id="polygon15826"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
   <path
-     d="m 16,377 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-     id="path173"
+     d="m 293.3573,156.5 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
+     id="path15831"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;stroke:#000000;fill-opacity:1" />
+     style="fill:#009fb1;fill-opacity:1;stroke:#000000" />
   <text
-     x="18"
-     y="362.70001"
+     x="295.3573"
+     y="142.2"
      font-size="14.00"
-     id="text175"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">C</text>
+     id="text15833"
+     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:200;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;font-family:Kp-Light;-inkscape-font-specification:Kp-Light Ultra-Light Italic"
+     sodipodi:linespacing="125%">all</text>
   <polyline
-     points="28,-1 28,-37 "
-     id="polyline177"
+     points="229,-119 229,-155 "
+     id="polyline15835"
      style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
+     transform="translate(80.357303,275.5)" />
   <text
-     x="45"
-     y="362.70001"
+     x="322.3573"
+     y="142.2"
      font-size="14.00"
-     id="text179"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">1</text>
-  <g
-     class="edge"
-     id="edge1"
-     transform="translate(4,378)">
-    <title
-       id="title182">[1,1,1]-&gt;[1,1,1,1]</title>
-    <path
-       style="fill:none;stroke:#000000"
-       inkscape:connector-curvature="0"
-       id="path184"
-       d="M 107.747,-77.5696 C 92.9841,-67.0442 74.653,-53.9749 59.1899,-42.9502" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon186"
-       points="57.0458,-45.7201 61.1095,-40.0203 61.1095,-40.0203 50.9352,-37.0649 " />
-  </g>
+     id="text15837"
+     style="font-size:14px;text-anchor:middle;font-family:Kp">2</text>
   <path
-     d="m 88,377 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-     id="path191"
+     d="m 308.3573,103.903 c 0,5.525 0,11.278 0,16.431"
+     id="path15842"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;stroke:#000000;fill-opacity:1" />
-  <text
-     x="90"
-     y="362.70001"
-     font-size="14.00"
-     id="text193"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">D</text>
-  <polyline
-     points="100,-1 100,-37 "
-     id="polyline195"
-     style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
-  <text
-     x="117"
-     y="362.70001"
-     font-size="14.00"
-     id="text197"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">1</text>
-  <g
-     class="edge"
-     id="edge2"
-     transform="translate(4,378)">
-    <title
-       id="title200">[1,1,1]-&gt;[1,1,1,2]</title>
-    <path
-       style="fill:none;stroke:#000000"
-       inkscape:connector-curvature="0"
-       id="path202"
-       d="m 124.587,-74.7284 c -4.13,8.8346 -8.913,19.0648 -13.218,28.2727" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon204"
-       points="108.168,-47.8725 114.509,-44.9077 114.509,-44.9077 107.103,-37.3313 " />
-  </g>
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="225.55,-171.912 225.55,-171.912 228,-178.912 230.45,-171.912 "
+     id="polygon15844"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
   <path
-     d="m 160,377 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-     id="path209"
+     d="m 417.3573,156.5 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
+     id="path15849"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;stroke:#000000;fill-opacity:1" />
+     style="fill:#ffffff;stroke:#000000" />
   <text
-     x="162"
-     y="362.70001"
+     x="419.3573"
+     y="142.2"
      font-size="14.00"
-     id="text211"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">E</text>
+     id="text15851"
+     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:200;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;font-family:Kp-Light;-inkscape-font-specification:Kp-Light Ultra-Light Italic"
+     sodipodi:linespacing="125%">all</text>
   <polyline
-     points="172,-1 172,-37 "
-     id="polyline213"
+     points="353,-119 353,-155 "
+     id="polyline15853"
      style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
+     transform="translate(80.357303,275.5)" />
   <text
-     x="189"
-     y="362.70001"
+     x="446.3573"
+     y="142.2"
      font-size="14.00"
-     id="text215"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">1</text>
-  <g
-     class="edge"
-     id="edge3"
-     transform="translate(4,378)">
-    <title
-       id="title218">[1,1,1]-&gt;[1,1,1,3]</title>
-    <path
-       style="fill:none;stroke:#000000"
-       inkscape:connector-curvature="0"
-       id="path220"
-       d="m 145.413,-74.7284 c 4.13,8.8346 8.913,19.0648 13.218,28.2727" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon222"
-       points="155.491,-44.9077 161.832,-47.8725 161.832,-47.8725 162.897,-37.3313 " />
-  </g>
+     id="text15855"
+     style="font-size:14px;text-anchor:middle;font-family:Kp">2</text>
   <path
-     d="m 304,303 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-22 0,-22 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,22 0,22 0,6 6,12 12,12"
-     id="path227"
+     d="m 341.9283,97.291 c 0.143,0.07 0.286,0.14 0.429,0.209 20.913,10.168 45.007,20.822 62.999,28.575"
+     id="path15860"
      inkscape:connector-curvature="0"
-     style="fill:#009fb1;stroke:#000000;fill-opacity:1" />
-  <text
-     x="306"
-     y="283.70001"
-     font-size="14.00"
-     id="text229"
-     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;font-family:Nimbus Roman No9 L;-inkscape-font-specification:Nimbus Roman No9 L Italic">any</text>
-  <polyline
-     points="316,-75 316,-121 "
-     id="polyline231"
-     style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
-  <text
-     x="333"
-     y="272.20001"
-     font-size="14.00"
-     id="text233"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">1</text>
-  <polyline
-     points="316,-98 342,-98 "
-     id="polyline235"
-     style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
-  <text
-     x="333"
-     y="295.20001"
-     font-size="14.00"
-     id="text237"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">1</text>
-  <g
-     class="edge"
-     id="edge10"
-     transform="translate(4,378)">
-    <title
-       id="title240">[1,2]-&gt;[1,2,1]</title>
-    <path
-       style="fill:none;stroke:#000000"
-       inkscape:connector-curvature="0"
-       id="path242"
-       d="m 341.163,-158.593 c -3.801,8.658 -8.218,18.719 -12.329,28.081" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon244"
-       points="325.516,-131.659 331.925,-128.845 331.925,-128.845 324.701,-121.096 " />
-  </g>
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="260.177,-176.167 260.177,-176.167 255.009,-181.486 262.367,-180.55 "
+     id="polygon15862"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
   <path
-     d="m 376,298 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-     id="path249"
+     d="m 144.3573,216.5 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
+     id="path15867"
      inkscape:connector-curvature="0"
-     style="fill:#009fb1;stroke:#000000;fill-opacity:1;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:3, 3;stroke-dashoffset:0" />
+     style="fill:#ffffff;stroke:#000000" />
   <text
-     x="377.5"
-     y="283.70001"
+     x="146.3573"
+     y="202.2"
      font-size="14.00"
-     id="text251"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">F</text>
+     id="text15869"
+     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:200;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;font-family:Kp-Light;-inkscape-font-specification:Kp-Light Ultra-Light Italic"
+     sodipodi:linespacing="125%">any</text>
   <polyline
-     points="387,-80 387,-116 "
-     id="polyline253"
+     points="80,-59 80,-95 "
+     id="polyline15871"
      style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
+     transform="translate(80.357303,275.5)" />
   <text
-     x="404.5"
-     y="283.70001"
+     x="173.3573"
+     y="202.2"
      font-size="14.00"
-     id="text255"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">1</text>
-  <g
-     class="edge"
-     id="edge11"
-     transform="translate(4,378)">
-    <title
-       id="title258">[1,2]-&gt;[1,2,2]</title>
-    <path
-       style="fill:none;stroke:#000000"
-       inkscape:connector-curvature="0"
-       id="path260"
-       d="m 360.837,-158.593 c 4.495,10.238 9.851,22.439 14.543,33.126" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon262"
-       points="372.234,-123.927 378.643,-126.741 378.643,-126.741 379.459,-116.177 " />
-  </g>
+     id="text15873"
+     style="font-size:14px;text-anchor:middle;font-family:Kp">1</text>
   <path
-     d="m 232,377 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-     id="path267"
+     d="m 203.0633,161.287 c -7.598,6.295 -15.781,13.075 -22.9878,19.0465"
+     id="path15878"
      inkscape:connector-curvature="0"
-     style="fill:#009fb1;stroke:#000000;fill-opacity:1;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:3, 3;stroke-dashoffset:0" />
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="121.423,-116.332 121.423,-116.332 128.376,-118.912 124.549,-112.559 "
+     id="polygon15880"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
+  <ellipse
+     cx="149"
+     cy="-77"
+     rx="18"
+     ry="18"
+     id="ellipse15885"
+     d="m 167,-77 c 0,9.941125 -8.05887,18 -18,18 -9.94113,0 -18,-8.058875 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+     sodipodi:cx="149"
+     sodipodi:cy="-77"
+     sodipodi:rx="18"
+     sodipodi:ry="18"
+     style="fill:#ffffff;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
   <text
-     x="234"
-     y="362.70001"
+     x="229.3573"
+     y="202.2"
      font-size="14.00"
-     id="text269"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">G</text>
-  <polyline
-     points="244,-1 244,-37 "
-     id="polyline271"
-     style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
-  <text
-     x="261"
-     y="362.70001"
-     font-size="14.00"
-     id="text273"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">1</text>
-  <g
-     class="edge"
-     id="edge7"
-     transform="translate(4,378)">
-    <title
-       id="title276">[1,2,1]-&gt;[1,2,1,1]</title>
-    <path
-       style="fill:none;stroke:#000000"
-       inkscape:connector-curvature="0"
-       id="path278"
-       d="m 294.175,-74.7284 c -8.783,9.3926 -19.041,20.3625 -28.057,30.0046" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon280"
-       points="263.479,-47.026 268.592,-42.2451 268.592,-42.2451 259.206,-37.3313 " />
-  </g>
+     id="text15887"
+     style="font-size:14px;text-anchor:middle;font-family:Tt-Kp">B</text>
   <path
-     d="m 304,377 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-     id="path285"
+     d="m 229.3573,163.903 c 0,5.525 0,11.278 0,16.4305"
+     id="path15892"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;stroke:#000000;fill-opacity:1" />
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="146.55,-111.912 146.55,-111.912 149,-118.912 151.45,-111.912 "
+     id="polygon15894"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
+  <ellipse
+     cx="18"
+     cy="-18"
+     rx="18"
+     ry="18"
+     id="ellipse15899"
+     d="M 36,-18 C 36,-8.0588745 27.941125,0 18,0 8.0588745,0 0,-8.0588745 0,-18 c 0,-9.941125 8.0588745,-18 18,-18 9.941125,0 18,8.058875 18,18 z"
+     sodipodi:cx="18"
+     sodipodi:cy="-18"
+     sodipodi:rx="18"
+     sodipodi:ry="18"
+     style="fill:#ffffff;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
   <text
-     x="306"
-     y="362.70001"
+     x="98.3573"
+     y="261.20001"
      font-size="14.00"
-     id="text287"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">H</text>
-  <polyline
-     points="316,-1 316,-37 "
-     id="polyline289"
-     style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
-  <text
-     x="333"
-     y="362.70001"
-     font-size="14.00"
-     id="text291"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">1</text>
-  <g
-     class="edge"
-     id="edge8"
-     transform="translate(4,378)">
-    <title
-       id="title294">[1,2,1]-&gt;[1,2,1,2]</title>
-    <path
-       style="fill:none;stroke:#000000"
-       inkscape:connector-curvature="0"
-       id="path296"
-       d="m 315,-74.7284 c 0,8.4626 0,18.2057 0,27.1044" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon298"
-       points="311.5,-47.3313 318.5,-47.3313 318.5,-47.3313 315,-37.3313 " />
-  </g>
+     id="text15901"
+     style="font-size:14px;text-anchor:middle;font-family:Tt-Kp">C</text>
   <path
-     d="m 376,377 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-     id="path303"
+     d="m 135.9119,221.408 c -8.4597,7.905 -17.6856,16.5259 -24.876,23.2448"
+     id="path15906"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;stroke:#000000;fill-opacity:1" />
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="53.9106,-55.909 53.9106,-55.909 60.698,-58.8981 57.2561,-52.3288 "
+     id="polygon15908"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
+  <ellipse
+     cx="68"
+     cy="-18"
+     rx="18"
+     ry="18"
+     id="ellipse15913"
+     d="M 86,-18 C 86,-8.0588745 77.941125,0 68,0 58.058875,0 50,-8.0588745 50,-18 c 0,-9.941125 8.058875,-18 18,-18 9.941125,0 18,8.058875 18,18 z"
+     sodipodi:cx="68"
+     sodipodi:cy="-18"
+     sodipodi:rx="18"
+     sodipodi:ry="18"
+     style="fill:#ffffff;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
   <text
-     x="377"
-     y="362.70001"
+     x="148.3573"
+     y="261.20001"
      font-size="14.00"
-     id="text305"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">I</text>
-  <polyline
-     points="386,-1 386,-37 "
-     id="polyline307"
-     style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
-  <text
-     x="404"
-     y="362.70001"
-     font-size="14.00"
-     id="text309"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">1</text>
-  <g
-     class="edge"
-     id="edge9"
-     transform="translate(4,378)">
-    <title
-       id="title312">[1,2,1]-&gt;[1,2,1,3]</title>
-    <path
-       style="fill:none;stroke:#000000"
-       inkscape:connector-curvature="0"
-       id="path314"
-       d="m 335.825,-74.7284 c 8.783,9.3926 19.041,20.3625 28.057,30.0046" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon316"
-       points="361.408,-42.2451 366.521,-47.026 366.521,-47.026 370.794,-37.3313 " />
-  </g>
+     id="text15915"
+     style="font-size:14px;text-anchor:middle;font-family:Tt-Kp">D</text>
   <path
-     d="m 484,303 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-22 0,-22 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,22 0,22 0,6 6,12 12,12"
-     id="path321"
+     d="m 154.6995,223.6359 c -1.0237,5.3043 -2.0872,10.8153 -3.0442,15.7743"
+     id="path15920"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;stroke:#000000;fill-opacity:1" />
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="71.9675,-52.4892 71.9675,-52.4892 75.6996,-58.8981 76.7788,-51.5607 "
+     id="polygon15922"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
+  <ellipse
+     cx="118"
+     cy="-18"
+     rx="18"
+     ry="18"
+     id="ellipse15927"
+     d="m 136,-18 c 0,9.9411255 -8.05887,18 -18,18 -9.94113,0 -18,-8.0588745 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+     sodipodi:cx="118"
+     sodipodi:cy="-18"
+     sodipodi:rx="18"
+     sodipodi:ry="18"
+     style="fill:#ffffff;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
   <text
-     x="486"
-     y="283.70001"
+     x="198.3573"
+     y="261.20001"
      font-size="14.00"
-     id="text323"
-     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-anchor:middle;font-family:Nimbus Roman No9 L;-inkscape-font-specification:Nimbus Roman No9 L Italic">any</text>
-  <polyline
-     points="496,-75 496,-121 "
-     id="polyline325"
-     style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
-  <text
-     x="513"
-     y="272.20001"
-     font-size="14.00"
-     id="text327"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">1</text>
-  <polyline
-     points="496,-98 522,-98 "
-     id="polyline329"
-     style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
-  <text
-     x="513"
-     y="295.20001"
-     font-size="14.00"
-     id="text331"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">1</text>
-  <g
-     class="edge"
-     id="edge16"
-     transform="translate(4,378)">
-    <title
-       id="title334">[1,3]-&gt;[1,3,1]</title>
-    <path
-       style="fill:none;stroke:#000000"
-       inkscape:connector-curvature="0"
-       id="path336"
-       d="m 495,-158.593 c 0,8.475 0,18.296 0,27.489" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon338"
-       points="491.5,-131.096 498.5,-131.096 498.5,-131.096 495,-121.096 " />
-  </g>
+     id="text15929"
+     style="font-size:14px;text-anchor:middle;font-family:Tt-Kp">E</text>
   <path
-     d="m 556,298 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-     id="path343"
+     d="m 175.1087,222.5213 c 4.528,6.6179 9.3366,13.6453 13.3976,19.5814"
+     id="path15934"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;stroke:#000000;fill-opacity:1" />
-  <text
-     x="557"
-     y="283.70001"
-     font-size="14.00"
-     id="text345"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">J</text>
-  <polyline
-     points="566,-80 566,-116 "
-     id="polyline347"
-     style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
-  <text
-     x="584"
-     y="283.70001"
-     font-size="14.00"
-     id="text349"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">1</text>
-  <g
-     class="edge"
-     id="edge17"
-     transform="translate(4,378)">
-    <title
-       id="title352">[1,3]-&gt;[1,3,2]</title>
-    <path
-       style="fill:none;stroke:#000000"
-       inkscape:connector-curvature="0"
-       id="path354"
-       d="m 514.674,-158.593 c 9.449,10.76 20.8,23.689 30.512,34.749" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon356"
-       points="542.689,-121.383 547.949,-126.001 547.949,-126.001 551.917,-116.177 " />
-  </g>
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="92.6321,-51.7375 92.6321,-51.7375 90.7013,-58.8981 96.6761,-54.5044 "
+     id="polygon15936"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
   <path
-     d="m 448,377 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-     id="path361"
+     d="m 283.3573,216.5 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
+     id="path15941"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;stroke:#000000;fill-opacity:1" />
+     style="fill:#009fb1;fill-opacity:1;stroke:#000000" />
   <text
-     x="450"
-     y="362.70001"
+     x="285.3573"
+     y="202.2"
      font-size="14.00"
-     id="text363"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">K</text>
+     id="text15943"
+     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:200;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;font-family:Kp-Light;-inkscape-font-specification:Kp-Light Ultra-Light Italic"
+     sodipodi:linespacing="125%">any</text>
   <polyline
-     points="460,-1 460,-37 "
-     id="polyline365"
+     points="219,-59 219,-95 "
+     id="polyline15945"
      style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
+     transform="translate(80.357303,275.5)" />
   <text
-     x="477"
-     y="362.70001"
+     x="312.3573"
+     y="202.2"
      font-size="14.00"
-     id="text367"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">1</text>
-  <g
-     class="edge"
-     id="edge13"
-     transform="translate(4,378)">
-    <title
-       id="title370">[1,3,1]-&gt;[1,3,1,1]</title>
-    <path
-       style="fill:none;stroke:#000000"
-       inkscape:connector-curvature="0"
-       id="path372"
-       d="m 484.587,-74.7284 c -4.13,8.8346 -8.913,19.0648 -13.218,28.2727" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon374"
-       points="468.168,-47.8725 474.509,-44.9077 474.509,-44.9077 467.103,-37.3313 " />
-  </g>
+     id="text15947"
+     style="font-size:14px;text-anchor:middle;font-family:Kp">1</text>
   <path
-     d="m 520,377 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-     id="path379"
+     d="m 304.2143,163.527 c -0.972,5.639 -1.989,11.537 -2.897,16.8065"
+     id="path15952"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;stroke:#000000;fill-opacity:1" />
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="221.45,-112.43 221.45,-112.43 225.054,-118.912 226.279,-111.597 "
+     id="polygon15954"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
+  <ellipse
+     cx="277"
+     cy="-77"
+     rx="18"
+     ry="18"
+     id="ellipse15959"
+     d="m 295,-77 c 0,9.941125 -8.05887,18 -18,18 -9.94113,0 -18,-8.058875 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+     sodipodi:cx="277"
+     sodipodi:cy="-77"
+     sodipodi:rx="18"
+     sodipodi:ry="18"
+     style="fill:#ffffff;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
   <text
-     x="522"
-     y="362.70001"
+     x="357.3573"
+     y="202.2"
      font-size="14.00"
-     id="text381"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">L</text>
-  <polyline
-     points="532,-1 532,-37 "
-     id="polyline383"
-     style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
-  <text
-     x="549"
-     y="362.70001"
-     font-size="14.00"
-     id="text385"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">1</text>
-  <g
-     class="edge"
-     id="edge14"
-     transform="translate(4,378)">
-    <title
-       id="title388">[1,3,1]-&gt;[1,3,1,2]</title>
-    <path
-       style="fill:none;stroke:#000000"
-       inkscape:connector-curvature="0"
-       id="path390"
-       d="m 505.413,-74.7284 c 4.13,8.8346 8.913,19.0648 13.218,28.2727" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon392"
-       points="515.491,-44.9077 521.832,-47.8725 521.832,-47.8725 522.897,-37.3313 " />
-  </g>
+     id="text15961"
+     style="font-size:14px;text-anchor:middle;font-family:Tt-Kp">F</text>
   <path
-     d="m 592,377 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
-     id="path397"
+     d="m 327.4923,162.149 c 6.309,7.469 13.118,15.528 18.639,22.0628"
+     id="path15966"
      inkscape:connector-curvature="0"
-     style="fill:#ffffff;stroke:#000000;fill-opacity:1" />
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="245.083,-111.983 245.083,-111.983 242.437,-118.912 248.826,-115.146 "
+     id="polygon15968"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
+  <ellipse
+     cx="168"
+     cy="-18"
+     rx="18"
+     ry="18"
+     id="ellipse15973"
+     d="m 186,-18 c 0,9.9411255 -8.05887,18 -18,18 -9.94113,0 -18,-8.0588745 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+     sodipodi:cx="168"
+     sodipodi:cy="-18"
+     sodipodi:rx="18"
+     sodipodi:ry="18"
+     style="fill:#009fb1;fill-opacity:1;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
   <text
-     x="595"
-     y="362.70001"
+     x="248.3573"
+     y="261.20001"
      font-size="14.00"
-     id="text399"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">M</text>
+     id="text15975"
+     style="font-size:14px;text-anchor:middle;font-family:Tt-Kp">G</text>
+  <path
+     d="m 278.6493,221.9668 c -6.311,7.195 -13.094,14.9276 -18.638,21.2479"
+     id="path15980"
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="196.54,-55.2514 196.54,-55.2514 202.998,-58.8981 200.224,-52.0201 "
+     id="polygon15982"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
+  <ellipse
+     cx="218"
+     cy="-18"
+     rx="18"
+     ry="18"
+     id="ellipse15987"
+     d="m 236,-18 c 0,9.9411255 -8.05887,18 -18,18 -9.94113,0 -18,-8.0588745 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+     sodipodi:cx="218"
+     sodipodi:cy="-18"
+     sodipodi:rx="18"
+     sodipodi:ry="18"
+     style="fill:#ffffff;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
+  <text
+     x="298.3573"
+     y="261.20001"
+     font-size="14.00"
+     id="text15989"
+     style="font-size:14px;text-anchor:middle;font-family:Tt-Kp">H</text>
+  <path
+     d="m 298.3573,223.6359 c 0,5.3043 0,10.8153 0,15.7743"
+     id="path15994"
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="215.55,-51.8981 215.55,-51.8981 218,-58.8981 220.45,-51.8982 "
+     id="polygon15996"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
+  <ellipse
+     cx="268"
+     cy="-18"
+     rx="18"
+     ry="18"
+     id="ellipse16001"
+     d="m 286,-18 c 0,9.9411255 -8.05887,18 -18,18 -9.94113,0 -18,-8.0588745 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+     sodipodi:cx="268"
+     sodipodi:cy="-18"
+     sodipodi:rx="18"
+     sodipodi:ry="18"
+     style="fill:#ffffff;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
+  <text
+     x="348.3573"
+     y="261.20001"
+     font-size="14.00"
+     id="text16003"
+     style="font-size:14px;text-anchor:middle;font-family:Tt-Kp">I</text>
+  <path
+     d="m 318.0653,221.9668 c 6.311,7.195 13.094,14.9276 18.638,21.2479"
+     id="path16008"
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="235.776,-52.0201 235.776,-52.0201 233.002,-58.8981 239.46,-55.2514 "
+     id="polygon16010"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
+  <path
+     d="m 417.3573,216.5 c 0,0 30,0 30,0 6,0 12,-6 12,-12 0,0 0,-12 0,-12 0,-6 -6,-12 -12,-12 0,0 -30,0 -30,0 -6,0 -12,6 -12,12 0,0 0,12 0,12 0,6 6,12 12,12"
+     id="path16015"
+     inkscape:connector-curvature="0"
+     style="fill:#ffffff;stroke:#000000" />
+  <text
+     x="419.3573"
+     y="202.2"
+     font-size="14.00"
+     id="text16017"
+     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:200;font-stretch:normal;text-align:center;line-height:125%;writing-mode:lr-tb;text-anchor:middle;font-family:Kp-Light;-inkscape-font-specification:Kp-Light Ultra-Light Italic"
+     sodipodi:linespacing="125%">any</text>
   <polyline
-     points="606,-1 606,-37 "
-     id="polyline401"
+     points="353,-59 353,-95 "
+     id="polyline16019"
      style="fill:none;stroke:#000000"
-     transform="translate(4,378)" />
+     transform="translate(80.357303,275.5)" />
   <text
-     x="622"
-     y="362.70001"
+     x="446.3573"
+     y="202.2"
      font-size="14.00"
-     id="text403"
-     style="font-size:14px;text-anchor:middle;font-family:'Times,serif'">1</text>
+     id="text16021"
+     style="font-size:14px;text-anchor:middle;font-family:Kp">1</text>
+  <path
+     d="m 432.3573,163.903 c 0,5.525 0,11.278 0,16.4305"
+     id="path16026"
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="349.55,-111.912 349.55,-111.912 352,-118.912 354.45,-111.912 "
+     id="polygon16028"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
+  <ellipse
+     cx="411"
+     cy="-77"
+     rx="18"
+     ry="18"
+     id="ellipse16033"
+     d="m 429,-77 c 0,9.941125 -8.05887,18 -18,18 -9.94113,0 -18,-8.058875 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+     sodipodi:cx="411"
+     sodipodi:cy="-77"
+     sodipodi:rx="18"
+     sodipodi:ry="18"
+     style="fill:#ffffff;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
+  <text
+     x="491.3573"
+     y="202.2"
+     font-size="14.00"
+     id="text16035"
+     style="font-size:14px;text-anchor:middle;font-family:Tt-Kp">J</text>
+  <path
+     d="m 455.1943,161.95 c 8.086,7.949 16.878,16.5918 23.768,23.3648"
+     id="path16040"
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="372.657,-112.257 372.657,-112.257 369.383,-118.912 376.092,-115.752 "
+     id="polygon16042"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
+  <ellipse
+     cx="318"
+     cy="-18"
+     rx="18"
+     ry="18"
+     id="ellipse16047"
+     d="m 336,-18 c 0,9.9411255 -8.05887,18 -18,18 -9.94113,0 -18,-8.0588745 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+     sodipodi:cx="318"
+     sodipodi:cy="-18"
+     sodipodi:rx="18"
+     sodipodi:ry="18"
+     style="fill:#ffffff;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
+  <text
+     x="398.3573"
+     y="261.20001"
+     font-size="14.00"
+     id="text16049"
+     style="font-size:14px;text-anchor:middle;font-family:Tt-Kp">K</text>
+  <path
+     d="m 418.4463,222.8222 c -3.812,6.3899 -7.838,13.139 -11.276,18.9039"
+     id="path16054"
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="336.109,-54.1415 336.109,-54.1415 341.799,-58.8981 340.317,-51.6313 "
+     id="polygon16056"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
+  <ellipse
+     cx="368"
+     cy="-18"
+     rx="18"
+     ry="18"
+     id="ellipse16061"
+     d="m 386,-18 c 0,9.9411255 -8.05887,18 -18,18 -9.94113,0 -18,-8.0588745 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+     sodipodi:cx="368"
+     sodipodi:cy="-18"
+     sodipodi:rx="18"
+     sodipodi:ry="18"
+     style="fill:#ffffff;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
+  <text
+     x="448.3573"
+     y="261.20001"
+     font-size="14.00"
+     id="text16063"
+     style="font-size:14px;text-anchor:middle;font-family:Tt-Kp">L</text>
+  <path
+     d="m 439.0663,223.3993 c 1.548,5.517 3.163,11.2702 4.604,16.4032"
+     id="path16068"
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="356.334,-51.4964 356.334,-51.4964 356.801,-58.8981 361.051,-52.8208 "
+     id="polygon16070"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
+  <ellipse
+     cx="418"
+     cy="-18"
+     rx="18"
+     ry="18"
+     id="ellipse16075"
+     d="m 436,-18 c 0,9.9411255 -8.05887,18 -18,18 -9.94113,0 -18,-8.0588745 -18,-18 0,-9.941125 8.05887,-18 18,-18 9.94113,0 18,8.058875 18,18 z"
+     sodipodi:cx="418"
+     sodipodi:cy="-18"
+     sodipodi:rx="18"
+     sodipodi:ry="18"
+     style="fill:#ffffff;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
+  <text
+     x="498.3573"
+     y="261.20001"
+     font-size="14.00"
+     id="text16077"
+     style="font-size:14px;text-anchor:middle;font-family:Tt-Kp">M</text>
+  <path
+     d="m 457.5443,221.2524 c 9.362,8.0855 19.615,16.9398 27.502,23.7514"
+     id="path16082"
+     inkscape:connector-curvature="0"
+     style="fill:none;stroke:#000000" />
+  <polygon
+     points="375.499,-52.4685 375.499,-52.4685 371.802,-58.8981 378.701,-56.177 "
+     id="polygon16084"
+     style="fill:#000000;stroke:#000000"
+     transform="translate(80.357303,275.5)" />
   <g
-     class="edge"
-     id="edge15"
-     transform="translate(4,378)">
-    <title
-       id="title406">[1,3,1]-&gt;[1,3,1,3]</title>
-    <path
-       style="fill:none;stroke:#000000"
-       inkscape:connector-curvature="0"
-       id="path408"
-       d="m 522.253,-77.5696 c 14.763,10.5254 33.094,23.5947 48.557,34.6194" />
-    <polygon
-       style="fill:#000000;stroke:#000000"
-       id="polygon410"
-       points="568.891,-40.0203 572.954,-45.7201 572.954,-45.7201 579.065,-37.0649 " />
-  </g>
-  <g
-     id="g7782"
-     transform="matrix(1.1288347,0,0,1.1288347,-4.6815935,-4.8739443)">
+     transform="matrix(0.51257644,0,0,0.51257644,-109.92737,-1.3821823)"
+     id="g4136">
     <path
        sodipodi:nodetypes="cc"
-       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:0.8858692;stroke-opacity:1"
+       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:1.95092821;stroke-opacity:1"
        inkscape:connector-curvature="0"
        id="path26"
-       d="M 114.04325,27.305276 C 102.1845,34.251953 80.700343,46.836793 67.170728,54.762593" />
+       d="M 409.57193,31.866001 C 386.47165,45.3978 344.62153,69.912472 318.26648,85.351555" />
     <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:0.8858692;stroke-opacity:1"
+       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:1.95092821;stroke-opacity:1"
        inkscape:connector-curvature="0"
        id="path40"
-       d="m 121.8186,31.748304 c 0,5.68512 0,12.517729 0,18.855819" />
+       d="m 424.71795,40.52081 c 0,11.074344 0,24.383943 0,36.730243" />
     <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:0.8858692;stroke-opacity:1"
+       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:1.95092821;stroke-opacity:1"
        inkscape:connector-curvature="0"
        id="path54"
-       d="m 129.59395,27.305275 c 11.99549,7.027389 33.72737,19.75845 47.41299,27.776339" />
+       d="m 439.86397,31.865999 c 23.36664,13.689022 65.69932,38.488526 92.35825,54.106994" />
     <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:0.8858692;stroke-opacity:1"
+       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:1.95092821;stroke-opacity:1"
        inkscape:connector-curvature="0"
        id="path68"
-       d="M 54.009869,65.975157 C 47.250367,72.569876 37.17752,82.39726 29.558906,89.83029" />
+       d="m 292.62975,107.1931 c -13.16719,12.8462 -32.78862,31.98948 -47.62932,46.46867" />
     <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:0.8858692;stroke-opacity:1"
+       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:1.95092821;stroke-opacity:1"
        inkscape:connector-curvature="0"
-       id="path82-0"
-       d="m 57.578133,68.05031 c -2.148486,6.169488 -4.825471,13.857216 -7.235991,20.779935" />
+       id="path82"
+       d="m 299.58056,111.2354 c -4.18515,12.01787 -9.39979,26.9932 -14.09537,40.47833" />
     <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:0.8858692;stroke-opacity:1"
+       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:1.95092821;stroke-opacity:1"
        inkscape:connector-curvature="0"
        id="path96"
-       d="m 63.273996,68.05031 c 2.27238,6.509881 5.103738,14.621772 7.653255,21.926441" />
+       d="m 310.67583,111.2354 c 4.42649,12.68094 9.94184,28.48252 14.90818,42.71167" />
     <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:0.8858692;stroke-opacity:1"
+       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:1.95092821;stroke-opacity:1"
        inkscape:connector-curvature="0"
        id="path110"
-       d="m 116.84921,66.987707 c -4.72533,6.890876 -11.11891,16.21485 -16.4602,24.004048" />
+       d="m 415.03781,109.1655 c -9.20472,13.4231 -21.65911,31.58576 -32.06369,46.75875" />
     <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:0.8858692;stroke-opacity:1"
+       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:1.95092821;stroke-opacity:1"
        inkscape:connector-curvature="0"
        id="path124"
-       d="m 121.8186,68.699207 c 0,5.512511 0,12.137184 0,18.282985" />
+       d="m 424.71795,112.49942 c 0,10.73811 0,23.64266 0,35.61439" />
     <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:0.8858692;stroke-opacity:1"
+       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:1.95092821;stroke-opacity:1"
        inkscape:connector-curvature="0"
        id="path138"
-       d="m 126.78799,66.987707 c 4.53544,6.616604 10.6721,15.569465 15.79875,23.04863" />
+       d="m 434.39809,109.1655 c 8.83482,12.88883 20.78875,30.32858 30.77522,44.89764" />
     <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:0.8858692;stroke-opacity:1"
+       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:1.95092821;stroke-opacity:1"
        inkscape:connector-curvature="0"
        id="path152"
-       d="m 180.36321,68.05031 c -2.27238,6.509881 -5.10373,14.621772 -7.65325,21.926441" />
+       d="m 538.76008,111.2354 c -4.42648,12.68094 -9.94182,28.48252 -14.90816,42.71167" />
     <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:0.8858692;stroke-opacity:1"
+       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:1.95092821;stroke-opacity:1"
        inkscape:connector-curvature="0"
-       id="path166-3"
-       d="m 186.05907,68.05031 c 2.39627,6.850274 5.382,15.386329 8.07051,23.072948" />
+       id="path166"
+       d="m 549.85535,111.2354 c 4.66782,13.34401 10.48387,29.97184 15.72097,44.94501" />
     <path
-       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:0.8858692;stroke-opacity:1"
+       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:1.95092821;stroke-opacity:1"
        inkscape:connector-curvature="0"
        id="path180"
-       d="m 189.62734,65.975157 c 7.10767,6.934619 17.6993,17.26852 25.71042,25.08466" />
+       d="m 556.80616,107.1931 c 13.84542,13.50831 34.47741,33.63826 50.08269,48.86373" />
     <ellipse
-       transform="matrix(0.34106961,0,0,0.51335949,14.381674,105.40471)"
-       style="fill:#009fb1;fill-opacity:1;stroke:#4d4d4d;stroke-width:2.11708021;stroke-opacity:1"
+       transform="matrix(0.66438747,0,0,1,215.4359,184)"
+       style="fill:#009fb1;fill-opacity:1;stroke:#009fb1;stroke-width:2.39348459;stroke-opacity:1"
        sodipodi:ry="18"
        sodipodi:rx="27"
        sodipodi:cy="-162"
@@ -1187,8 +979,8 @@
        cy="-162"
        cx="315" />
     <ellipse
-       transform="matrix(0.34106961,0,0,0.51335949,14.381674,105.40471)"
-       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:2.11708021;stroke-opacity:1"
+       transform="matrix(0.66438747,0,0,1,215.4359,184)"
+       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:2.39348459;stroke-opacity:1"
        sodipodi:ry="18"
        sodipodi:rx="27"
        sodipodi:cy="-90"
@@ -1200,8 +992,8 @@
        cy="-90"
        cx="135" />
     <ellipse
-       transform="matrix(0.34106961,0,0,0.51335949,14.381674,105.40471)"
-       style="fill:#009fb1;fill-opacity:1;stroke:#4d4d4d;stroke-width:2.11708021;stroke-opacity:1"
+       transform="matrix(0.66438747,0,0,1,215.4359,184)"
+       style="fill:#009fb1;fill-opacity:1;stroke:#009fb1;stroke-width:2.39348459;stroke-opacity:1"
        sodipodi:ry="18"
        sodipodi:rx="27"
        sodipodi:cy="-90"
@@ -1213,8 +1005,8 @@
        cy="-90"
        cx="315" />
     <ellipse
-       transform="matrix(0.34106961,0,0,0.51335949,14.381674,105.40471)"
-       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:2.11708021;stroke-opacity:1"
+       transform="matrix(0.66438747,0,0,1,215.4359,184)"
+       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:2.39348459;stroke-opacity:1"
        sodipodi:ry="18"
        sodipodi:rx="27"
        sodipodi:cy="-90"
@@ -1226,8 +1018,8 @@
        cy="-90"
        cx="495" />
     <ellipse
-       transform="matrix(0.34106961,0,0,0.51335949,14.381674,105.40471)"
-       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:2.11708021;stroke-opacity:1"
+       transform="matrix(0.66438747,0,0,1,215.4359,184)"
+       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:2.39348459;stroke-opacity:1"
        sodipodi:ry="18"
        sodipodi:rx="27"
        sodipodi:cy="-18"
@@ -1239,8 +1031,8 @@
        cy="-18"
        cx="27" />
     <ellipse
-       transform="matrix(0.34106961,0,0,0.51335949,14.381674,105.40471)"
-       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:2.11708021;stroke-opacity:1"
+       transform="matrix(0.66438747,0,0,1,215.4359,184)"
+       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:2.39348459;stroke-opacity:1"
        sodipodi:ry="18"
        sodipodi:rx="27"
        sodipodi:cy="-18"
@@ -1252,8 +1044,8 @@
        cy="-18"
        cx="99" />
     <ellipse
-       transform="matrix(0.34106961,0,0,0.51335949,14.381674,105.40471)"
-       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:2.11708021;stroke-opacity:1"
+       transform="matrix(0.66438747,0,0,1,215.4359,184)"
+       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:2.39348459;stroke-opacity:1"
        sodipodi:ry="18"
        sodipodi:rx="27"
        sodipodi:cy="-18"
@@ -1265,8 +1057,8 @@
        cy="-18"
        cx="171" />
     <ellipse
-       transform="matrix(0.34106961,0,0,0.51335949,14.381674,105.40471)"
-       style="fill:#009fb1;fill-opacity:1;stroke:#4d4d4d;stroke-width:2.11708021;stroke-opacity:1"
+       transform="matrix(0.66438747,0,0,1,215.4359,184)"
+       style="fill:#009fb1;fill-opacity:1;stroke:#009fb1;stroke-width:2.39348459;stroke-opacity:1"
        sodipodi:ry="18"
        sodipodi:rx="27"
        sodipodi:cy="-18"
@@ -1278,8 +1070,8 @@
        cy="-18"
        cx="243" />
     <ellipse
-       transform="matrix(0.34106961,0,0,0.51335949,14.381674,105.40471)"
-       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:2.11708021;stroke-opacity:1"
+       transform="matrix(0.66438747,0,0,1,215.4359,184)"
+       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:2.39348459;stroke-opacity:1"
        sodipodi:ry="18"
        sodipodi:rx="27"
        sodipodi:cy="-18"
@@ -1291,8 +1083,8 @@
        cy="-18"
        cx="315" />
     <ellipse
-       transform="matrix(0.34106961,0,0,0.51335949,14.381674,105.40471)"
-       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:2.11708021;stroke-opacity:1"
+       transform="matrix(0.66438747,0,0,1,215.4359,184)"
+       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:2.39348459;stroke-opacity:1"
        sodipodi:ry="18"
        sodipodi:rx="27"
        sodipodi:cy="-18"
@@ -1304,8 +1096,8 @@
        cy="-18"
        cx="387" />
     <ellipse
-       transform="matrix(0.34106961,0,0,0.51335949,14.381674,105.40471)"
-       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:2.11708021;stroke-opacity:1"
+       transform="matrix(0.66438747,0,0,1,215.4359,184)"
+       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:2.39348459;stroke-opacity:1"
        sodipodi:ry="18"
        sodipodi:rx="27"
        sodipodi:cy="-18"
@@ -1317,8 +1109,8 @@
        cy="-18"
        cx="459" />
     <ellipse
-       transform="matrix(0.34106961,0,0,0.51335949,14.381674,105.40471)"
-       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:2.11708021;stroke-opacity:1"
+       transform="matrix(0.66438747,0,0,1,215.4359,184)"
+       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:2.39348459;stroke-opacity:1"
        sodipodi:ry="18"
        sodipodi:rx="27"
        sodipodi:cy="-18"
@@ -1330,8 +1122,8 @@
        cy="-18"
        cx="531" />
     <ellipse
-       transform="matrix(0.34106961,0,0,0.51335949,14.381674,105.40471)"
-       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:2.11708021;stroke-opacity:1"
+       transform="matrix(0.66438747,0,0,1,215.4359,184)"
+       style="fill:#4d4d4d;fill-opacity:1;stroke:#4d4d4d;stroke-width:2.39348459;stroke-opacity:1"
        sodipodi:ry="18"
        sodipodi:rx="27"
        sodipodi:cy="-18"
@@ -1345,177 +1137,162 @@
     <text
        sodipodi:linespacing="125%"
        id="text3316"
-       y="24.797775"
-       x="118.75468"
-       style="font-size:9.85650253px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Myriad Pro;-inkscape-font-specification:Sans Bold Italic"
+       y="29.848314"
+       x="424.69791"
+       style="font-size:23.53317642px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Tt-Kp;-inkscape-font-specification:Tt-Kp Medium"
        xml:space="preserve"><tspan
-         y="24.797775"
-         x="118.75468"
+         y="29.848314"
+         x="424.69791"
          id="tspan3318"
          sodipodi:role="line">A</tspan></text>
     <text
        sodipodi:linespacing="125%"
        id="text3320"
-       y="61.829777"
-       x="57.548401"
-       style="font-size:9.85650253px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Myriad Pro;-inkscape-font-specification:Sans Bold Italic"
+       y="101.83655"
+       x="305.10815"
+       style="font-size:23.53317642px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Tt-Kp;-inkscape-font-specification:Tt-Kp Medium"
        xml:space="preserve"><tspan
-         y="61.829777"
-         x="57.548401"
+         y="101.83655"
+         x="305.10815"
          id="tspan3322"
          sodipodi:role="line">B</tspan></text>
     <text
        sodipodi:linespacing="125%"
        id="text3324"
-       y="61.869202"
-       x="118.84355"
-       style="font-size:9.85650253px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Myriad Pro;-inkscape-font-specification:Sans Bold Italic"
+       y="101.83655"
+       x="424.69791"
+       style="font-size:23.53317642px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Tt-Kp;-inkscape-font-specification:Tt-Kp Medium"
        xml:space="preserve"><tspan
-         y="61.869202"
-         x="118.84355"
+         y="101.83655"
+         x="424.69791"
          id="tspan3326"
          sodipodi:role="line">F</tspan></text>
     <text
        sodipodi:linespacing="125%"
        id="text3328"
-       y="61.76078"
-       x="181.0159"
-       style="font-size:9.85650253px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Myriad Pro;-inkscape-font-specification:Sans Bold Italic"
+       y="101.66005"
+       x="544.29944"
+       style="font-size:23.53317642px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Tt-Kp;-inkscape-font-specification:Tt-Kp Medium"
        xml:space="preserve"><tspan
-         y="61.76078"
-         x="181.0159"
+         y="101.66005"
+         x="544.29944"
          id="tspan3330"
          sodipodi:role="line">J</tspan></text>
     <text
        sodipodi:linespacing="125%"
        id="text3332"
-       y="99.14296"
-       x="20.155855"
-       style="font-size:9.85650253px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Myriad Pro;-inkscape-font-specification:Sans Bold Italic"
+       y="173.84831"
+       x="233.36609"
+       style="font-size:23.53317642px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Tt-Kp;-inkscape-font-specification:Tt-Kp Medium"
        xml:space="preserve"><tspan
-         y="99.14296"
-         x="20.155855"
+         y="173.84831"
+         x="233.36609"
          id="tspan3334"
          sodipodi:role="line">C</tspan></text>
     <text
        sodipodi:linespacing="125%"
        id="text3336"
-       y="99.202103"
-       x="44.611267"
-       style="font-size:9.85650253px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Myriad Pro;-inkscape-font-specification:Sans Bold Italic"
+       y="173.83655"
+       x="281.19022"
+       style="font-size:23.53317642px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Tt-Kp;-inkscape-font-specification:Tt-Kp Medium"
        xml:space="preserve"><tspan
-         y="99.202103"
-         x="44.611267"
+         y="173.83655"
+         x="281.19022"
          id="tspan3338"
          sodipodi:role="line">D</tspan></text>
     <text
        sodipodi:linespacing="125%"
        id="text3340"
-       y="99.241524"
-       x="69.865067"
-       style="font-size:9.85650253px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Myriad Pro;-inkscape-font-specification:Sans Bold Italic"
+       y="173.83655"
+       x="329.02612"
+       style="font-size:23.53317642px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Tt-Kp;-inkscape-font-specification:Tt-Kp Medium"
        xml:space="preserve"><tspan
-         y="99.241524"
-         x="69.865067"
+         y="173.83655"
+         x="329.02612"
          id="tspan3342"
          sodipodi:role="line">E</tspan></text>
     <text
        sodipodi:linespacing="125%"
        id="text3344"
-       y="99.172531"
-       x="93.803009"
-       style="font-size:9.85650253px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Myriad Pro;-inkscape-font-specification:Sans Bold Italic"
+       y="173.84831"
+       x="376.86203"
+       style="font-size:23.53317642px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Tt-Kp;-inkscape-font-specification:Tt-Kp Medium"
        xml:space="preserve"><tspan
-         y="99.172531"
-         x="93.803009"
+         y="173.84831"
+         x="376.86203"
          id="tspan3346"
          sodipodi:role="line">G</tspan></text>
     <text
        sodipodi:linespacing="125%"
        id="text3348"
-       y="99.241524"
-       x="118.38651"
-       style="font-size:9.85650253px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Myriad Pro;-inkscape-font-specification:Sans Bold Italic"
+       y="173.00008"
+       x="424.69791"
+       style="font-size:23.53317642px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Tt-Kp;-inkscape-font-specification:Tt-Kp Medium"
        xml:space="preserve"><tspan
-         y="99.241524"
-         x="118.38651"
+         y="173.00008"
+         x="424.69791"
          id="tspan3350"
          sodipodi:role="line">H</tspan></text>
     <text
        sodipodi:linespacing="125%"
        id="text3352"
-       y="99.241524"
-       x="144.92659"
-       style="font-size:9.85650253px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Myriad Pro;-inkscape-font-specification:Sans Bold Italic"
+       y="173.83655"
+       x="472.54556"
+       style="font-size:23.53317642px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Tt-Kp;-inkscape-font-specification:Tt-Kp Medium"
        xml:space="preserve"><tspan
-         y="99.241524"
-         x="144.92659"
+         y="173.83655"
+         x="472.54556"
          id="tspan3354"
          sodipodi:role="line">I</tspan></text>
     <text
        sodipodi:linespacing="125%"
        id="text3356"
-       y="99.241524"
-       x="167.78528"
-       style="font-size:9.85650253px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Myriad Pro;-inkscape-font-specification:Sans Bold Italic"
+       y="173.83655"
+       x="520.36969"
+       style="font-size:23.53317642px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Tt-Kp;-inkscape-font-specification:Tt-Kp Medium"
        xml:space="preserve"><tspan
-         y="99.241524"
-         x="167.78528"
+         y="173.83655"
+         x="520.36969"
          id="tspan3358"
          sodipodi:role="line">K</tspan></text>
     <text
        sodipodi:linespacing="125%"
        id="text3360"
-       y="99.241524"
-       x="193.31999"
-       style="font-size:9.85650253px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Myriad Pro;-inkscape-font-specification:Sans Bold Italic"
+       y="173.83655"
+       x="568.20563"
+       style="font-size:23.53317642px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Tt-Kp;-inkscape-font-specification:Tt-Kp Medium"
        xml:space="preserve"><tspan
-         y="99.241524"
-         x="193.31999"
+         y="173.83655"
+         x="568.20563"
          id="tspan3362"
          sodipodi:role="line">L</tspan></text>
     <text
        sodipodi:linespacing="125%"
        id="text3364"
-       y="99.241524"
-       x="216.20819"
-       style="font-size:9.85650253px;font-style:italic;font-variant:normal;font-weight:bold;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Myriad Pro;-inkscape-font-specification:Sans Bold Italic"
+       y="173.83655"
+       x="616.05328"
+       style="font-size:23.53317642px;font-style:normal;font-variant:normal;font-weight:500;font-stretch:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:middle;fill:#ffffff;fill-opacity:1;stroke:none;font-family:Tt-Kp;-inkscape-font-specification:Tt-Kp Medium"
        xml:space="preserve"><tspan
-         y="99.241524"
-         x="216.20819"
+         y="173.83655"
+         x="616.05328"
          id="tspan3366"
          sodipodi:role="line">M</tspan></text>
-    <text
-       sodipodi:linespacing="100%"
-       id="text6163-67-4"
-       y="128.46753"
-       x="121.493"
-       style="font-size:12.80000019px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Myriad Pro;-inkscape-font-specification:Myriad Pro Italic"
-       xml:space="preserve"><tspan
-         id="tspan4401"
-         style="font-size:12.80000019px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;line-height:100%;text-anchor:middle;font-family:Myriad Pro;-inkscape-font-specification:Myriad Pro Italic"
-         y="128.46753"
-         x="121.493"
-         sodipodi:role="line">The tree represented by this voting structure</tspan></text>
   </g>
   <text
      xml:space="preserve"
-     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Myriad Pro;-inkscape-font-specification:Sans Italic"
-     x="428.0563"
-     y="247.65237"
-     id="text7858"
-     sodipodi:linespacing="125%"
-     transform="scale(0.8,0.8)"><tspan
+     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:200;font-stretch:normal;text-align:start;line-height:100%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Kp-Light;-inkscape-font-specification:Kp-Light Ultra-Light Italic"
+     x="107.61981"
+     y="114.94211"
+     id="text19608"
+     sodipodi:linespacing="100%"><tspan
        sodipodi:role="line"
-       id="tspan7860" /></text>
-  <text
-     xml:space="preserve"
-     style="font-size:14px;font-style:italic;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Myriad Pro;-inkscape-font-specification:Sans Italic"
-     x="157.26416"
-     y="353.7359"
-     id="text6545"
-     sodipodi:linespacing="125%"
-     transform="scale(0.8,0.8)"><tspan
+       id="tspan19610"
+       x="107.61981"
+       y="114.94211"
+       style="text-align:center;line-height:100%;text-anchor:middle">The tree represented</tspan><tspan
        sodipodi:role="line"
-       id="tspan6547"></tspan></text>
+       x="107.61981"
+       y="128.94211"
+       id="tspan19612"
+       style="text-align:center;line-height:100%;text-anchor:middle">by this voting structure</tspan></text>
 </svg>
