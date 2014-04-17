@@ -849,6 +849,22 @@ In order to compare the performance of my voting algorithms with those used in t
 
 \subsection{Helper scripts\label{ssc:benchmarking-scripts}}
 
+\begin{figure}[p]
+    \centering
+    \includegraphics[scale=.75]{Images/Benchmarking.pdf}
+    \caption[Benchmarking flowgraph]{High-level overview of the \emph{benchmark} task:
+    \begin{inparaenum}[(1)]
+        \item The latest version of the source code is pulled from the central repository and compiled on the new followers.
+        \item On all followers and the leader, the Erlang process is killed and the file system cache is purged.
+        \item Rafter is started on each node in the cluster.
+        \item The leader is configured. This step triggers a leader election.
+        \item Memaslap is executed on the runner, targeting the leader.
+        \item The script downloads log files from the runner and the leader.
+    \end{inparaenum}
+    }
+    \label{fig:benchmarking}
+\end{figure}
+
 The benchmarks were automated using Fabric and the awsfabrictasks plugin. A task called \textit{benchmark} executes a sweep of the parameter space, starting nodes as appropriate and collecting the logged results. It makes use of a few helper functions:
 
 \begin{description}
@@ -862,7 +878,7 @@ The benchmarks were automated using Fabric and the awsfabrictasks plugin. A task
 
 The \textit{benchmark} task uses these helper functions as follows: For each combination of cluster size, protocol and failure mode that is to be tested, the procedure starts by deploying the latest version of the project source code to all instances as required and compiling it (using the \texttt{deploy} task). It then starts up an Erlang node with a fresh name on each of them. These nodes start in follower state and with an empty initial configuration.
 
-Next, the leader is reconfigured using the \texttt{configure} task. Then \texttt{memaslap} is run, and its results as well as the time to consensus measurements are downloaded by the \texttt{collect\_results} task.
+Next, the leader is reconfigured using the \texttt{configure} task. Then \texttt{memaslap} is run, and its results as well as the time to consensus measurements are downloaded by the \texttt{collect\_results} task. See \cref{fig:benchmarking} for a visualisation of the complete benchmarking procedure.
 
 \subsection[Amazon EC2 set-up]{Amazon \ECC set-up}
 
