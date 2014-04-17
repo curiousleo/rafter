@@ -353,7 +353,7 @@ When a physical node casts its vote, its votes are added to the votes its parent
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.6\textwidth, keepaspectratio]{Images/Majority5-defs.pdf}
+    \includegraphics[scale=0.75]{Images/Majority5-defs.pdf}
     \caption[Tree-structured voting scheme for a Majority Protocol]{A tree-structured voting scheme for a Majority Protocol managing five processes. Three processes are enough to form a quorum, so the threshold of the root node is three.}
     \label{fig:majority5-defs}
 \end{figure}
@@ -530,15 +530,17 @@ To simplify this translation, I will now introduce two common patterns that will
 
 \begin{figure}[h]
     \centering
-    \begin{subfigure}[t]{0.4\textwidth}
-        \includegraphics[width=\textwidth, keepaspectratio]{Images/Any.pdf}
+    \begin{subfigure}[t]{0.35\textwidth}
+        \centering
+        \includegraphics[scale=.75]{Images/Any.pdf}
         \caption{An any-node has a threshold of one, so it votes as soon as \emph{any} of its children do.}
         \label{fig:any}
     \end{subfigure}
     \quad
-    \begin{subfigure}[t]{0.4\textwidth}
-        \includegraphics[width=\textwidth, keepaspectratio]{Images/All.pdf}
-        \caption{An all-node's threshold is equal to the number of children it has, so it requires \emph{all} of them to vote.}
+    \begin{subfigure}[t]{0.35\textwidth}
+        \centering
+        \includegraphics[scale=.75]{Images/All.pdf}
+        \caption{An all-node's threshold equals the number of its children, so it requires \emph{all} of them to vote.}
         \label{fig:all}
     \end{subfigure}
     \caption{Common patterns in tree-shaped voting structures.}
@@ -561,7 +563,7 @@ The Majority Protocol (also know as Majority Consensus Voting\autocite{majority}
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.5\textwidth, keepaspectratio]{Images/Majority5.pdf}
+    \includegraphics[scale=.75]{Images/Majority5.pdf}
     \caption{Voting structure for the Majority Protocol with five processes.}
     \label{fig:majority5-struct}
 \end{figure}
@@ -586,7 +588,7 @@ Assuming for now that our nodes fit into a rectangular \(c \times r\) grid so th
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\textwidth, keepaspectratio]{Images/Grid4-covers.pdf}
+    \includegraphics[scale=.75]{Images/Grid4-covers.pdf}
     \caption{Annotated voting structure for the Grid Protocol with four processes.}
     \label{fig:grid4-covers}
 \end{figure}
@@ -627,7 +629,7 @@ In this protocol, the processes are logically arranged in a tree of degree \(d\)
 
 \begin{figure}[h]
     \centering
-    \includegraphics[width=0.9\textwidth, keepaspectratio]{Images/Tree3_13.pdf}
+    \includegraphics[scale=.75]{Images/Tree3_13.pdf}
     \caption{Voting structure for the Tree Quorum Protocol based on a ternary tree with 13 processes. Processes \texttt{A}, \texttt{F} and \texttt{G} have voted. They lie on a path from the root (\texttt{A}) to a leaf (\texttt{G}), so they form a quorum. The dotted grey lines are not part of the voting structure proper; they only indicate how the original tree is preserved in the voting structure.}
     \label{fig:grid3_13}
 \end{figure}
