@@ -599,10 +599,10 @@ The Grid Protocol specification demands that both requirements must be fulfilled
 
 In the description of the Grid Protocol above, we assumed that the number of processes \(n\) fits nicely into a rectangular grid with \(r\) rows and \(c\) columns. We can of course always enforce this, even when the number of processes is prime, by letting either \(r = 1\) or \(c = 1\). In these extreme cases, however, the Grid Protocol reduces to locking \emph{all} processes:
 
-\begin{description}
+\begin{compactdesc}
     \item[\(\mathbf{r = 1}\)] makes the \textsc{c}-cover equal to the set of all nodes;
     \item[\(\mathbf{c = 1}\)] makes the \textsc{cc}-cover equal to the set of all nodes.
-\end{description}
+\end{compactdesc}
 
 This is clearly not desirable. Instead, the grid structure we impose on the processes is the smallest almost-square grid that all processes can fit in.\footnote{Almost-square here means that \(c\) and \(r\) differ by at most one, so \(|\,c - r\,| \leq 1\).} Specifically, we let \( r = \left\lceil \sqrt{n} \right\rceil \) and
 
