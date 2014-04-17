@@ -906,9 +906,9 @@ The m1.xlarge instances provided enough compute power and much more network band
 
 \subsection{Choice of parameters}
 
-Due to time constraints, benchmarking every combination of parameters was impossible. For this reason, I turned off failure simulation for the benchmarks and instead analysed the behaviour under different failure modes theoretically (see XXX.) I benchmarked all voting structures. The Grid Protocol was tested with the \enquote{favouring rows} option set; benchmarks were also run on binary and tertiary trees created by the Tree Quorum Protocol.
+Due to time constraints, benchmarking every combination of parameters was impossible. For this reason, I turned off failure simulation for the benchmarks and instead analysed the behaviour under different failure modes theoretically (see XXX.) I benchmarked all voting structures. The Grid Protocol was tested with the \enquote{favouring rows} option; benchmarks were also run on binary and tertiary trees created by the Tree Quorum Protocol.
 
-As for cluster sizes, I tried to find configurations for which at least one protocol was optimal in some way. My Amazon \ECC account allowed me to run experiments with up to 19 nodes.
+As for cluster sizes, I tried to find configurations for which at least one protocol was optimal in some way. My Amazon \ECC account allowed me to run experiments with up to 19 nodes (plus one separate \enquote{runner} instance).
 
 \begin{description}
     \item[Majority Protocol] Any uneven number of nodes is optimal.
