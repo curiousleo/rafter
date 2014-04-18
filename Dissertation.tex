@@ -175,7 +175,7 @@ Date \hspace{0.4in} \today
 
 \pagenumbering{arabic}
 
-This dissertation describes the extension of an implementation of the new Raft consensus algorithm with the ability to form quorums using structured voting schemes.
+This dissertation describes how I extended an implementation of the new Raft consensus algorithm with the ability to form quorums using structured voting schemes.
 
 % \begin{itemize}
     % \item Principal motivation for the project
@@ -192,11 +192,17 @@ This dissertation describes the extension of an implementation of the new Raft c
 
 \section{Motivation\label{sc:motivation}}
 
-As ever-increasing amounts of data are being handled in commercial settings as well as in research, distributed systems for processing and storage are becoming more and more ubiquitous. One main driver of this development is the need to increase fault tolerance in the face of arbitrary network and node failures.
+As ever-increasing amounts of data are being handled in commercial settings as well as in research, distributed systems for data processing and storage are becoming increasingly ubiquitous. This development brings about the need to increase fault tolerance in the face of arbitrary network and node failures.
 
 According to Eric Brewer's famous \textsc{cap} theorem \autocite{cap}, a partition tolerant system cannot be both strictly consistent and maximally available.\footnote{The terms consistency, availability and partition tolerance are defined in \cref{ssc:cap-acid-and-base}.} Many recent distributed data stores sacrifice consistency for availability. Some applications, however, require strong consistency guarantees -- data backup and configuration management systems, for example. Consensus protocols like Paxos \autocite{paxos} and Raft \autocite{raft} guarantee consistency at the cost of decreased availability.
 
-In this project, I added support for structured voting schemes to an existing implementation of Raft. My aim was increase the availability and scalability of data storage systems built on top of this implementation while still providing the same consistency guarantees as the original Raft algorithm. Regarding availability, structured voting schemes are more flexible than unstructured voting schemes like the Majority Protocol, and can in some cases be tailored to resist certain failure modes. Concerning scalability, the number of nodes involved in an election is always \(O(n)\) for any reasonable unstructured voting scheme. Structured voting schemes, on the other hand, can allow for elections with fewer nodes.
+Today's popular distributed data stores use \emph{unstructured} voting schemes. This means that in order for an operation to proceed, a certain number of processes must agree to it. Majority voting is a widely used instance of an unstructured voting scheme, requiring the consensus of a majority of the processes in the cluster. Some systems, notably Dynamo \autocite{dynamo} and the more recent Cassandra \autocite{cassandra}, allow quorums to be smaller than necessary to guarantee consistency. This gives rise to a less well-defined notion of \enquote{eventual consistency}, and enables the system administrator to trade decreased consistency for increased availability.
+
+\emph{Structured} voting schemes, on the other hand, impose a logical structure of some kind onto the cluster. They are strongly consistent by default, and take the identity of each process into account when forming quorums, instead of merely counting them (as unstructured voting schemes do). This allows for much more detailed tuning of the system's availability as the structure of the cluster and the properties of individual nodes can guide the selection and configuration of the structured voting scheme.
+
+In this project, I added support for structured voting schemes to an existing implementation of Raft. My aim was to allow more fine-grained availability and scalability trade-offs for data storage systems built on top of this implementation while still providing the same consistency guarantees as the original Raft algorithm.
+
+% Regarding availability, structured voting schemes are more flexible than unstructured voting schemes like the Majority Protocol, and can in some cases be tailored to resist certain failure modes. Concerning scalability, the number of nodes involved in an election is always \(O(n)\) for any reasonable unstructured voting scheme. Structured voting schemes, on the other hand, can allow for elections with fewer nodes.
 
 \section{Challenges\label{sc:challenges}}
 
@@ -204,21 +210,21 @@ So far, structured voting schemes have mostly been confined to academic papers a
 
 Due to the lack of previous implementations of structured voting scheme algorithms, I had to design my own, based on the high-level description from Storm's PhD thesis.\autocite{voting}
 
-In addition, distributed programming in itself is a challenge: any component may fail at the least convenient time; network connections may be unreliable; messages may be dropped, duplicated or reordered. Fortunately, Erlang provides some tools that make writing distributed systems a bit easier.
+In addition, distributed programming in itself is a challenge: any component may fail at the least convenient time; network connections may be unreliable; messages may be dropped, duplicated or reordered. Fortunately, the programming language Erlang\footnote{\url{http://www.erlang.org}} used in this project provides some tools that make writing distributed systems a bit easier.
 
 Lastly, benchmarking a distributed system running in the cloud is difficult. Thorough planning and a high degree of automation is required to make it at all feasible.
 
 \section{Related work\label{sc:related-work}}
 
-The primary source of ideas for this project was Christian Storm's PdD thesis, \citetitle{voting} \parencite{voting}, which puts unstructured and structured voting schemes into a common framework and analyses them analytically.
+The primary source of ideas for this project was Christian Storm's PhD thesis, \citetitle{voting} \parencite{voting}, which puts unstructured and structured voting schemes into a common framework and analyses them using Petri nets.
 
-During an internship at \textsc{tng} Technology Consulting\footnote{\url{http://www.tngtech.com/}}, I produced a working prototype of a key-value store based on structured voting schemes using the Node.js JavaScript framework.\footnote{Node.js (\url{http://nodejs.org/}) is a platform for building network applications in JavaScript.} This was done under the supervision of Christoph Stock and Christian Storm.
-
-Literature on voting schemes goes back much further: Majority voting was introduced in \citedate{majority}; the Tree Quorum Protocol and the Grid Protocol were invented in the early 1990s.
+Literature on voting schemes goes back much further: Majority voting \autocite{majority} was introduced in \citedate{majority}; the Tree Quorum Protocol \autocites{tree}{gen-tree} and the Grid Protocol \autocites{grid}{bettergrid} were invented in the early 1990s.
 
 The Raft consensus algorithm, on the other hand, is a very recent addition to distributed systems toolset. Indeed, at the time of this writing, the original Raft paper is still a draft \autocite{raft}. It has nonetheless led to a lot of excitement since its first version, and a few dozen implementations in different languages and in various stages of development exist.
 
-Considering the environment in which distributed systems run, many big internet firms have been operating data centres for years now. This has enabled them to collect data about the frequency of different types of failures over time. I used data compiled by of Google Senior Fellow Jeff Dean to direct my failure simulation. \autocite{distr}
+Considering the environment in which distributed systems run, many big internet firms have been operating data centres for years now. This has enabled them to collect data about the frequency of different types of failures over time. I used data compiled by Google Senior Fellow Jeff Dean to direct my failure simulation. \autocite{distr}
+
+During an internship at \textsc{tng} Technology Consulting\footnote{\url{http://www.tngtech.com}}, I produced a working prototype of a key-value store based on structured voting schemes using the Node.js JavaScript framework.\footnote{Node.js (\url{http://nodejs.org}) is a platform for building network applications in JavaScript.} This was done under the supervision of Christoph Stock and Christian Storm.
 
 
 
