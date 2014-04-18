@@ -17,6 +17,7 @@
 \usepackage{booktabs}
 \usepackage{algorithmicx}
 \usepackage{algpseudocode}
+\usepackage{attrib}
 \usepackage{algorithm}
 \usepackage{mathtools}
 \usepackage[binary-units]{siunitx}
@@ -255,6 +256,7 @@ Out of those three, partition tolerance is required in almost all cases. As \cit
 
 \begin{quote}
     For a distributed \dots{} system to \emph{not} require partition tolerance it would have to run on a network which is guaranteed to never drop messages \dots{} and whose nodes are guaranteed to never [fail]. [These] types of systems \dots{} don't exist.
+    \attrib{\cite{needp}}
 \end{quote}
 
 This leaves designers of distributed systems with the task of finding the right trade-off between consistency and availability, both of which should be considered as continuous rather than binary properties \autocite{cap12}. With the rise of commercial databases of unprecedented scale over the last decade, consistency (in its strict form as defined above) is in many cases sacrificed for increased availability.%
@@ -263,7 +265,8 @@ The authors of \citetitle{dynamo} describe this as follows:%
 \footnote{Notable other eventually consistent systems include Cassandra \parentext{\citeurl{cassandra}}, Riak \parentext{\citeurl{riak}} and HBase \parentext{\citeurl{hbase}}.}
 
 \begin{quote}
-    For systems prone to server and network failures, availability can be increased by using optimistic replication techniques, where \ldots concurrent, disconnected work is tolerated. The challenge with this approach is that it can lead to \emph{conflicting changes which must be detected and resolved}.
+    For systems prone to server and network failures, availability can be increased by using optimistic replication techniques, where \ldots{} concurrent, disconnected work is tolerated. The challenge with this approach is that it can lead to \emph{conflicting changes which must be detected and resolved}.
+    \attrib{\cite{dynamo}}
 \end{quote}
 
 The conflict detection and resolution mechanisms required by eventually consistent systems increase their complexity compared to consistent systems, which do not need them. This begs the question: are there techniques that could be used to improve availability without giving up on consistency, allowing for simpler systems? The \textsc{cap} theorem tells us that we can never build strictly consistent and maximally available systems, but a different trade-off might be possible.
@@ -279,7 +282,9 @@ At its core, Raft uses a replicated state machine architecture, implemented usin
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.5\textwidth, keepaspectratio]{Images/Replicated_state_machine.pdf}
-    \caption{Replicated state machine architecture}
+    \caption{Replicated state machine architecture.
+        \protect\attrib{\cite[2]{raft}}
+    }
     \label{fig:replicated-state-machine}
 \end{figure}
 
@@ -288,13 +293,16 @@ Raft implements this replicated log architecture using a collections of servers 
 This requirement for each server to be in a specific state at any time makes it an \emph{asymmetric} consensus algorithm, as opposed to Paxos, which is \emph{symmetric} since it has no concept of \enquote{roles}. The designers of Raft made a conscious decision to build an asymmetric voting algorithm since it suits their philosophy of decomposition well:
 
 \begin{quote}
-    Raft implements consensus by first electing a distinguished leader, then giving the leader complete responsibility for managing the replicated log.\autocite[section 5]{raft}
+    Raft implements consensus by first electing a distinguished leader, then giving the leader complete responsibility for managing the replicated log.
+    \attrib{\cite[3]{raft}}
 \end{quote}
 
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.5\textwidth, keepaspectratio]{Images/Consensus_FSM.pdf}
-    \caption{Server states and the transitions between them}
+    \caption{Server states and the transitions between them.
+        \protect\attrib{\cite[5]{raft}}
+    }
     \label{fig:consensus-fsm}
 \end{figure}
 
