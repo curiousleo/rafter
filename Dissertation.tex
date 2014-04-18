@@ -81,6 +81,9 @@
 \newcommand{\easy}[0]{{\color{teal!80}\(\bullet\)} }
 \newcommand{\low}[0]{{\color{teal!80}\(\bullet\)} }
 
+\newcommand{\yes}{{\fontfamily{jkposn}\selectfont\textsc{Yes}}}
+\newcommand{\no}{{\fontfamily{jkposn}\selectfont\textsc{No}}}
+
 \newlength{\smallbaselineskip}
 \setlength{\smallbaselineskip}{13.6pt}
 
@@ -254,7 +257,7 @@ In this chapter, I will first introduce some of the challenges posed by distribu
 Eric Brewer's famous \textsc{cap} theorem states that any distributed system can provide at most two out of the three desirable properties consistency (\textsc{c}), availability (\textsc{a}), and partition tolerance (\textsc{p}).\autocite{cap} The following definitions are adapted from the proof of the \textsc{cap} theorem by \citeauthor{capproof}:\autocite{capproof}
 
 \begin{description}
-    \item[Consistency] There must exist a total order on all operations such that each operation looks as if it were completed at a single instant. An important consequence of this \emph{linearisable} (or \emph{atomic}) consistency guarantee is that any read operation that begins after a write operation completes must return that value, or the result of a later write operation.\footnote{As \textcite{capproof} point out, the term \emph{consistency} is highly overloaded. Note that the notion of atomic consistency used in this report subsumes what is called atomicity and consistency in the context of \textsc{acid} (\enquote{atomic, consistent, isolated, durable}) databases.}
+    \item[Consistency] There must exist a total order on all operations such that each operation looks as if it were completed at a single instant. An important consequence of this \emph{linearisable} (or \emph{atomic}) consistency guarantee is that any read operation that begins after a write operation completes must return that value, or the result of a later write operation.\footnote{As \textcite{capproof} point out, the term \emph{consistency} is highly overloaded. The reader may observe that the notion of atomic consistency used in this dissertation subsumes what is called atomicity and consistency in the context of \textsc{acid} (\enquote{atomic, consistent, isolated, durable}) databases.}
     \item[Availability] Every request received by a non-failing node in the system must result in a response.
     \item[Partition tolerance] The system continues to operate despite arbitrary message loss. This includes network partitions, where all messages sent from nodes in one component of the partition to nodes in another component are lost.
 \end{description}
@@ -276,11 +279,11 @@ The authors of \citetitle{dynamo} describe this as follows:%
     \attrib{\cite{dynamo}}
 \end{quote}
 
-The conflict detection and resolution mechanisms required by eventually consistent systems increase their complexity compared to consistent systems, which do not need them. This begs the question: are there techniques that could be used to improve availability without giving up on consistency, allowing for simpler systems? The \textsc{cap} theorem tells us that we can never build strictly consistent and maximally available systems, but a different trade-off might be possible.
+The conflict detection and resolution mechanisms required by applications built on top of eventually consistent systems increase their complexity compared to those based on consistent systems, which do not need them. This begs the question: are there techniques that could be used to improve availability without giving up on consistency, allowing for simpler systems? The \textsc{cap} theorem tells us that we can never build strictly consistent and maximally available systems, but a different trade-off might be possible.
 
 \section{Introduction to the Raft consensus algorithm\label{ssc:raft-consensus-algorithm}}
 
-Although still a draft, the paper describing the new Raft consensus algorithm \autocite{raft} has created a lot of buzz; dozens of implementations in various languages and stages of development already exist.\footnote{For an up-to-date list of Raft implementations, see \url{http://raftconsensus.github.io/\#implementations}.}
+Although still a draft, the paper describing the new Raft consensus algorithm \autocite{raft} has become widely known very quickly; dozens of implementations in various languages and stages of development already exist.\footnote{See \url{http://raftconsensus.github.io/\#implementations} for a list of Raft implementations.}
 
 In the following, I will give a short overview of the Raft consensus algorithm. It is meant to introduce the terminology required for the Implementation and Evaluation chapters.
 
@@ -315,29 +318,31 @@ This requirement for each server to be in a specific state at any time makes it 
 
 \minisec{Leader election}
 
-A server remains in follower state as long as it receives valid heartbeats (\appendEntriesRPC s that carry no entries) from a leader or candidate. If a follower receives no communication over a period of time, it assumes that there is no viable leader and begins an election to choose a new one. To do so, it transitions to \textit{candidate} state and issues \requestVoteRPC s in parallel to all other servers in the cluster. Then one of three things happens: (a) the candidate wins the election, (b) another server establishes itself as leader, or (c) a period of time goes by without a winner, in which case a new election is started.
+A server remains in follower state as long as it receives valid heartbeats from a leader or candidate. If a follower receives no communication over a period of time, it assumes that there is no viable leader and begins an election to choose a new one. To do so, it transitions to \textit{candidate} state and issues \requestVoteRPC s in parallel to all other servers in the cluster. Then one of three things happens: (a) the candidate wins the election, (b) another server establishes itself as leader, or (c) a period of time goes by without a winner, in which case a new election is started.
 
 Each server receiving a \requestVoteRPC{} will vote for at most one candidate, on a first-come-first-served basis. Once a candidate wins an election, it becomes the new leader and sends heartbeat messages to every other server to establish its authority.
 
 \minisec{Log replication}
 
-Each client request to a leader contains a command to be executed by the replicated state machines. The leader appends the command to its log as a new entry, then issues \appendEntriesRPC s in parallel to all other servers to replicate the entry. When the entry has been safely replicated, the leader applies the entry to its state machine and returns the result of that execution to the client (for a complete description of what it means for an entry to be \enquote{safely replicated}, see subsection 5.3 of the Raft paper.)
+Each client request to a leader contains a command to be executed by the replicated state machines. The leader appends the command to its log as a new entry, then issues \appendEntriesRPC s in parallel to all other servers to replicate the entry. When the entry has been safely replicated, the leader applies the entry to its state machine and returns the result of that execution to the client (for a complete description of what it means for an entry to be \enquote{safely replicated}, \cite[see][subsection 5.3]{raft}.)
 
 \minisec{Safety guarantees}
 
 In order to guarantee overall correctness, different components of Raft are designed to make sure certain well-defined safety properties are true at all times (see \cref{sc:rafter-safety} for the complete list.) These properties are shown to hold and then used to prove correctness in the separate correctness proof \autocite{raftproof}.
 
-Since my project involved changing the way in which quorums\footnote{A \emph{quorum} is a minimal subset of the cluster that an operation has to obtain \enquote{Yes} votes from in order to be performed. Majority voting, for example, specifies that any set of servers containing at least half the servers in the entire cluster constitutes a quorum.} are constructed, I had to pay special attention to the Election Safety property (stating that there can be at most one leader at any given time) and all the steps in the proof to do with quorums, in order to make sure all the desired properties still hold (see \cref{sc:rafter-proof} for a justification.)
+Since my project involved changing the way in which quorums\footnote{A \emph{quorum} is a minimal subset of the cluster that an operation has to obtain \yes{} votes from in order to be performed. Majority voting, for example, specifies that any set of servers containing at least half the servers in the entire cluster constitutes a quorum.} are constructed, I had to pay special attention to the Election Safety property (stating that there can be at most one leader at any given time) and all the steps in the proof to do with quorums, in order to make sure all the desired properties still hold (see \cref{sc:rafter-proof} for a justification.)
 
 \section{Introduction to structured voting schemes\label{ssc:structured-voting-schemes}}
 
 Voting schemes specify quorums. On an abstract level, they provide a procedure, which, given some knowledge about the entire cluster, decides whether or not a set of processes constitutes a quorum.
 
-The Majority Protocol and Read One Write All are examples of unstructured voting schemes: whether or not a set of nodes forms a quorum depends only on its cardinality. By taking into account the identity of nodes, as opposed to just counting them, we can build \emph{structured} voting schemes.
+The Majority Protocol and Read One Write All are examples of unstructured voting schemes: whether or not a set of nodes forms a quorum depends only on its cardinality. In the case of the Majority Protocol, both read and write operations need the consent of a majority of processes; Read One Write All requires all processes to agree on write operations, whereas any one process can serve a read request.
+
+By taking into account the identity of nodes (as opposed to just counting them), and superimposing a logical structure on the cluster, we can build \emph{structured} voting schemes.
 
 \minisec{Quorum systems}
 
-A quorum system is defined as a tuple of a read and a write quorum set whose elements are called read quorums and write quorums, respectively. These are constructed such that every write quorum intersects with every other write quorum and with every read quorum in at least one process; read quorums need not intersect \autocite{voting}.
+Formally, a quorum system is defined as a tuple of a read and a write quorum set whose elements are called read quorums and write quorums, respectively. These are constructed such that every write quorum intersects with every other write quorum and with every read quorum. Read quorums need not intersect pairwise \autocite{voting}.
 
 The key realisation that lead to this project was that write quorums have precisely the property required for Raft's leader election, namely that any two write quorums intersect. From this point on, \emph{quorum} will mean \emph{write quorum} unless specifically noted otherwise.
 
@@ -354,11 +359,11 @@ Structured voting schemes impose a logical structure on the set of processes and
 
 \minisec{Specifying voting structures}
 
-\citeauthor{generators} present \emph{tree-shaped voting structures} as a universal quorum system representation in the form of semantics-enriched tree graphs. They are produced by voting structure specific \emph{voting structure generators} \autocite{generators}.
+\citeauthor{generators} present \emph{tree-shaped voting structures} as a universal quorum system representation in the form of semantics-enriched tree graphs. They are produced by voting structure-specific \emph{voting structure generators} \autocite{generators}.
 
-In a tree-shaped voting structure, each node without children (a \enquote{physical node}) represents a process. Nodes with children (called \enquote{virtual nodes}) represent the structure of the voting scheme. The tree is to be interpreted such that votes flow upwards, from the physical nodes (the leaves of the tree) up to the virtual node at its root.
+In a tree-shaped voting structure, each node without children (a \emph{physical node}) represents a process. Nodes with children (called \emph{virtual nodes}) represent the structure of the voting scheme. The tree is to be interpreted such that votes flow upwards, from the physical nodes (the leaves of the tree) up to the virtual node at its root. \Cref{fig:grid4-state} on \cpageref{fig:grid4-state} illustrates this process for a Grid Protocol with four nodes. Examples of voting structures for different structured voting schemes are given in the Implementation chapter.
 
-Note that in general, voting schemes are most naturally represented by directed acyclic graphs. But since from an algorithmic perspective, tree structures are easier to operate on, we simply transform the voting scheme graphs into tree by duplicating nodes as necessary.
+Note that in general, voting schemes are most naturally represented by directed acyclic graphs. But since from an algorithmic perspective tree structures are easier to operate on, the voting scheme graphs are simply transformed into trees by duplicating nodes as necessary, preserving correctness.
 
 When a physical node casts its vote, its votes are added to the votes its parent virtual node has already received. If the sum of those votes equals or exceeds the parent node's threshold, then the parent node in turn passes its vote to its parent. An annotated example is given in \cref{fig:majority5-defs}.
 
@@ -371,7 +376,7 @@ When a physical node casts its vote, its votes are added to the votes its parent
 
 \section{Software engineering\label{sc:software-engineering}}
 
-An analysis of the requirements made the dependencies between the different components of the project explicit (see \cref{fig:dependencies}.) This helped me draw up a development schedule, which is outlined in my proposal.
+An analysis of the requirements made the dependencies between the different components of the project explicit (see \cref{fig:dependencies}). This helped me draw up a development schedule, which is outlined in my proposal.
 
 The main software engineering technique I used to increase my chances of success were \emph{modularisation} and \emph{testing} as explained below.
 
@@ -404,7 +409,7 @@ The requirement for this project to be deemed a success was a demonstration of t
 \begin{figure}[h]
     \centering
     \includegraphics[width=1\textwidth, keepaspectratio]{Images/Dependencies.pdf}
-    \caption{Dependency graph of the project's main components. Arrows point from dependent components to their dependencies.}
+    \caption{Dependency graph of the project's main components. Arrows point from dependent components to their dependencies. Dashed arrows indicate optional dependencies.}
     \label{fig:dependencies}
 \end{figure}
 
@@ -412,7 +417,7 @@ The requirement for this project to be deemed a success was a demonstration of t
 
 This technique permeated all levels of the project. The code itself was written in a functional style, where each function typically spans between one and ten lines. This increased understandability by forcing me to split larger functions into smaller ones, each performing a small and well-defined task.
 
-All development took place using Git, a popular version control system.\footnote{Git (\url{http://git-scm.com}) is an open source distributed version control system emphasising speed, originally developed by Linux Torvalds to simplify the development of the Linux kernel. Git supports very cheap and fast branching, a feature I used extensively in this project.} I used Git's branching facility to keep independent pieces of code separate during their development. Whenever code from different branches needed to be combined, I merged the required feature branches into a temporary branch. For convenience, all documentation (including the proposal, the progress presentation and this very report) was kept under its own branch in the same repository.
+All development took place using Git, a popular version control system.\footnote{Git (\url{http://git-scm.com}) is an open source distributed version control system emphasising speed, originally developed by Linux Torvalds to simplify the development of the Linux kernel. Git supports very cheap and fast branching, a feature I used extensively in this project.} I used Git's branching facility to keep independent pieces of code separate during their development. Whenever code from different branches needed to be combined, I merged the required feature branches into a temporary branch. For convenience, all documentation (including the proposal, the progress presentation and this very dissertation) was kept under its own branch in the same repository.
 
 \begin{table}[h]
     \centering
@@ -431,42 +436,49 @@ All development took place using Git, a popular version control system.\footnote
     \label{tab:branches}
 \end{table}
 
-The voting algorithm, the voting structure visualiser and the generators for the Majority Protocol and the Grid Protocol were initially written and tested independently from Rafter. Only once I was sufficiently confident in the correctness of the code did I integrate it with Rafter. This integration process turned out to take much less time than expected -- due to the modularity of Rafter, only few changes were required in order for it to use my generalised voting functions.
+The voting algorithm, the voting structure visualiser and the generators for the Majority Protocol and the Grid Protocol were initially written and tested independently from Rafter. I integrate it with Rafter only once I was sufficiently confident in the correctness of the code. Thanks to the modularity of Rafter and the clear separation of concerns in my code, the integration process went through without major unexpected problems.
 
 \section{Languages, tools and libraries\label{sc:tools}}
 
-In the inception phase of the project, I was faced with the decision of whether to use and existing implementation of Raft or write one from scratch. Since I was primarily interested in implementing structured voting algorithms, and many implementations of Raft already exist, I decided to adapt an existing implementation.
+In the inception phase of the project, I was faced with the decision of whether to use and existing implementation of Raft or write one from scratch. Since I was primarily interested in implementing structured voting algorithms and many implementations of Raft already exist, I decided to adapt an existing implementation.
 
-Having written a distributed key-value store in Node.js during an internship, I decided to look for an implementation that used a programming language with built-in support for distributed programming that I had heard of, but never used before: Erlang. Out of the five Raft implementations written in Erlang, Andrew Stone's \emph{Rafter} seemed to be the most mature.\footnote{Andrew Stone is a Distributed Systems Developer at Basho Technologies (\url{http://basho.com}). Rafter is an open source project hosted on GitHub (\url{http://github.com/andrewjstone/rafter}).}
+Having written a distributed key-value store in Node.js during an internship, I decided to look for an implementation that used a programming language with built-in support for distributed programming that I had heard of, but never used before: Erlang. Out of the five Raft implementations written in Erlang, Andrew Stone's \emph{Rafter} seemed to be the most mature.\footnote{Rafter is an open source project hosted on GitHub (\url{http://github.com/andrewjstone/rafter}).}
 
 \subsection{Structured voting extension}
 
 The choice of Erlang and Rafter then determined my primary programming toolkit for the structured voting extension:
 
 \begin{description}
-    \item[Erlang] A dynamically typed functional programming language originally designed to run Ericsson's telephony switches, Erlang features a run-time system with built-in support for concurrency, distribution and fault tolerance.
+    \item[Erlang] A dynamically typed functional programming language originally designed to run telephone switches, Erlang features a run-time system with built-in support for concurrency, distribution and fault tolerance.
+        \attrib{\url{http://www.erlang.org}}
     \item[Open Telephony Platform] Commonly referred to as \enquote{the \textsc{otp}}, the Open Telephony Platform provides a set of Erlang libraries and design principles providing middle-ware to develop Erlang applications.
+        \attrib{\url{http://www.erlang.org/doc}}
     \item[QuickCheck] A commercial testing framework for Erlang by Quviq \textsc{se}. Rafter's unit and integration tests use it, and I adapted and amended them to cover my code as well.
-    \item[Dialyzer] The \enquote{Discrepancy Analyzer for Erlang programs} is used to statically type check Erlang programs.
+        \attrib{\url{http://www.quviq.com}}
+    \item[Dialyzer] The \enquote{Discrepancy Analyzer for Erlang programs} is used to statically type-check Erlang programs.
+        \attrib{\url{http://www.erlang.org/doc/man/dialyzer.html}}
 \end{description}
 
 \subsection{Benchmarking in the Amazon Elastic Compute Cloud\label{ssc:ec2-benchmarking}}
 
-In order to test and benchmark my code in a real-world environment, it was decided early on that I would run the project on a cluster of servers in the Amazon Elastic Compute Cloud (Amazon \textsc{ec2}). This allowed me to execute Rafter on up to twenty instances within the same data centre.
+In order to test and benchmark my code in a realistic environment, it needed to be run on a cluster of machines (as opposed to on a single computer) as this is how systems like Rafter are deployed in the real world. It was decided early on that I would run the project in the Amazon Elastic Compute Cloud (Amazon \textsc{ec2}). This allowed me to execute my benchmarks on up to twenty instances within the same data centre.
 
 Orchestrating a cluster of Amazon \ECC instances and running benchmarks required its own set of tools.
 
 \begin{description}
-    \item[Fabric] is a Python library and command-line tool for streamlining the use of \textsc{ssh} for application deployment or systems administration tasks.\footnote{Fabric: \url{http://fabfile.org}} Administrative functions like starting an Erlang node on an instance or compiling Rafter were defined as \emph{tasks} within the Fabric framework, which could then be executed on arbitrary \ECC instances with the help of the \enquote{awsfabrictasks} plugin.\footnote{awsfabrictasks: \url{https://awsfabrictasks.readthedocs.org/en/latest/}}
-    \item[Boto] is a Python interface to Amazon Web Services. Awsfabrictasks is built on top of Boto, but I occasionally needed to use Boto's lower-level functionality directly.
-    \item[Memaslap] was used to generate a test load on the cluster. It is part of libMemcached, an open source client library and toolset for the Memcached server.\footnote{libMemcached: \url{http://libmemcached.org}} It is highly configurable, but still in an early phase of development, which required me to patch its Makefile in order to get it to compile.
+    \item[Fabric] is a Python library and command-line tool for streamlining the use of \textsc{ssh} for application deployment or systems administration tasks. Administrative functions like starting an Erlang node on an instance or compiling Rafter were defined as \emph{tasks} within the Fabric framework, which could then be executed on arbitrary \ECC instances with the help of the \enquote{awsfabrictasks} plugin.
+        \attrib{\url{http://fabfile.org}, \url{https://awsfabrictasks.readthedocs.org}}
+    \item[Boto] is a Python interface to Amazon Web Services, which includes the Elastic Compute Cloud. Awsfabrictasks is built on top of Boto, but I occasionally needed to use Boto's lower-level functionality directly.
+        \attrib{\url{http://docs.pythonboto.org}}
+    \item[Memaslap] was used to generate a test load on the cluster. It is part of libMemcached, an open source client library and toolset for the Memcached server. It is highly configurable, but still in an early phase of development, requiring me to patch its Makefile in order to get it to compile.
+        \attrib{\url{http://libmemcached.org}}
 \end{description}
 
 \section{Development environment and backup}
 
-The entire project was developed on my private laptop running Arch Linux, using the Vim text editor.\footnote{Vim is an extensible open source text editor for programmers. \url{http://www.vim.org}} I used version R16B03 of the Erlang interpreter and compiler.\footnote{The most recent version of the Erlang interpreter can be found here: \url{http://www.erlang.org/download.html}} Apart from a few temporary files and compilation artefacts, every file I created was checked into some branch of the project's Git repository. See \cref{tab:branches} for a list of the main long-running branches created.
+The entire project was developed on my private laptop running Arch Linux, using the Vim text editor.\footnote{Vim is an extensible open source text editor for programmers. \url{http://www.vim.org}} I used version R16B03 of the Erlang interpreter and compiler. Apart from a few temporary files and compilation artefacts, every file I created was checked into some branch of the project's Git repository. See \cref{tab:branches} for a list of the main long-running branches created.
 
-I used a public GitHub repository at \url{https://github.com/curiousleo/rafter} as a backup and a way to share files with my project supervisors; I \enquote{pushed} my changes to this repository after every significant change, but at least every few hours while I was working on the project. I took daily backups of my home directory, which contained the project repository, to an external hard drive.
+I used a public GitHub repository at \url{https://github.com/curiousleo/rafter} as a backup and a way to share files with my project supervisors; I pushed my changes to this repository after every significant change, but at least every few hours while I was working on the project. I took daily backups of my home directory, which contained the project repository, to an external hard drive.
 
 \section{Summary}
 
