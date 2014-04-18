@@ -75,6 +75,13 @@
 \newcommand{\ECC}[0]{\textsc{ec}2 }
 \newcommand{\voted}[1]{\textbf{\color{black}#1}}
 
+\newcommand{\zerospacing}{\setlength{\thinmuskip}{0}\setlength{\medmuskip}{0}\setlength{\thickmuskip}{0}}
+\newcommand{\high}[0]{{\color{purple!90}\(\zerospacing \bullet \bullet \bullet\)} }
+\newcommand{\hard}[0]{{\color{purple!90}\(\zerospacing \bullet \bullet \bullet\)} }
+\newcommand{\medium}[0]{{\color{violet!80}\(\zerospacing \bullet \bullet\)} }
+\newcommand{\easy}[0]{{\color{teal!80}\(\bullet\)} }
+\newcommand{\low}[0]{{\color{teal!80}\(\bullet\)} }
+
 \newlength{\smallbaselineskip}
 \setlength{\smallbaselineskip}{13.6pt}
 
@@ -379,19 +386,19 @@ The requirement for this project to be deemed a success was a demonstration of t
         \toprule
         \textit{Objective} & \textit{Importance} & \textit{Difficulty} \\
         \midrule
-        Voting structure and state type specification & high & medium \\
-        Core voting algorithm & high & hard \\
-        Voting structure visualiser & medium & medium \\
-        Majority Protocol voting structure generator & high & easy \\
-        Grid Protocol voting structure generator & medium & hard \\
-        Tree Quorum Protocol voting structure generator & low & hard \\
-        Rafter integration & high & hard \\
-        Memcached frontend & high & medium \\
-        Amazon \ECC benchmark set-up & high & medium \\
-        Benchmarking and analysis of the results & high & medium \\
+        Voting structure and state type specification & \high & \medium \\
+        Core voting algorithm & \high & \hard \\
+        Voting structure visualiser & \medium & \medium \\
+        Majority Protocol voting structure generator & \high & \easy \\
+        Grid Protocol voting structure generator & \medium & \hard \\
+        Tree Quorum Protocol voting structure generator & \low & \hard \\
+        Rafter integration & \high & \hard \\
+        Memcached frontend & \high & \medium \\
+        Amazon \ECC benchmark set-up & \high & \medium \\
+        Benchmarking and analysis of the results & \high & \medium \\
         \bottomrule
     \end{tabularx}
-    \caption{Objectives of the project}
+    \caption{Objectives of the project. \high high importance or hard; \medium medium importance or difficulty; \low low importance or easy.}
     \label{tab:objectives}
 \end{table}
 
