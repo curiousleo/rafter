@@ -27,7 +27,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -196,11 +196,11 @@
      sodipodi:linespacing="125%"
      id="text4196"
      y="22.143997"
-     x="12.322004"
+     x="7.5220037"
      style="font-size:14px;font-style:italic;font-variant:normal;font-weight:200;font-stretch:normal;text-align:start;line-height:125%;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1;stroke:none;font-family:Kp-Light;-inkscape-font-specification:Kp-Light Ultra-Light Italic"
      xml:space="preserve"><tspan
        y="22.143997"
-       x="12.322004"
+       x="7.5220037"
        id="tspan4198"
        sodipodi:role="line"
        style="font-size:14px;font-style:italic;font-variant:normal;font-weight:200;font-stretch:normal;text-align:start;line-height:125%;writing-mode:lr-tb;text-anchor:start;font-family:Kp-Light;-inkscape-font-specification:Kp-Light Ultra-Light Italic">Virtual node</tspan></text>
