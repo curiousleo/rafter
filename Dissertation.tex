@@ -74,10 +74,10 @@
 \newcommand{\appendEntriesRPC}[0]{\texttt{appendEntries} \textsc{rpc}}
 \newcommand{\ECC}[0]{\textsc{ec}2 }
 
-\newcommand{\zerospacing}{\setlength{\thinmuskip}{0}\setlength{\medmuskip}{0}\setlength{\thickmuskip}{0}}
-\newcommand{\high}[0]{{\color{purple!90}\(\zerospacing \bullet \bullet \bullet\)} }
-\newcommand{\hard}[0]{{\color{purple!90}\(\zerospacing \bullet \bullet \bullet\)} }
-\newcommand{\medium}[0]{{\color{violet!80}\(\zerospacing \bullet \bullet\)} }
+\newcommand{\zerospacing}[0]{\medmuskip=0mu}
+\newcommand{\high}[0]{{\color{purple!90}\zerospacing \(\bullet \bullet \bullet\)} }
+\newcommand{\hard}[0]{{\color{purple!90}\zerospacing \(\bullet \bullet \bullet\)} }
+\newcommand{\medium}[0]{{\color{violet!80}\zerospacing \(\bullet \bullet\)} }
 \newcommand{\easy}[0]{{\color{teal!80}\(\bullet\)} }
 \newcommand{\low}[0]{{\color{teal!80}\(\bullet\)} }
 
