@@ -28,7 +28,7 @@
 \usepackage{subcaption}
 \usepackage{paralist}
 \usepackage[autocite=footnote,citestyle=authoryear-comp,bibstyle=authoryear,
-            isbn=false,doi=false,backend=biber]{biblatex}
+            dashed=false,isbn=false,doi=false,backend=biber]{biblatex}
 \usepackage[bookmarks,hidelinks]{hyperref}
 \usepackage[noabbrev]{cleveref}
 
@@ -95,6 +95,9 @@
 \newcommand{\multirowbt}[3]{%
 \multirow{#1}{#2}{\verticalcompensation{#1}#3}%
 }
+
+\setlength{\bibitemsep}{.5\baselineskip}
+% \setlength{\bibnamesep}{\baselineskip}
 
 \hyphenation{com-po-nent}
 
