@@ -1119,11 +1119,11 @@ XXX
 Figure 3 of the Raft paper lists the following safety properties which the algorithm guarantees to be true at all times:\autocite{raft}
 
 \begin{description}
-    \item[Election Safety] at most one leader can be elected in a given term.\footnote{Raft divides time into \emph{terms} of arbitrary length. Each begins with an election, in which one or more candidates attempt to become leader.}
-    \item[Leader Append-Only] a leader never overwrites or deletes entries in its log; it only appends new entries.
-    \item[Log Matching] if two logs contain an entry with the same index and term, then the logs are identical in all entries up through the given index.
-    \item[Leader Completeness] if a log entry is committed in a given term, then that entry will be present in the logs of the leaders for all higher-numbered terms.
-    \item[State Machine Safety] if a server has applied a log entry at a given index to its state machine, no other server will ever apply a different log entry for the same index.
+    \item[Election Safety:] at most one leader can be elected in a given term.\footnote{Raft divides time into \emph{terms} of arbitrary length. Each begins with an election, in which one or more candidates attempt to become leader.}
+    \item[Leader Append-Only:] a leader never overwrites or deletes entries in its log; it only appends new entries.
+    \item[Log Matching:] if two logs contain an entry with the same index and term, then the logs are identical in all entries up through the given index.
+    \item[Leader Completeness:] if a log entry is committed in a given term, then that entry will be present in the logs of the leaders for all higher-numbered terms.
+    \item[State Machine Safety:] if a server has applied a log entry at a given index to its state machine, no other server will ever apply a different log entry for the same index.
 \end{description}
 
 \section{Raft correctness proof: intersection requirement}
@@ -1176,7 +1176,7 @@ for(std::map<id, paths_t>::iterator indices_it = indices.begin();
 \section{Voting structure and voting state type specifications}
 \label{sc:voting-types}
 
-\begin{listing}[h]
+\begin{listing}[H]
     \begin{erlangcode}
 -type path() :: list(non_neg_integer()).
 -type vote() :: boolean() | pending.
