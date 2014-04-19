@@ -49,12 +49,12 @@ get_last_entry(Peer) ->
 
 start_cluster() ->
     {ok, _Started} = application:ensure_all_started(rafter),
-    Opts = #rafter_opts{state_machine=rafter_backend_echo, logdir="./log"},
+    Opts = #rafter_opts{state_machine=rafter_backend_echo, logdir="/tmp/rafter/log"},
     Peers = [peer1, peer2, peer3, peer4, peer5],
     [rafter_sup:start_peer(Me, Opts) || Me <- Peers].
 
 start_test_node(Name) ->
     {ok, _Started} = application:ensure_all_started(rafter),
     Me = {Name, node()},
-    Opts = #rafter_opts{state_machine=rafter_backend_memcached, logdir="./data"},
+    Opts = #rafter_opts{state_machine=rafter_backend_memcached, logdir="/tmp/rafter/data"},
     start_node(Me, Opts).
