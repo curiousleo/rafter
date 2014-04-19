@@ -43,7 +43,7 @@ server_name(Me) ->
     list_to_atom(atom_to_list(Me) ++ "_memcached").
 
 empty_listeners(Peer) ->
-    [start_socket(Peer) || _ <- lists:seq(1, 2000)],
+    [start_socket(Peer) || _ <- lists:seq(1, 100)],
     ok.
 
 listen(Port) ->
