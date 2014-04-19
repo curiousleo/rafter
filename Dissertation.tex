@@ -773,7 +773,7 @@ end
 
 Memcached is a high-performance key-value cache designed to sit between an application and a database. If the application issues a query that has been seen before by Memcached, the result is served from the cache; otherwise, the query is executed on the database and the result stored in Memcached. Originally developed for LiveJournal, Memcached is now used by many high-traffic websites including Youtube, Twitter, Reddit, Facebook and Wikipedia.
 
-My implementation of a Memcached frontend for Rafter amounts to a slight abuse of Memcached for my own intentions. First and foremost, Memcached caches are designed to be very fast, at the expense even of durability: clients cannot, in general, expect the cache to keep a value in memory indefinitely -- dropping a key-value pair to make place for a new one is perfectly acceptable for a cache like Memcached. Rafter, in contrast, is designed to be durable: every write operation is flushed to disk at once. Therefore, building a Memcached protocol frontend on top of it results in an implementation that is orders of magnitude slower than original Memcached.
+My implementation of a Memcached frontend for Rafter amounts to a slight abuse of Memcached for my own intentions. First and foremost, Memcached caches are designed to be very fast, at the expense even of durability: clients cannot, in general, expect the cache to keep a value in memory indefinitely -- dropping a key-value pair to make place for a new one is perfectly acceptable for a cache like Memcached. Rafter, in contrast, is designed to be durable: every write operation is flushed to disk at once. Therefore, building a Memcached protocol frontend on top of it results in an implementation that is orders of magnitude slower than original Memcached and has different eviction semantics.
 
 I added a Memcached frontend to Rafter for two reasons: to showcase a useful application that could be built on top of it, and to be able to use Memcached's benchmarking tool, \texttt{memaslap}.\footnote{\texttt{memaslap} is part of libMemcached (\url{http://libmemcached.org/libMemcached.html}), an open source library and toolset for Memcached.}
 
@@ -786,7 +786,7 @@ Next, I picked the commands and features I wanted the frontend to support. Since
 The actual implementation of the Memcached frontend consists of three parts: A supervisor, a protocol decoder/encoder, and a backend.
 
 \begin{description}
-    \item[The supervisor] starts and watches over instances of the decoder/encoder. \emph{Supervisors} are a \emph{behaviour} defined in the \textsc{otp}, Erlang's set of core libraries. Crucially, they are notified when a process started by them fails. By default, the Memcached supervisor starts 20 instances of the decoder/encoder, which allows up to 20 clients to connect to the server simultaneously. Whenever one of them crashes, a new decoder/encoder is brought up.
+    \item[The supervisor] starts and watches over instances of the decoder/encoder. \emph{Supervisors} are a \emph{behaviour} defined in the \textsc{otp}, Erlang's set of core libraries. Crucially, they are notified when a process started by them fails. By default, the Memcached supervisor starts 20 instances of the decoder/encoder, which allows up to 20 clients to connect to the server simultaneously.\footnote{My measurements show that increasing the number of decoders above 20 does not significantly improve the throughput.} Whenever one of them crashes, a new decoder/encoder is brought up.
     \item[The protocol decoder and encoder] makes up the actual \enquote{frontend}: this is the component a Memcached client talks to directly via \textsc{tcp}.
     \item[The backend] finally executes the commands decoded by the frontend by reading from and writing to a local database. In Raft terminology, this module constitutes the \emph{state machine}. It uses Erlang's built-in \texttt{ets} (Erlang Term Storage) module for storing the data.
 \end{description}
@@ -828,14 +828,14 @@ In order to collect benchmarking data, I created a simple logging module. This m
     \item[Experiment] the voting scheme used and its parameters, if any;
     \item[Cluster] the number of nodes in the cluster;
     \item[Operation] \texttt{Read} or \texttt{Write};
-    \item[Time to consensus (\textsc{ttc})] the time taken between receiving the request and returning its result to the client.
+    \item[Time to consensus (\textsc{ttc})] the time taken between receiving the request and returning its result to the client in microseconds.
 \end{description}
 
 \begin{table}[h]
     \centering
-    \begin{tabularx}{.5\textwidth}{X r l r}
+    \begin{tabular}{l c c c}
         \toprule
-        \textit{Experiment} & \textit{Cluster} & \textit{Operation} & \textit{\textsc{ttc}} \\
+        \textit{Experiment} & \textit{Cluster} & \textit{Operation} & \textit{\textsc{ttc} (\si{\micro\second})} \\
         \midrule
         \multicolumn{4}{c}{\(\vdots\)} \\
         Majority & 3 & Write & 2920 \\
@@ -845,14 +845,16 @@ In order to collect benchmarking data, I created a simple logging module. This m
         Grid & 11 & Read & 7269 \\
         \multicolumn{4}{c}{\(\vdots\)} \\
         \bottomrule
-    \end{tabularx}
+    \end{tabular}
     \caption[Example TTC log snippet]{Example \textsc{ttc} log snippet}
     \label{tab:csv}
 \end{table}
 
-Rafter puts information related to a specific request in a record of type \texttt{client\_req}. For logging purposes, I added a field \texttt{started} to it, which is initialised to the current system time whenever a new client request record is created.
+Rafter puts information related to a specific request in a record of type \texttt{client\_req}. For logging purposes, I added a field \texttt{started} to it, which is initialised to the current system time whenever a new client request record is created. I then amended the function sending the client response to also send a message to the logger containing the time difference between the current system time and the time when the request was started.
 
-I then amended the function sending the client response to also send a message to the logger containing the time difference between the current system time and the time when the request was started.
+I conducted a short series of tests to see if turning on logging decreased the performance of Rafter. No statistically significant effect on the throughput could be found. There are two main reasons for this: firstly, as mentioned above, the logger runs in its own process and receives messages from other components of the system. This means that when a process wants to add an entry to the log, it sends a message to the logger. The program flow is not interrupted: the message is simply queued in the logger's message inbox and the process that sent the message continues execution. The logger acts upon the message at some later point when the Erlang scheduler decides to switch to its message handling procedure. Hence the logger automatically benefits from Erlang's scheduling and parallelism features, decreasing the time penalty.
+
+Secondly, the \textsc{cvs} files are written to a folder in \texttt{/tmp}, which is mounted as a \texttt{tempfs} file system. Under normal operating conditions, this complete file system lives in main memory and is never written to disk. This makes write operations very cheap, again keeping the time penalty for logging at a minimum.
 
 \section{Reporting issues and bugs}
 
@@ -934,7 +936,7 @@ All the success criteria listed in my project proposal have been met, and in som
         I took an Arch Linux image specially made to run on Amazon \ECC{} instances, built and installed all necessary tools required for benchmarking, and deployed it on a cluster.
     \item \emph{Running the benchmarks, and collecting and evaluating the results. The evaluation must include a comparison and discussion of the benchmarks collected for the different voting schemes.}
 
-        Done -- see XXX.
+        See \cref{ssc:results}.
 \end{enumerate}
 
 \section{Testing}
@@ -1031,6 +1033,7 @@ As for cluster sizes, I tried to find configurations for which at least one prot
 Taking the union of the \enquote{interesting} optimal cases, we get 3, 4, 5, 7, 9, 11, 12, 13, 15, and~17 as the cluster sizes to benchmark.
 
 \subsection{Results}
+\label{ssc:results}
 
 The purpose of the benchmarks was twofold: to find the overhead caused by adding additional complexity in the form of the structured voting layer, and to compare the performance of different structured voting schemes.
 
@@ -1066,7 +1069,7 @@ The time to consensus versus cluster size graph for all four structured voting s
 
 Consider the graph of the Grid Protocol time to consensus (the \enquote{grid} dataset in \cref{fig:maj-tree-grid-ttc}). The \textsc{ttc} measurements increase by about \SI{3.5}{\milli\second} between 12 and 13 nodes but then stay within about \SI{1}{\milli\second} until the cluster size reaches 16; then there is a jump by \SI{7.5}{\milli\second} as the cluster size hits 17. Why the plateau between 13 and 16? By \cref{eq:grid-dims}, cluster sizes 13, 14, 15, and 16 all generate quadratic 4\,\(\times\)\,4 grids. Clusters with 12 nodes fit into a 4\,\(\times\)\,3 grid, and those with 17 nodes require a 5\,\(\times\)\,4 grid. Thus, it seems that the \textsc{ttc} times change mainly when the grid shape changes.
 
-This behaviour can be explained by looking at the number of nodes required to vote \yes, which depends on the shape of the grid: for a \(r \times c\) grid it is \(r + c - 1\).\footnote{A Grid Protocol quorum needs votes from each column  (\(c\) votes) and one entire column (\(r\) votes). Those two sets intersect in one process, hence the number of processes in a Grid Protocol quorum is \(r + c - 1\).} For cluster sizes 13, 14, 15 and 16, the grid has the same 4\,\(\times\)\,4 shape, so in each case, seven votes are required.
+This behaviour can be explained by looking at the number of nodes required to vote \yes, which depends on the shape of the grid: for a \(r \times c\) grid it is \(r + c - 1\).\footnote{A Grid Protocol quorum needs votes from each column  (\(c\) votes) and one entire column (\(r\) votes). Those two sets intersect in one process, and so the number of processes in a Grid Protocol quorum is \(r + c - 1\).} For cluster sizes 13, 14, 15 and 16, the grid has the same 4\,\(\times\)\,4 shape, so in each case, seven votes are required.
 
 % It is important to note that seven \yes{} votes from arbitrary processes do \emph{not} suffice; rather, \ldots
 
@@ -1074,15 +1077,28 @@ The Tree Quorum Protocol graphs show a similar behaviour. A cluster of 15 nodes 
 
 \minisec{The dent in the cumulative histogram}
 
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.8\textwidth, keepaspectratio]{Images/ttc_7_plain-maj-tree-grid.pdf}
+    \caption{Cumulative histogram of time to consensus measurements for a cluster with seven nodes, under original Rafter, the Majority Protocol, the Tree Quorum Protocol and the Grid Protocol (legend as for \cref{fig:ttc}).}
+    \label{fig:plain-maj-tree-grid-ttc}
+\end{figure}
+
 All cumulative histograms (\cref{fig:plain-maj-tree-grid-ttc} show the one for a cluster of size 7) of the time to consensus measurements I took exhibit one or more \enquote{dents} between the 75th and the 100th percentile. These show up as large upper error bars in \cref{fig:ttc} as well. Where do they come from?
 
 Preliminary experiments showed that the time to consensus increases by orders of magnitude when the load on the system is high. The system load is primarily a function of the frequency at which the client -- \texttt{memaslap} for the purposes of the benchmarks -- sends requests. By carefully reducing this throughput by varying the \texttt{--tps=X} command line parameter, I made sure to operate the system in a regime just below overloading for most of the requests. This is the part of the curves below the dents, roughly the region below the 75th percentile.
 
+\minisec{Throughput}
+
+Throughput is highly correlated with time to consensus: The lower the \textsc{ttc}, the higher the throughput. But the throughput depends on a number of other factors as well, most importantly the amount of parallelism in the system: if the number of operations that can be executed simultaneously is doubled, then (ceteris paribus) the throughput doubles while \textsc{ttc} stays constant.
+
+I used the output of Memaslap (which \cref{fig:throughput} is compiled from) to confirm that my time to consensus values were reasonable. It is important to note that while \cref{fig:ttc,fig:plain-maj-tree-grid-ttc} show time to consensus for write operations only, \cref{fig:throughput} indicates the throughput averaged over both read and write operations. The reason behind this is that in Rafter, the leader has the canonical log, and can therefore serve any read request directly. There is no quorum-building involved in a read operation, and so the response time is independent of the voting structure or the cluster size. Unfortunately, Memaslap only outputs the overall average throughput, I had to make do with this value.
+
 \begin{figure}[h]
     \centering
-    \includegraphics[width=\textwidth, keepaspectratio]{Images/ttc_7_plain-maj-tree-grid.pdf}
-    \caption{Cumulative histogram of time to consensus measurements for a cluster with seven nodes, under original Rafter, the Majority Protocol, the Tree Quorum Protocol and the Grid Protocol (legend as for \cref{fig:ttc}).}
-    \label{fig:plain-maj-tree-grid-ttc}
+    \includegraphics[width=0.8\textwidth, keepaspectratio]{Images/throughput.pdf}
+    \caption{Throughput for original Rafter and different structured voting schemes (legend as for \cref{fig:ttc}).}
+    \label{fig:throughput}
 \end{figure}
 
 XXX
