@@ -795,15 +795,17 @@ The actual implementation of the Memcached frontend consists of three parts: A s
 
 In order to evaluate and compare the different voting structures, I added failure simulation to Rafter's state machine. Apart from being in leader, follower or candidate state, nodes can now also be in the \textit{failed} state. Failed nodes do not process any incoming messages, nor do they send any messages to other nodes.
 
-The failure simulation, like all the benchmarking code I wrote for this project, assumes that the leader is fixed and stays up. This leader can then instruct its followers to fail -- either once or repeatedly. It is, in turn, controlled by the \emph{benchmark runner}, which is the Amazon \ECC instance that runs the benchmarking scripts. For the \textbf{fail once} failure mode, the process is as follows:
+According to Jeff Dean of Google, two of the most common failure modes in a modern data centre are individual machine failures (called \emph{repeated failures} in the following) and rack failures (correlated failures) \autocite[sl. 10]{distr}. During a preliminary theoretical analysis, I could find no evidence that structured voting schemes would be able to deal with rack failures better than unstructured protocols. Hence only repeated/individual failures were considered.
 
-\begin{enumerate}
-    \item The benchmark runner sends a message to the leader with parameters \(\lambda\) and \(T\).
-    \item After waiting for a time \(t \sim \text{Exp}(\lambda)\), the leader sends a message to a random follower to go into failed state for time \(T\).
-    \item The leader repeats step (2.) until it receives a \enquote{stop} message.
-\end{enumerate}
+% The failure simulation, like all the benchmarking code I wrote for this project, assumes that the leader is fixed and stays up. This leader can then instruct its followers to fail -- either once or repeatedly. It is, in turn, controlled by the \emph{benchmark runner}, which is the Amazon \ECC instance that runs the benchmarking scripts. For the \textbf{fail once} \label{fail-once} failure mode, the process is as follows:
 
-\textbf{Repeated failures} work similarly. The idea here is that a parameter \(\texttt{Up} \in \oiv{0,1}\) specifies the uptime ratio of each node. After running for a time \(t \sim \text{Exp}(\lambda)\), nodes fail for time \(t \cdot \frac{1 - \texttt{Up}}{\texttt{Up}}\). This results in followers being \enquote{up}, that is, actively participating in the cluster, for approximately \(\texttt{Up} \cdot 100\%\) of the time:
+% \begin{enumerate}
+    % \item The benchmark runner sends a message to the leader with parameters \(\lambda\) and \(T\).
+    % \item After waiting for a time \(t \sim \text{Exp}(\lambda)\), the leader sends a message to a random follower to go into failed state for time \(T\).
+    % \item The leader repeats step (2.) until it receives a \enquote{stop} message.
+% \end{enumerate}
+
+Here is how I implemented \label{repeated-failures} \emph{repeated failures}: the idea is that a parameter \(\texttt{Up} \in \oiv{0,1}\) specifies the uptime ratio of each node. After running for a time \(t \sim \text{Exp}(\lambda)\), nodes fail for time \(t \cdot \frac{1 - \texttt{Up}}{\texttt{Up}}\). This results in followers being \enquote{up}, that is, actively participating in the cluster, for approximately \(\texttt{Up} \cdot 100\%\) of the time:
 \[ \frac{\text{uptime}}{\text{total time}}
  = \frac{\text{uptime}}{\text{uptime} + \text{duration of failure}}
  = \frac{t}{t + t \cdot \frac{1-\texttt{Up}}{\texttt{Up}}}
@@ -1020,7 +1022,7 @@ The m1.xlarge instances provided enough compute power and much more network band
 
 \subsection{Choice of parameters}
 
-Due to time constraints, benchmarking every combination of parameters was impossible. For this reason, I turned off failure simulation for the benchmarks and instead analysed the behaviour under different failure modes theoretically (see XXX.) I benchmarked all voting structures. The Grid Protocol was tested with the \enquote{favouring rows} option; benchmarks were also run on binary and tertiary trees created by the Tree Quorum Protocol.
+Due to time constraints, benchmarking every combination of parameters was impossible. I benchmarked all voting structures. The Grid Protocol was tested with the \enquote{favouring rows} option; benchmarks were also run on binary and tertiary trees created by the Tree Quorum Protocol.
 
 As for cluster sizes, I tried to find configurations for which at least one protocol was optimal in some way. My Amazon \ECC account allowed me to run experiments with up to 19 nodes (plus one separate \enquote{runner} instance).
 
@@ -1032,8 +1034,10 @@ As for cluster sizes, I tried to find configurations for which at least one prot
 
 Taking the union of the \enquote{interesting} optimal cases, we get 3, 4, 5, 7, 9, 11, 12, 13, 15, and~17 as the cluster sizes to benchmark.
 
-\subsection{Results}
+\subsection{Empirical results: no failures}
 \label{ssc:results}
+
+This section discusses the results gathered from running the benchmarks with failure simulation turned off.
 
 The purpose of the benchmarks was twofold: to find the overhead caused by adding additional complexity in the form of the structured voting layer, and to compare the performance of different structured voting schemes.
 
@@ -1050,14 +1054,14 @@ A more interesting aspect is the seemingly linear relationship between the size 
 \begin{figure}[p]
     \begin{subfigure}{1\textwidth}
         \centering
-        \includegraphics[width=0.8\textwidth, keepaspectratio]{Images/ttc_plain-maj.pdf}
+        \includegraphics[width=0.75\textwidth, keepaspectratio]{Images/ttc_plain-maj.pdf}
         \caption{Time to consensus results for original Rafter and the Majority Protocol.}
         \label{fig:plain-maj-ttc}
     \end{subfigure}
 
     \begin{subfigure}{1\textwidth}
         \centering
-        \includegraphics[width=0.8\textwidth, keepaspectratio]{Images/ttc_maj-tree-grid.pdf}
+        \includegraphics[width=0.75\textwidth, keepaspectratio]{Images/ttc_maj-tree-grid.pdf}
         \caption{\textsc{ttc} measurements for different structured voting schemes}
         \label{fig:maj-tree-grid-ttc}
     \end{subfigure}
@@ -1075,11 +1079,18 @@ This behaviour can be explained by looking at the number of nodes required to vo
 
 The Tree Quorum Protocol graphs show a similar behaviour. A cluster of 15 nodes exactly fills a binary tree of height 3. Add one more node, and a non-full binary tree of height 4 is required to hold all nodes. Analogously, 13 nodes fit exactly into a ternary tree of height 2; more nodes require at least height 3. This helps explain the rapid increase in time to consensus between 15 and 16 nodes in the binary (\enquote{tree2}) case and the similar effect between 13 and 15 nodes in the ternary (\enquote{tree3}) case.
 
+\begin{figure}[t]
+    \centering
+    \includegraphics[width=0.75\textwidth, keepaspectratio]{Images/ttc_grid.pdf}
+    \caption{Time to consensus plots for the Grid Protocol. The numbers indicate uptimes in percent: \texttt{grid-80} is the dataset captured with uptime 80\%, and analogously for \texttt{grid-60} and \texttt{grid-40}.}
+    \label{fig:ttc-grid}
+\end{figure}
+
 \minisec{The dent in the cumulative histogram}
 
-\begin{figure}[h]
+\begin{figure}[p]
     \centering
-    \includegraphics[width=0.8\textwidth, keepaspectratio]{Images/ttc_7_plain-maj-tree-grid.pdf}
+    \includegraphics[width=0.75\textwidth, keepaspectratio]{Images/ttc_7_plain-maj-tree-grid.pdf}
     \caption{Cumulative histogram of time to consensus measurements for a cluster with seven nodes, under original Rafter, the Majority Protocol, the Tree Quorum Protocol and the Grid Protocol (legend as for \cref{fig:ttc}).}
     \label{fig:plain-maj-tree-grid-ttc}
 \end{figure}
@@ -1090,22 +1101,38 @@ Preliminary experiments showed that the time to consensus increases by orders of
 
 \minisec{Throughput}
 
-Throughput is highly correlated with time to consensus: The lower the \textsc{ttc}, the higher the throughput. But the throughput depends on a number of other factors as well, most importantly the amount of parallelism in the system: if the number of operations that can be executed simultaneously is doubled, then (ceteris paribus) the throughput doubles while \textsc{ttc} stays constant.
+Throughput is highly correlated with time to consensus: The lower the \textsc{ttc}, the higher the throughput. But it depends on a number of other factors as well, most importantly the amount of parallelism in the system: if the number of operations that can be executed simultaneously is doubled, then (ceteris paribus) the throughput doubles while \textsc{ttc} stays constant.
 
-I used the output of Memaslap (which \cref{fig:throughput} is compiled from) to confirm that my time to consensus values were reasonable. It is important to note that while \cref{fig:ttc,fig:plain-maj-tree-grid-ttc} show time to consensus for write operations only, \cref{fig:throughput} indicates the throughput averaged over both read and write operations. The reason behind this is that in Rafter, the leader has the canonical log, and can therefore serve any read request directly. There is no quorum-building involved in a read operation, and so the response time is independent of the voting structure or the cluster size. Unfortunately, Memaslap only outputs the overall average throughput, I had to make do with this value.
+I used the output of Memaslap (which \cref{fig:throughput} is compiled from) to confirm that my time to consensus values were reasonable. It is important to note that while \cref{fig:ttc,fig:plain-maj-tree-grid-ttc} show time to consensus for write operations only, \cref{fig:throughput} indicates the throughput averaged over both read and write operations. The reason behind this is that in Rafter, the leader has the canonical log, and can therefore serve any read request directly. There is no quorum-building involved in a read operation, and so the response time is independent of the voting structure or the cluster size. Unfortunately, Memaslap only outputs the overall average throughput, so I had to make do with this one value.
 
-\begin{figure}[h]
+\begin{figure}[p]
     \centering
-    \includegraphics[width=0.8\textwidth, keepaspectratio]{Images/throughput.pdf}
+    \includegraphics[width=0.75\textwidth, keepaspectratio]{Images/throughput.pdf}
     \caption{Throughput for original Rafter and different structured voting schemes (legend as for \cref{fig:ttc}).}
     \label{fig:throughput}
 \end{figure}
 
-XXX
+\subsection{Empirical results: repeated failures}
+\label{ssc:repeated-failures}
+
+The repeated failures simulation is described on \cpageref{repeated-failures}. Time to consensus graphs for 80\%, 60\% and 40\% uptime can be found in \cref{sc:ttc-graphs}.
+
+The graphs show that as long as the uptime is above 40\%, time to consensus values do not change significantly. \Cref{fig:ttc-grid} shows an example graph for the Grid Protocol where the lines almost coincide and no general trend can be extracted. The same plot for other structured voting schemes looks similar.
 
 \section{Summary}
 
-XXX
+This chapter started by showing that all the requirements of the project proposal have been fulfilled. I described my testing set-up using QuickCheck and demonstrated good software engineering practice through very high test coverage.
+
+The remainder of the chapter was devoted to a discussion of the benchmarking measurements. Two main results have been found. Firstly, the implementation of structured voting schemes is computationally more expensive than hard-coding majority voting and therefore slower, as demonstrated by \cref{fig:plain-maj-ttc}. This was to be expected.
+
+Secondly, I have shown that structured voting schemes are nevertheless worth considering in a practical setting. \Cref{fig:maj-tree-grid-ttc-circled} shows that given the right cluster size, structured voting schemes can be faster than unstructured voting schemes in finding quorums, as evidenced by the circled region of the graph. Here, the (ternary) Tree Quorum Protocol, a structured voting scheme, beats the Majority Protocol, the default unstructured voting scheme, in the time to consensus measurements.
+
+\begin{figure}{1\textwidth}
+    \centering
+    \includegraphics[width=1\textwidth, keepaspectratio]{Images/ttc_maj-tree-grid-circled.pdf}
+    \caption{Time to consensus measurements for different voting schemes. This graph shows the main evidence that structured voting schemes can have practical advantages. Within the circled area, the (ternary) Tree Quorum Protocol found quorums significantly faster than the Majority Protocol. This graph is an annotated version of \cref{fig:maj-tree-grid-ttc}.}
+    \label{fig:maj-tree-grid-ttc-circled}
+\end{figure}
 
 
 
@@ -1116,6 +1143,22 @@ XXX
     % \item Refer to Introduction
     % \item Lessons learnt
 % \end{itemize}
+
+This dissertation has described how I designed, implemented, tested and benchmarked a structured voting extension to Rafter, an existing implementation of the new Raft consensus algorithm. All goals outlined in the original proposal have been met, and a few optional extensions have been added.
+
+\minisec{Results}
+
+The result of the project is twofold: firstly, the implementation of the extension itself. I have successfully built upon an existing piece of software, Rafter, that is still in an early phase of development, largely undocumented and written in a language I was entirely unfamiliar with when I started this project. The extension works and is stable. Adding more structured voting schemes is easy.
+
+Secondly, I have shown that structured voting schemes have practical value. The main evidence for this can be found in \cref{fig:maj-tree-grid-ttc-circled}, which shows that under certain conditions, structured voting schemes can be more efficient than unstructured ones. Optimising the voting structure data types and algorithms would decrease the penalty for using structured voting schemes, and therefore result in structured voting schemes being more efficient than unstructured ones under a larger range of configurations, especially as the size of the cluster grows big.
+
+\minisec{Takeaway}
+
+Doing this project and writing the dissertation has been very educational. I have learnt to administer cloud servers, analysed big datasets with a variety of different tools, and fought battles with \LaTeX{} to get just the layout I wanted. Last but not least, I have learnt to appreciate just how much time and care it takes to benchmark a distributed system.
+
+\minisec{Conclusion}
+
+I hope that this dissertation is readable, and that I have given each part of the project appropriate space for explanation and discussion. Structured voting schemes are not a new idea, but maybe after decades of being confined to academic papers, they will finally be picked up by implementers of distributed systems -- the potential for efficiency gains are real, as this dissertation has shown.
 
 %TC:ignore
 
@@ -1254,6 +1297,30 @@ This generator function is used wherever a test requires a voting structure. As 
 \label{ssc:property}
 
 The file \texttt{test/rafter\_voting\_majority\_eqc.erl} defines a property of the Majority Protocol in the function \texttt{prop\_majority\_quorum()}. In essence, this property states that a vot succeeds if more than half of the nodes agree (\(v \ge \left\lceil n \, / \, 2 \right\rceil \), where \(v\) is the number of votes and \(n\) the total number of processes.)
+
+\section{Time to consensus with repeated failures}
+\label{sc:ttc-graphs}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.75\textwidth, keepaspectratio]{Images/up-80.pdf}
+    \caption{Time to consensus measurements for the Majority Protocol, the Tree Quorum protocol with branching factor 3, and the Grid Protocol with 80\% uptime.}
+    \label{fig:up-80}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.75\textwidth, keepaspectratio]{Images/up-60.pdf}
+    \caption{Time to consensus measurements for the Majority Protocol, the Tree Quorum protocol with branching factor 3, and the Grid Protocol with 60\% uptime.}
+    \label{fig:up-60}
+\end{figure}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.75\textwidth, keepaspectratio]{Images/up-40.pdf}
+    \caption{Time to consensus measurements for the Majority Protocol, the Tree Quorum protocol with branching factor 3, and the Grid Protocol with 40\% uptime.}
+    \label{fig:up-40}
+\end{figure}
 
 
 % \listoffigures
