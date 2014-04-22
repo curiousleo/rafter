@@ -362,7 +362,7 @@ By taking into account the identity of nodes (as opposed to just counting them),
 
 \minisec{Quorum systems}
 
-Formally, a quorum system is defined as a tuple of a read and a write quorum set whose elements are called read quorums and write quorums, respectively. These are constructed such that every write quorum intersects with every other write quorum and with every read quorum. Read quorums need not intersect pairwise \autocite{voting}.
+A quorum system is defined as a tuple of a read and a write quorum set whose elements are called read quorums and write quorums, respectively. These are constructed such that every write quorum intersects with every other write quorum and with every read quorum. Read quorums need not intersect pairwise \autocite[For a formal definition of \emph{quorum}, \emph{quorum set} and \emph{quorum system}, see][section 2.3]{voting}.
 
 The key realisation that lead to this project was that write quorums have precisely the property required for Raft's leader election, namely that any two write quorums intersect. From this point on, \emph{quorum} will mean \emph{write quorum} unless specifically noted otherwise.
 
@@ -708,6 +708,8 @@ Having written and tested the structured voting code, I integrated it into Rafte
     \item In order to use my structured voting code, the node configuration had to be changed from a list of peers (which is all that is needed when only the Majority Protocol is used) to a voting structure (enabling Rafter to use other protocols as well). This required updating every line of code that made use of this field from the configuration record.
     \item All the places in the code which implicitely assumed that the Majority Protocol was being used had to be rewritten. In most cases, this meant making them wrappers around my generalised structured voting code.
 \end{enumerate}
+
+Thanks to the modularity of both the original Rafter implementation and my own code, this part of the implementation process posed no major unforeseen difficulties.
 
 \section{Memcached frontend}
 
