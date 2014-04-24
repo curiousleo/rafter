@@ -360,12 +360,14 @@ Each client request to a leader contains a command to be executed by the replica
 
 In order to guarantee overall correctness, different components of Raft are designed to make sure certain well-defined safety properties are true at all times (see \cref{sc:rafter-safety} for the complete list.) These properties are shown to hold and then used to prove correctness in the separate correctness proof \autocite{raftproof}.
 
-Since my project involved changing the way in which quorums\footnote{A \emph{quorum} is a minimal subset of the cluster that an operation has to obtain \yes{} votes from in order to be performed. Majority voting, for example, specifies that any set of servers containing at least half the servers in the entire cluster constitutes a quorum.} are constructed, I had to pay special attention to the Election Safety property (stating that there can be at most one leader at any given time) and all the steps in the proof to do with quorums, in order to make sure all the desired properties still hold (see \cref{sc:rafter-proof} for a justification.)
+Since my project involved changing the way in which quorums are constructed, I had to pay special attention to the Election Safety property (stating that there can be at most one leader at any given time) and all the steps in the proof to do with quorums, in order to make sure all the desired properties still hold (see \cref{sc:rafter-proof} for a justification). For a definition of \emph{quorum}, see \cref{ssc:structured-voting-schemes}.
 
 \section{Introduction to structured voting schemes}
 \label{ssc:structured-voting-schemes}
 
-Voting schemes specify quorums. On an abstract level, they provide a procedure, which, given some knowledge about the entire cluster, decides whether or not a set of processes constitutes a quorum.
+\emph{Voting schemes} specify quorums. On an abstract level, they provide a procedure, which, given some knowledge about the entire cluster, decides whether or not a set of processes constitutes a quorum.
+
+A \emph{quorum} is a minimal subset of the cluster that an operation has to obtain \yes{} votes from in order to be performed. Majority voting, for example, specifies that any set of servers containing at least half the servers in the entire cluster constitutes a quorum.
 
 The Majority Protocol and Read One Write All are examples of unstructured voting schemes: whether or not a set of nodes forms a quorum depends only on its cardinality. In the case of the Majority Protocol, both read and write operations need the consent of a majority of processes; Read One Write All requires all processes to agree on write operations, whereas any one process can serve a read request.
 
