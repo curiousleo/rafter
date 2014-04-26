@@ -221,11 +221,9 @@ code_change(_OldVsn, StateName, State, _Extra) ->
 
 %% Simulate process failure: ignore incoming messages
 failed(_, S) ->
-    rafter_ttc_log ! failed,
     {next_state, failed, S}.
 
 failed(_, _, S) ->
-    rafter_ttc_log ! failed,
     {next_state, failed, S}.
 
 %% Election timeout has expired. Go to candidate state iff we are a voter.
