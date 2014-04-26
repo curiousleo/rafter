@@ -93,18 +93,23 @@ handle_event(stop, _, State) ->
     {stop, normal, State};
 
 handle_event(restart, failed, {StateName, State=#state{failure_tref=undefined}}) ->
+    rafter_ttc_log ! failed,
     {next_state, StateName, State};
 handle_event(restart, failed, {StateName, State=#state{failure_tref=Tref}}) ->
     timer:cancel(Tref),
+    rafter_ttc_log ! failed,
     {next_state, StateName, State#state{failure_tref=undefined}};
 handle_event(restart, StateName, State=#state{failure_tref=undefined}) ->
+    rafter_ttc_log ! restarted,
     {next_state, StateName, State};
 handle_event(restart, StateName, State=#state{failure_tref=Tref}) ->
     timer:cancel(Tref),
+    rafter_ttc_log ! restarted,
     {next_state, StateName, State#state{failure_tref=undefined}};
 
 handle_event({fail_once, T}, follower, State=#state{me=Me}) ->
     {ok, Tref} = timer:send_after(T, Me, restart),
+    rafter_ttc_log ! failed,
     {next_state, failed, {follower, State#state{failure_tref=Tref}}};
 handle_event({fail_once, _T}, failed, State) ->
     % this should not happen ..
@@ -167,6 +172,7 @@ handle_info({client_timeout, Id}, StateName, #state{client_reqs=Reqs}=State)
 handle_info({repeated_failure_timeout, RanFor, Lambda, Up}, follower, State=#state{me=Me}) ->
     FailFor = trunc((1 - Up) * RanFor / Up + 0.5),
     {ok, Tref} = timer:send_after(FailFor, Me, {repeated_failure_timeout, Lambda, Up}),
+    rafter_ttc_log ! failed,
     {next_state, failed, {follower, State#state{failure_tref=Tref}}};
 handle_info({repeated_failure_timeout, Lambda, Up}, failed, {StateName, State=#state{me=Me}}) ->
     RunFor = exponential(Lambda),
@@ -183,14 +189,18 @@ handle_info({oneoff_failure_timeout, Lambda, T}, leader, State=#state{me=Me, con
     end;
 
 handle_info(restart, failed, {StateName, State=#state{failure_tref=undefined}}) ->
+    rafter_ttc_log ! restarted,
     {next_state, StateName, State};
 handle_info(restart, failed, {StateName, State=#state{failure_tref=Tref}}) ->
+    rafter_ttc_log ! restarted,
     timer:cancel(Tref),
     {next_state, StateName, State#state{failure_tref=undefined}};
 handle_info(restart, StateName, State=#state{failure_tref=undefined}) ->
+    rafter_ttc_log ! restarted,
     {next_state, StateName, State};
 handle_info(restart, StateName, State=#state{failure_tref=Tref}) ->
     timer:cancel(Tref),
+    rafter_ttc_log ! restarted,
     {next_state, StateName, State#state{failure_tref=undefined}};
 
 handle_info(_Event, _StateName, State) ->
