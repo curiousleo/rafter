@@ -126,9 +126,11 @@
 %TC:ignore
 
 % \frontmatter
-\pagenumbering{roman}
-
 \includepdf{Cover.pdf}
+
+\begin{titlepage}
+
+\pagenumbering{roman}
 
 {\color{white}x}
 
@@ -140,6 +142,8 @@ Log rafts like the one pictured [on the cover] were first developed in 1906 by S
 \end{quote}
 
 My project aims to extend an implementation of the Raft consensus algorithm. One main goal is to enable applications running on top of this implementation to reliably scale to a large number of servers, a bit like Benson's rafts \enquote{dependably} transported large numbers of logs.
+
+\end{titlepage}
 
 \chapter*{Proforma}
 \label{ch:proforma}
