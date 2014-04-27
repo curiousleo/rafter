@@ -56,6 +56,7 @@
 \usemintedstyle{tango}
 \newminted{cpp}{fontfamily=jkptt, fontsize=\small}
 \newminted{erlang}{fontfamily=jkptt, fontsize=\small}
+\newminted{bash}{fontfamily=jkptt, fontsize=\small}
 \newmint{erlang}{fontfamily=jkptt}
 
 \DeclareFloatVCode{ruleabove}%
@@ -137,8 +138,8 @@
 \vfil
 
 \begin{quote}
-Log rafts like the one pictured [on the cover] were first developed in 1906 by Simon Benson, a Portland-based timber magnate. Although Benson was not the first timberman to transport his company's logs to market by rafting them together, he was the first to develop an ocean-worthy raft that could dependably transport \enquote{millions of feet} at a time.\footnote{Reproduced with kind permission from the Oregon History Society}
-\attrib{\cite{benson}}
+Log rafts like the one pictured [on the cover] were first developed in 1906 by Simon Benson, a Portland-based timber magnate. Although Benson was not the first timberman to transport his company's logs to market by rafting them together, he was the first to develop an ocean-worthy raft that could dependably transport \enquote{millions of feet} at a time.\footnote{Photo \parencite{benson} and description reproduced with kind permission from the Oregon Historical Society (\url{http://www.ohs.org}).}
+\attrib{Joshua Binus, Oregon Historical Society 2004}
 \end{quote}
 
 My project aims to extend an implementation of the Raft consensus algorithm. One main goal is to enable applications running on top of this implementation to reliably scale to a large number of servers, a bit like Benson's rafts \enquote{dependably} transported large numbers of logs.
@@ -968,7 +969,7 @@ In order to compare the performance of my voting algorithms with those used in t
         \item On all followers and the leader, the Erlang process is killed and the file system cache is purged.
         \item Rafter is started on each node in the cluster.
         \item The leader is configured. This step triggers a leader election.
-        \item Memaslap is executed on the runner, targeting the leader.
+        \item \texttt{memaslap} is executed on the runner, targeting the leader.
         \item The script downloads log files from the runner and the leader.
     \end{inparaenum}
     }
@@ -982,7 +983,7 @@ The benchmarks are automated using Fabric and the awsfabrictasks plugin (see \cr
     \item[start\_erlang\_node] Takes a name as its parameter and starts an Erlang node with that name on the instance.
     \item[stop\_erlang\_node] Kills the Erlang interpreter process on this instance.
     \item[configure] Creates a configuration script and executes it. The script evaluates an Erlang program that is created on the fly. It uses Erlang's remote procedure call module, to issue a call to the leader to update its configuration, which consists of the list of followers and the voting scheme to use. The script then sends a message to the leader to relay a \enquote{restart} message to its followers so they all recover from a possible failed state. Finally, a new failure mode is sent to the leader.
-    \item[memaslap] Runs \texttt{memaslap}, the Memcached load tester, locally, targeting the Memaslap frontend running on the leader node. The output of the program is diverted into a log file.
+    \item[memaslap] Runs \texttt{memaslap}, the Memcached load tester, locally, targeting the \texttt{memaslap} frontend running on the leader node. The output of the program is diverted into a log file.
     \item[collect\_results] Uses \texttt{rsync} to download the Memcached and time to consensus log files to the machine running the benchmarks.
 \end{description}
 
@@ -991,6 +992,8 @@ The \textit{benchmark} task uses these helper functions as follows: For each com
 Next, the leader is reconfigured using the \texttt{configure} task. Then \texttt{memaslap} is run, and its results as well as the time to consensus measurements are downloaded by the \texttt{collect\_results} task.
 
 \subsection[Amazon EC2 set-up]{Amazon \ECC set-up}
+
+The Amazon Elastic Compute Cloud was used as a testbed for the benchmarks. It provides a realistic environment for testing -- after all, consensus systems like Rafter would usually run in a data centre like Amazon's. The random packet delivery timing, network congestion and packet loss experienced in the Amazon cloud make for a good stress test of Rafter's ability to cope with such issues.
 
 New instances in the Amazon Elastic Compute Cloud are created from virtual appliances called \enquote{Amazon Machine Images} (\textsc{ami}s). Amazon's own default \textsc{ami} does not have the latest version of the Erlang platform in its package sources, so I based my custom \textsc{ami} on an Arch Linux image instead.\footnote{Project \enquote{Arch Linux on \ECC}: \url{https://www.uplinklabs.net/projects/arch-linux-on-ec2/}} I created an instance of the Arch \textsc{ami}, installed Erlang and a few standard tools and built libMemcached from source, as all distributions I checked had building \texttt{memaslap} disabled by default.
 
@@ -1018,7 +1021,7 @@ The m1.xlarge instances provided enough compute power and much more network band
 
 Due to time constraints, benchmarking every combination of parameters was impossible. I benchmarked all voting structures. The Grid Protocol was tested with the \enquote{favouring rows} option (explained in \cref{ssc:grid}); benchmarks were also run on binary and tertiary trees created by the Tree Quorum Protocol.
 
-As for cluster sizes, I tried to find configurations for which at least one protocol was optimal in some way. My Amazon \ECC account allowed me to run experiments with up to 19 nodes (plus one separate \enquote{runner} instance).
+As for cluster sizes, I tried to find configurations for which at least one protocol was optimal in some way. My Amazon \ECC account allowed me to run experiments with up to 19 nodes (plus one separate \enquote{runner} instance). This seems like a reasonably large range of cluster sizes -- the authors of the Zookeeper paper, for instance, give benchmarking results for up to 13 servers \autocite{zookeeper}.
 
 \begin{description}
     \item[Majority Protocol] Any odd number of nodes is optimal.
@@ -1028,7 +1031,10 @@ As for cluster sizes, I tried to find configurations for which at least one prot
 
 Taking the union of the \enquote{interesting} optimal cases, we get 3, 4, 5, 7, 9, 11, 12, 13, 15, and~17 as the cluster sizes to benchmark.
 
-\subsection{Empirical results: no failures}
+The \texttt{memaslap} command line arguments and the corresponding configuration file can be found in \cref{sc:memaslap-conf}.
+
+% \subsection{Empirical results: no failures}
+\subsection{Results and analysis}
 \label{ssc:results}
 
 This section discusses the results gathered from running the benchmarks with failure simulation turned off.
@@ -1039,7 +1045,7 @@ While the benchmarks ran, two types of measurements were taken: time to consensu
 
 \begin{description}
     \item[Time to consensus] was logged by a Rafter module I wrote for this purpose (see \cref{sc:logging} for more details on the logger). It is the time a request spent inside the system in total, from when it was received by the leader to when the leader sends the response back to the client.
-    \item[Total througput] was captured by Memaslap, the Memcached benchmarking tool. Throughput is measured in operations per second.
+    \item[Total througput] was captured by \texttt{memaslap}, the Memcached benchmarking tool. Throughput is measured in operations per second.
 \end{description}
 
 \minisec{Comparison with the original Rafter implementation}
@@ -1080,12 +1086,12 @@ This behaviour can be explained by looking at the number of nodes required to vo
 
 The Tree Quorum Protocol graphs show a similar behaviour. A cluster of 15 nodes exactly fills a binary tree of height 3. Add one more node, and a non-full binary tree of height 4 is required to hold all nodes. Analogously, 13 nodes fit exactly into a ternary tree of height 2; more nodes require at least height 3. This helps explain the rapid increase in time to consensus between 15 and 16 nodes in the binary (\enquote{tree2}) case and the similar effect between 13 and 15 nodes in the ternary (\enquote{tree3}) case.
 
-\begin{figure}[t]
-    \centering
-    \includegraphics[width=0.75\textwidth, keepaspectratio]{Images/ttc_grid.pdf}
-    \caption{Time to consensus plots for the Grid Protocol. The numbers indicate uptimes in percent: \texttt{grid-80} is the dataset captured with uptime 80\%, and analogously for \texttt{grid-60} and \texttt{grid-40}.}
-    \label{fig:ttc-grid}
-\end{figure}
+% \begin{figure}[t]
+    % \centering
+    % \includegraphics[width=0.75\textwidth, keepaspectratio]{Images/ttc_grid.pdf}
+    % \caption{Time to consensus plots for the Grid Protocol. The numbers indicate uptimes in percent: \texttt{grid-80} is the dataset captured with uptime 80\%, and analogously for \texttt{grid-60} and \texttt{grid-40}.}
+    % \label{fig:ttc-grid}
+% \end{figure}
 
 \minisec{The dent in the cumulative density function}
 
@@ -1096,6 +1102,13 @@ The Tree Quorum Protocol graphs show a similar behaviour. A cluster of 15 nodes 
     \label{fig:plain-maj-tree-grid-ttc}
 \end{figure}
 
+\begin{figure}[p]
+    \centering
+    \includegraphics[width=0.75\textwidth, keepaspectratio]{Images/throughput.pdf}
+    \caption{Throughput (50\% \texttt{set} and 50\% \texttt{get} combined) for original Rafter and different structured voting schemes (legend as for \cref{fig:ttc}). The dashed lines indicate the second order polynomial best fit.}
+    \label{fig:throughput}
+\end{figure}
+
 Cumulative density functions allow us to easily compare the shapes of the latency distributions of different voting schemes. All cumulative density functions (\cref{fig:plain-maj-tree-grid-ttc} shows the one for a cluster of size 7) of the time to consensus measurements I took exhibit one or more \enquote{dents} between the 75th and the 100th percentile. These show up as large upper error bars in \cref{fig:ttc} as well. Where do they come from?
 
 Preliminary experiments showed that the time to consensus increases by orders of magnitude as message queues build up when the load on the system is high. The system load is primarily a function of the frequency at which the client -- \texttt{memaslap} for the purposes of the benchmarks -- sends requests. By carefully reducing this throughput by varying the \texttt{--tps=X} command line parameter, I made sure to operate the system in a regime just below overloading for most of the requests. This is the part of the curves below the dents, roughly the region below the 75th percentile.
@@ -1104,21 +1117,14 @@ Preliminary experiments showed that the time to consensus increases by orders of
 
 Throughput is highly correlated with time to consensus: The lower the \textsc{ttc}, the higher the throughput. But it depends on a number of other factors as well, most importantly the degree of parallelism in the system: if the number of operations that can be executed simultaneously is doubled, then (ceteris paribus) the throughput doubles while \textsc{ttc} stays constant.
 
-I used the output of Memaslap (which \cref{fig:throughput} is compiled from) to confirm that my time to consensus values were reasonable. It is important to note that while \cref{fig:ttc,fig:plain-maj-tree-grid-ttc} show time to consensus for write operations only, \cref{fig:throughput} indicates the throughput averaged over both read and write operations. The reason behind this is that in Rafter, the leader has the canonical log, and can therefore serve any read request directly. There is no quorum-building involved in a read operation, and so the response time is independent of the voting structure or the cluster size. Unfortunately, Memaslap only outputs the overall average throughput, so I had to make do with this one value.
+I used the output of \texttt{memaslap} (which \cref{fig:throughput} is compiled from) to confirm that my time to consensus values were reasonable. It is important to note that while \cref{fig:ttc,fig:plain-maj-tree-grid-ttc} show time to consensus for write operations only, \cref{fig:throughput} indicates the throughput averaged over both read and write operations. The reason behind this is that in Rafter, the leader has the canonical log, and can therefore serve any read request directly. There is no quorum-building involved in a read operation, and so the response time is independent of the voting structure or the cluster size. Unfortunately, \texttt{memaslap} only outputs the overall average throughput, so I had to make do with this one value.
 
-\begin{figure}[p]
-    \centering
-    \includegraphics[width=0.75\textwidth, keepaspectratio]{Images/throughput.pdf}
-    \caption{Throughput for original Rafter and different structured voting schemes (legend as for \cref{fig:ttc}). The dashed lines indicate the second order polynomial best fit.}
-    \label{fig:throughput}
-\end{figure}
+% \subsection{Empirical results: repeated failures}
+% \label{ssc:repeated-failures}
 
-\subsection{Empirical results: repeated failures}
-\label{ssc:repeated-failures}
+% The repeated failures simulation is described on \cpageref{repeated-failures}. Time to consensus graphs for 80\%, 60\% and 40\% uptime can be found in \cref{sc:ttc-graphs}.
 
-The repeated failures simulation is described on \cpageref{repeated-failures}. Time to consensus graphs for 80\%, 60\% and 40\% uptime can be found in \cref{sc:ttc-graphs}.
-
-The graphs show that as long as the uptime is above 40\%, time to consensus values do not change significantly. \Cref{fig:ttc-grid} shows an example graph for the Grid Protocol where the lines almost coincide and no general trend can be extracted. The same plot for other structured voting schemes looks similar.
+% The graphs show that as long as the uptime is above 40\%, time to consensus values do not change significantly. \Cref{fig:ttc-grid} shows an example graph for the Grid Protocol where the lines almost coincide and no general trend can be extracted. The same plot for other structured voting schemes looks similar.
 
 \section{Summary}
 
@@ -1297,31 +1303,67 @@ This generator function is used wherever a test requires a voting structure. As 
 \subsection{Property example}
 \label{ssc:property}
 
-The file \texttt{test/rafter\_voting\_majority\_eqc.erl} defines a property of the Majority Protocol in the function \texttt{prop\_majority\_quorum()}. In essence, this property states that a vot succeeds if more than half of the nodes agree (\(v \ge \left\lceil n \, / \, 2 \right\rceil \), where \(v\) is the number of votes and \(n\) the total number of processes.)
+The file \texttt{test/rafter\_voting\_majority\_eqc.erl} defines a property of the Majority Protocol in the function \texttt{prop\_majority\_quorum()}. In essence, this property states that a vote succeeds if more than half of the nodes agree (\(v \ge \left\lceil n \, / \, 2 \right\rceil \), where \(v\) is the number of votes and \(n\) the total number of processes.)
 
-\section{Time to consensus with repeated failures}
-\label{sc:ttc-graphs}
+% \section{Time to consensus with repeated failures}
+% \label{sc:ttc-graphs}
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.75\textwidth, keepaspectratio]{Images/up-80.pdf}
-    \caption{Time to consensus measurements for the Majority Protocol, the Tree Quorum protocol with branching factor 3, and the Grid Protocol with 80\% uptime.}
-    \label{fig:up-80}
-\end{figure}
+% \begin{figure}[H]
+    % \centering
+    % \includegraphics[width=0.75\textwidth, keepaspectratio]{Images/up-80.pdf}
+    % \caption{Time to consensus measurements for the Majority Protocol, the Tree Quorum protocol with branching factor 3, and the Grid Protocol with 80\% uptime.}
+    % \label{fig:up-80}
+% \end{figure}
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.75\textwidth, keepaspectratio]{Images/up-60.pdf}
-    \caption{Time to consensus measurements for the Majority Protocol, the Tree Quorum protocol with branching factor 3, and the Grid Protocol with 60\% uptime.}
-    \label{fig:up-60}
-\end{figure}
+% \begin{figure}[H]
+    % \centering
+    % \includegraphics[width=0.75\textwidth, keepaspectratio]{Images/up-60.pdf}
+    % \caption{Time to consensus measurements for the Majority Protocol, the Tree Quorum protocol with branching factor 3, and the Grid Protocol with 60\% uptime.}
+    % \label{fig:up-60}
+% \end{figure}
 
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.75\textwidth, keepaspectratio]{Images/up-40.pdf}
-    \caption{Time to consensus measurements for the Majority Protocol, the Tree Quorum protocol with branching factor 3, and the Grid Protocol with 40\% uptime.}
-    \label{fig:up-40}
-\end{figure}
+% \begin{figure}[H]
+    % \centering
+    % \includegraphics[width=0.75\textwidth, keepaspectratio]{Images/up-40.pdf}
+    % \caption{Time to consensus measurements for the Majority Protocol, the Tree Quorum protocol with branching factor 3, and the Grid Protocol with 40\% uptime.}
+    % \label{fig:up-40}
+% \end{figure}
+
+\newpage
+
+\section{Memaslap configuration}
+\label{sc:memaslap-conf}
+
+\begin{listing}[H]
+    \begin{bashcode}
+memaslap \
+    --servers=${leader_address}:11211 \         # server address and port
+    --binary \                                  # use binary protocol
+    --execute_number=5000 \                     # run for 5000 operations
+    --verify=1.0 --exp_verify=1.0 \             # verify all responses
+    --cfg_cmd=memaslap.conf \                   # use memaslap.conf
+    --tps=0.05k \                               # aim for 50 ops/sec
+    --concurrency=1 \                           # only use one thread
+    \end{bashcode}
+    \caption{\texttt{memaslap} command line arguments used for the benchmarks.}
+    \label{lst:memaslap-args}
+\end{listing}
+
+\begin{listing}[H]
+    \begin{bashcode}
+key
+64      64      1   # all keys are 64 bytes long
+
+value
+1024    1024    1   # all values are 1024 bytes long
+
+cmd
+0   0.5             # 50% set
+1   0.5             # 50% get
+    \end{bashcode}
+    \caption{The \texttt{memaslap} configuration file used for the benchmarks.}
+    \label{lst:memaslap-conf}
+\end{listing}
 
 \chapter{Original project proposal}
 \label{ch:original-proposal}
