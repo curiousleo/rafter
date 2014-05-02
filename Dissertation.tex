@@ -703,6 +703,8 @@ Note that this implies \(r \geq c\); we are said to be \enquote{favouring rows}.
 
 The slots in the grid that are not taken up by a process are then considered to be populated by dead placeholder processes. As a little optimisation, we can remove the \textsc{cc}-covers for the columns that contain a placeholder since those columns can never be complete.
 
+An derivation of the probability of finding a Grid Protocol quorum given \(k\) \yes{} votes in a cluster of \(n\) processes is given in \cref{ch:grid-p}.
+
 \subsection{Tree Quorum Protocol}
 \label{ssc:tree}
 
@@ -1373,6 +1375,93 @@ cmd
     \caption{The \texttt{memaslap} configuration file used for the benchmarks.}
     \label{lst:memaslap-conf}
 \end{listing}
+
+\newpage
+\section{Additional graphs}
+
+% \begin{figure}[h]
+    % \centering
+    % \begin{subfigure}{\textwidth}
+    \begin{figure}[h]
+        \centering
+        \includegraphics[scale=.75]{Images/failure.pdf}
+        \caption{Cumulative density functions for different voting schemes and uptimes. The red lines represent the Grid Protocol and the blue lines correspond to the Majority Protocol. Solid means \(\texttt{Uptime} = 100\%\), dashed \(\texttt{Uptime} = 70\%\), dotted \(\texttt{Uptime} = 40\%\). In contrast to all other graphs in this dissertation, the measurements for this graph were taken on a single machine. See \cref{sc:failure-simulation} for an explanation of the failure simulation used to produce these plots.}
+        \label{fig:failure-ttc}
+    \end{figure}
+    % \end{subfigure}
+    % \quad
+    % \begin{subfigure}{\textwidth}
+    \begin{figure}[h]
+        \centering
+        \includegraphics[scale=.75]{Images/ttc_card_grid.pdf}
+        \caption{Time to consensus and minimum quorum cardinality (plus signs) for the Grid Protocol with up to 20 processes. The line connects the median \textsc{ttc} measurements and the error bars indicate the 25th and the 75th percentile.}
+        \label{fig:ttc_card_grid}
+    \end{figure}
+    % \end{subfigure}
+% \end{figure}
+
+\chapter{Grid Protocol probability analysis}
+\label{ch:grid-p}
+
+Given \(k \in \{0, 1, \dots, n\}\) \yes{} votes, what is the probability \(\mathbb{P}(Q^{c,r}_k) \overset{\text{def}}{=} \mathbb{P}(Q^{c,r}\;|\;V=k)\) that the set of votes forms a quorum?
+
+We assume here that the grid we are considering has \(r\) rows and \(c\) columns (let \(n = r c\) for convenience), therefore a complete column cover (\textsc{cc}-cover) consists of \(r\) nodes and a column cover (\textsc{c}-cover) consists of \(c\) nodes.
+
+Let \(\mathbb{P}(CC^{c,r}_k) \overset{\text{def}}{=} \mathbb{P}(CC^{c,r}\;|\;V=k)\) and \(\mathbb{P}(C^{c,r}_k) \overset{\text{def}}{=} \mathbb{P}(C^{c,r}\;|\;V=k)\) be the probability of getting a \textsc{cc}-cover and a \textsc{c}-cover, respectively, given \(k\) \yes{} votes. Then \(\mathbb{P}(Q^{c,r}_k) = \mathbb{P}(CC^{c,r}_{k}, C^{c,r}_k) = \mathbb{P}(C^{c,r}_k\;|\;CC^{c,r}_k)\;\mathbb{P}(CC^{c,r}_k)\).
+
+\section{\textsc{c}-cover probability}
+
+In this section and the next, I will assume that all the binomials that occur are defined, which is not necessarily the case. This issue will be taken care of when we put everything together at the end.
+
+The number of ways in which we can get a \textsc{c}-cover equals the number of ways in which \(c\) columns can be covered by \(k\) nodes. We divide by the total number of ways in which \(k\) nodes can be distributed over \(n\) slots to get \[\mathbb{P}(C^{c,r}_k) = \dbinom{k}{c} \div \dbinom{n}{k}\]
+
+Conditioning on the existence of a \textsc{cc}-cover, we find that there are \(c\) ways in which a \textsc{cc}-cover can come about, and so \(\mathbb{P}(C^{c,r}_k\;|\;CC^{c,r}_k) = c \, \mathbb{P}(C^{c-1,r}_{k-r}) \).
+
+\section{\textsc{cc}-cover probability}
+
+Consider how a \textsc{cc}-cover could be built. The first node could go anywhere in the grid. The second node would have to go into the same column, an event with probability \(\frac{r-1}{n-1}\). By similar reasoning, the third node would go into the same column with probability \(\frac{r-2}{n-2}\), and so forth. There are \(\binom{k}{r}\) different ways in which the \(k\) nodes at our disposal could cover those \(r\) slots. This gives
+
+\begin{align*}
+    \mathbb{P}(CC^{c,r}_k) &= \frac{r c}{n} \cdot \frac{r-1}{n-1} \cdot \frac{r-2}{n-2} \cdot \; \cdots \; \cdot \frac{r-(r-1)}{n-(r-1)} \cdot \dbinom{k}{r} \\
+    &= c \cdot \frac{r!}{n! \div (n-r)!} \cdot \dbinom{k}{r} \\
+    &= c \cdot \dbinom{k}{r} \div \dbinom{n}{r}
+\end{align*}
+
+\section{Quorum probability}
+
+Putting everything so far together, we have
+
+\begin{align*}
+    \mathbb{P}(Q^{c,r}_k)
+    &= \mathbb{P}(C^{c,r}_k\;|\;CC^{c,r}_k) \; \mathbb{P}(CC^{c,r}_k) \\
+    &= c \, \mathbb{P}(C^{c-1,r}_{k-r}) \; \mathbb{P}(CC^{c,r}_k) \\
+    &= c \, \left\{\dbinom{k-r}{c-1} \div \dbinom{n-r}{k-r}\right\} \, \left\{c \, \dbinom{k}{r} \div \dbinom{n}{r}\right\} \\
+    &= c^2 \, \frac{\dbinom{k-r}{c-1} \dbinom{k}{r}}{\dbinom{n-r}{k-r} \dbinom{n}{r}}
+\end{align*}
+
+By the definition of the binomial, this is only defined if \(n \geq k\) (which is true by assumption), \(k \geq r+c-1\) and \(n \geq r+c-1\) (which is implied by transitivity). We know that \(r+c-1\) nodes are needed in order to get a \textsc{c}-cover as well as a \textsc{cc}-cover, so if \(k < r+c-1\) there can be no quorum.
+
+The second special case is when we are sure to get a quorum. Starting from a full grid, we can take \(r-1\) nodes away and still get a  \textsc{c}-cover, or we can take \(c-1\) nodes away and still get a \textsc{cc}-cover. Thus if \(n-k < \min(r,c)\) we will always find a quorum.
+
+This gives the final expression for the probability of finding a quorum given \(k\) out of \(n\) possible votes,
+
+\[
+\mathbb{P}(Q^{c,r}_k) =
+    \begin{cases}
+        0 & \text{if}\;k < r+c-1 \\
+        1 & \text{if}\;k > n - \min(r,c) \\
+        {c \cdot \begin{pmatrix}n-(r+c-1) \\ k-(r+c-1)\end{pmatrix}} \div {\begin{pmatrix}n \\ k\end{pmatrix}} & \text{otherwise}
+    \end{cases}
+\]
+
+\Cref{fig:p_grid} shows a plot of this probability \(\mathbb{P}(Q^{c,r}_k)\) as a function of \(k\) with \(r = 4\) and \(c = 5\) fixed.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.75]{Images/p_grid_4x5.pdf}
+    \caption{Probability of forming a quorum as a function of the number of \yes{} votes in a cluster of 20 processes for the Majority and the Grid Protocol.}
+    \label{fig:p_grid}
+\end{figure}
 
 \chapter{Original project proposal}
 \label{ch:original-proposal}
