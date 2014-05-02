@@ -376,7 +376,15 @@ A \emph{quorum} is a minimal subset of the cluster that an operation has to obta
 
 The Majority Protocol and Read One Write All are examples of unstructured voting schemes: whether or not a set of nodes forms a quorum depends only on its cardinality. In the case of the Majority Protocol, both read and write operations need the consent of a majority of processes; Read One Write All requires all processes to agree on write operations, whereas any one process can serve a read request.
 
-By taking into account the identity of nodes (as opposed to just counting them), and superimposing a logical structure on the cluster, we can build \emph{structured} voting schemes.
+By taking into account the identity of nodes (as opposed to just counting them), and superimposing a logical structure on the cluster, we can build \emph{structured} voting schemes. These allow for smaller quorums, as \cref{fig:min-cardinality} shows.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[scale=.75]{Images/card_30.pdf}
+    \caption{Minimum quorum size for the (unstructured) Majority Protocol (\enquote{maj}), the (structured) Grid Protocol (\enquote{grid}) and the (structured) Tree Quorum Protocol (\enquote{tree2}, \enquote{tree3}, for binary tree and ternary trees, respectively)}
+    \label{fig:min-cardinality}
+\end{figure}
+
 
 \minisec{Quorum systems}
 
