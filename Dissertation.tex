@@ -827,6 +827,8 @@ The actual failure simulation then proceeds as follows:
     \item Followers repeat steps (3.) and (4.) until the leader sends out a \enquote{stop} message.
 \end{enumerate}
 
+Unfortunately, I was unable to simulate failures in this way on Amazon \ECC. Thus only local failure simulation measurements could be obtained (see \cref{fig:failure-ttc}).
+
 \section{Logging}
 \label{sc:logging}
 
@@ -869,25 +871,23 @@ Secondly, the \textsc{cvs} files are written to a folder in \texttt{/tmp}, which
 During the development of this project, I noticed several issues with the software I was using (see \cref{tab:issues} for a summary). In some cases, this was due to a misunderstanding on my part -- for example, I was having trouble setting up and using QuickCheck, so I contacted Thomas Arts of Quiviq who helped me sort things out. In some cases, I found mistakes in the documentation: when this happened, I forked the project, corrected the mistake, and created a pull request.\footnote{This is the development model used by most projects hosted on GitHub. \emph{Forking} copies the project to one's personal space. The contributor creates a new branch, attempts to fix the bug, and opens a \emph{pull request} for that branch. A pull request can then be reviewed, discussed and amended until it is either rejected or accepted and merged into the original project's \texttt{master} branch.} This caused me to create pull requests for Rafter, StatsBase.jl, a statistics package for the scientific programming language Julia that I used to analyse the benchmarking data, and awsfabrictasks.
 
 \ctable[
-    caption = Issues found with third-party software during the development of the project,
+    caption = Issues with third-party software that were found and reported during the development of the project,
     label = tab:issues,
     width = \textwidth,
-    pos = ht
+    pos = t
 ]{Xp{.72\textwidth}}{
-    \tnote[a]{Issue report: \url{https://github.com/andrewjstone/rafter/issues/22},
-
-        Pull request: \url{https://github.com/andrewjstone/rafter/pull/23}}
-    \tnote[b]{Pull request: \url{https://github.com/andrewjstone/rafter/pull/17}}
+    \tnote[a]{Issue report: \url{https://github.com/andrewjstone/rafter/issues/22}}
+    \tnote[b]{Pull request: \url{https://github.com/andrewjstone/rafter/pull/17} (merged)}
     \tnote[c]{Issue report: \url{https://github.com/espenak/awsfabrictasks/issues/15}}
     \tnote[d]{Issue report: \url{https://github.com/espenak/awsfabrictasks/issues/17}}
-    \tnote[e]{Pull request: \url{https://github.com/espenak/awsfabrictasks/pull/16}}
-    \tnote[f]{Pull request: \url{https://github.com/JuliaStats/StatsBase.jl/pull/48}}
+    \tnote[e]{Pull request: \url{https://github.com/espenak/awsfabrictasks/pull/16} (open)}
+    \tnote[f]{Pull request: \url{https://github.com/JuliaStats/StatsBase.jl/pull/48} (merged)}
 }{  \FL
     \textit{Project} & \textit{Issue} \ML
     \vspace*{-3pt}\multirowbt{2}{*}{Rafter}
         & \textsc{cpu} usage and operation execution time increase with the number of operations performed\tmark[a] \NN
     \cmidrule(l){2-2}
-        & More consistent variable naming in \textsc{readme}\tmark[c] \ML
+        & More consistent variable naming in \textsc{readme}\tmark[b] \ML
     \multirowbt{3}{*}{Awsfabrictasks}
         & \texttt{\@ec2instance} decorator executed too early\tmark[c] \NN
     \cmidrule(l){2-2}
@@ -921,6 +921,8 @@ The voting structures for the Majority Protocol, the Grid Protocol and the Tree 
 % \begin{itemize}
     % \item Failure modes presentation: most frequent failure modes are individual, then rack failures
 % \end{itemize}
+
+In this chapter, I first compare my achievements with the requirements in the original project proposal. This is followed by a description of my unit test rig. The rest of the chapter specifies the benchmarking set-up and discusses the results.
 
 \section{Overall results}
 \label{sc:overall-results}
@@ -1048,9 +1050,7 @@ The \texttt{memaslap} command line arguments and the corresponding configuration
 \subsection{Results and analysis}
 \label{ssc:results}
 
-This section discusses the results gathered from running the benchmarks with failure simulation turned off.
-
-The purpose of the benchmarks was twofold: to find the overhead caused by adding additional complexity in the form of the structured voting layer, and to compare the performance of different structured voting schemes.
+This section discusses the results gathered from running the benchmarks with failure simulation turned off.\footnote{\Cref{fig:failure-ttc} shows the cumulative density functions for the Majority Protocol and the Grid Protocol under a repeated failure simulation with different uptimes. The measurements shown in this graph were taken locally and are therefore not comparable with the distributed benchmarks discussed in this chapter.} The purpose of the benchmarks was twofold: to find the overhead caused by adding additional complexity in the form of the structured voting layer, and to compare the performance of different structured voting schemes.
 
 While the benchmarks ran, two types of measurements were taken: time to consensus (\textsc{ttc}) and throughput.
 
@@ -1064,10 +1064,6 @@ While the benchmarks ran, two types of measurements were taken: time to consensu
 \Cref{fig:plain-maj-ttc} shows time to consensus (\textsc{ttc}, y-axis) as a function of the cluster size (x-axis). The two curves have the same shape: this is to be expected, since the quorum finding mechanism works in precisely the same way. The time to consensus for the original Rafter implementation without structured voting schemes (the \enquote{plain} curve in the graph) is consistently smaller, and the difference between the two curves increases with the number of nodes in the cluster. In other words, for clusters with less than 20 nodes at least, computing quorums under the Majority Protocol takes roughly \SI{300}{\micro\second} longer per node than with the original Rafter implementation (as can be seen on \cref{fig:plain-maj-ttc}).
 
 This was to be expected: the voting scheme which is implemented by original Rafter is the same as the Majority Protocol, but the implementation is very different. In the original Rafter code, checking if a quorum has been found amounts to checking whether or not the number of \yes{} votes received is greater than half the number of servers. With the Majority Protocol, on the other hand, a new voting state is created whenever a new vote takes place, and a tree-walking algorithm updates it whenever a new vote comes in. It should come as no surprise that this takes longer.
-
-A more interesting aspect is the seemingly linear relationship between the size of the cluster and the difference in time to consensus between the Majority Protocol and original Rafter. This can be explained as follows: whenever a new vote comes in, the root node \enquote{accumulates} all votes, that is, it updates the number of \yes{} and \no{} votes it has seen by looking at its children. But the number of children of the root node in the Majority Protocol voting structure is precisely the size of the cluster, which means that for every incoming node, updating the voting state takes \(O(n)\) time.
-
-\minisec{Comparison between different structured voting schemes}
 
 \begin{figure}[p]
     \begin{subfigure}{1\textwidth}
@@ -1087,9 +1083,13 @@ A more interesting aspect is the seemingly linear relationship between the size 
     \label{fig:ttc}
 \end{figure}
 
+A more interesting aspect is the seemingly linear relationship between the size of the cluster and the difference in time to consensus between the Majority Protocol and original Rafter. This can be explained as follows: whenever a new vote comes in, the root node \enquote{accumulates} all votes, that is, it updates the number of \yes{} and \no{} votes it has seen by looking at its children. But the number of children of the root node in the Majority Protocol voting structure is precisely the size of the cluster, which means that for every incoming node, updating the voting state takes \(O(n)\) time.
+
+\minisec{Comparison between different structured voting schemes}
+
 The time to consensus versus cluster size graph for all four structured voting schemes implemented in this project in \cref{fig:maj-tree-grid-ttc} has some interesting features.
 
-Consider the graph of the Grid Protocol time to consensus (the \enquote{grid} dataset in \cref{fig:maj-tree-grid-ttc}). The \textsc{ttc} measurements increase by about \SI{3.5}{\milli\second} between 12 and 13 nodes but then stay within about \SI{1}{\milli\second} until the cluster size reaches 16; then there is a jump by \SI{7.5}{\milli\second} as the cluster size hits 17. Why the plateau between 13 and 16? By \cref{eq:grid-dims}, cluster sizes 13, 14, 15, and 16 all generate quadratic 4\,\(\times\)\,4 grids. Clusters with 12 nodes fit into a 4\,\(\times\)\,3 grid, and those with 17 nodes require a 5\,\(\times\)\,4 grid. Thus, it seems that the \textsc{ttc} times change mainly when the grid shape changes.
+Consider the graph of the Grid Protocol time to consensus (the \enquote{grid} dataset in \cref{fig:maj-tree-grid-ttc}). The \textsc{ttc} measurements increase by about \SI{3.5}{\milli\second} between 12 and 13 nodes but then stay within about \SI{1}{\milli\second} until the cluster size reaches 16; then there is a jump by \SI{7.5}{\milli\second} as the cluster size hits 17. Why the plateau between 13 and 16? By \cref{eq:grid-dims}, cluster sizes 13, 14, 15, and 16 all generate quadratic 4\,\(\times\)\,4 grids. Clusters with 12 nodes fit into a 4\,\(\times\)\,3 grid, and those with 17 nodes require a 5\,\(\times\)\,4 grid. Thus, it seems that the \textsc{ttc} times change mainly when the grid shape changes. See \cref{fig:ttc_card_grid} for a combined plot of \textsc{ttc} and minimum quorum cardinality for the Grid Protocol as a function of cluster size.
 
 This behaviour can be explained by looking at the number of nodes required to vote \yes, which depends on the shape of the grid: for a \(r \times c\) grid it is \(r + c - 1\).\footnote{A Grid Protocol quorum needs votes from each column  (\(c\) votes) and one entire column (\(r\) votes). Those two sets intersect in one process, and so the number of processes in a Grid Protocol quorum is \(r + c - 1\).} For cluster sizes 13, 14, 15 and 16, the grid has the same 4\,\(\times\)\,4 shape, so in each case, seven votes are required.
 
