@@ -106,7 +106,7 @@
 % custom commands
 \newcommand{\requestVoteRPC}[0]{\texttt{requestVote} \textsc{rpc}}
 \newcommand{\appendEntriesRPC}[0]{\texttt{appendEntries} \textsc{rpc}}
-\newcommand{\ECC}[0]{\textsc{ec}2 }
+\newcommand{\ECC}[0]{\textsc{ec}2}
 
 \newcommand{\zerospacing}[0]{\medmuskip=0mu}
 \newcommand{\high}[0]{{\color{purple!90}\zerospacing \(\bullet \bullet \bullet\)} }
@@ -139,7 +139,7 @@
 
 \begin{quote}
 Log rafts like the one pictured [on the cover] were first developed in 1906 by Simon Benson, a Portland-based timber magnate. Although Benson was not the first timberman to transport his company's logs to market by rafting them together, he was the first to develop an ocean-worthy raft that could dependably transport \enquote{millions of feet} at a time.\footnote{Photo \parencite{benson} and description reproduced with kind permission from the Oregon Historical Society (\url{http://www.ohs.org}).}
-\attrib{Joshua Binus, Oregon Historical Society 2004}
+\attrib{Joshua Binus 2004}
 \end{quote}
 
 My project aims to extend an implementation of the Raft consensus algorithm. One main goal is to enable applications running on top of this implementation to reliably scale to a large number of servers, a bit like Benson's rafts \enquote{dependably} transported large numbers of logs.
@@ -151,11 +151,11 @@ My project aims to extend an implementation of the Raft consensus algorithm. One
 
 \begin{center}
 {\renewcommand{\arraystretch}{1.5}%
-\begin{tabularx}{330pt}{rX}
+\begin{tabularx}{359pt}{rX}
 \textbf{Name and College} & Leonhard Markert, Emmanuel College \\
 \textbf{Project Title} & Extending Raft with structured voting \\
-\textbf{Examination} & Computer Science Tripos, Part \textsc{ii}, June 2014 \\
-\textbf{Word Count} & XXX words \\
+\textbf{Examination} & Computer Science Tripos, Part \textsc{ii} (June 2014) \\
+\textbf{Word Count} & 10,320 words \\
 \textbf{Project Originator} & Leonhard Markert \\
 \textbf{Project Supervisors} & Malte Schwarzkopf and Ionel Gog
 \end{tabularx}}
@@ -197,7 +197,7 @@ Date \hspace{0.4in} \today
 Special thanks to \dots
 
 \begin{description}
-    \item[Malte Schwarzkopf and Ionel Gog] for agreeing to supervise this project, sharing their experience with Amazon \ECC and Erlang, and for their detailed and helpful feedback on my dissertation drafts.
+    \item[Malte Schwarzkopf and Ionel Gog] for agreeing to supervise this project, sharing their experience with Amazon \ECC{} and Erlang, and for their detailed and helpful feedback on my dissertation drafts.
     \item[Christian Storm] for introducing me to structured voting and teaching me not to invent my own consensus algorithms.
     \item[Andrew Stone] for explaining some of the more complex bits of Rafter to me, and for quickly fixing that critical performance bug.
 \end{description}
@@ -267,7 +267,7 @@ The Raft consensus algorithm, on the other hand, is a very recent addition to di
 
 Considering the environment in which distributed systems run, many big internet firms have been operating data centres for years now. This has enabled them to collect data about the frequency of different types of failures over time. I used data compiled by Google Senior Fellow Jeff Dean to direct my failure simulation. \autocite{distr}
 
-During an internship at \textsc{tng} Technology Consulting\footnote{\url{http://www.tngtech.com}}, I produced a working prototype of a key-value store based on structured voting schemes using the Node.js JavaScript framework.\footnote{Node.js (\url{http://nodejs.org}) is a platform for building network applications in JavaScript.} This was done under the supervision of Christoph Stock and Christian Storm.
+During an internship at \textsc{tng} Technology Consulting,\footnote{\url{http://www.tngtech.com}} I produced a working prototype of a key-value store based on structured voting schemes using the Node.js JavaScript framework.\footnote{Node.js (\url{http://nodejs.org}) is a platform for building network applications in JavaScript.} This was done under the supervision of Christoph Stock and Christian Storm.
 
 
 
@@ -345,7 +345,7 @@ This requirement for each server to be in a specific state at any time makes it 
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.5\textwidth, keepaspectratio]{Images/Consensus_FSM.pdf}
-    \caption{Server states and the transitions between them.
+    \caption{Server states in Raft and the transitions between them.
         \protect\attrib{\cite[5]{raft}}
     }
     \label{fig:consensus-fsm}
@@ -392,7 +392,7 @@ Structured voting schemes impose a logical structure on the set of processes and
 \begin{figure}[h]
     \centering
     \includegraphics[scale=1]{Images/Grid_table.pdf}
-    \caption[Grid protocol quorum table]{A Grid Protocol quorum: The entire second column (\texttt{B}, \texttt{F}, \texttt{J}, \texttt{N}) and one process from each other column (\texttt{I}, \texttt{G}, \texttt{P}) are included}
+    \caption[Grid Protocol quorum table]{A Grid Protocol quorum: The entire second column (\texttt{B}, \texttt{F}, \texttt{J}, \texttt{N}) and one process from each other column (\texttt{I}, \texttt{G}, \texttt{P}) are included}
     \label{fig:grid-quorum}
 \end{figure}
 
@@ -439,7 +439,7 @@ The requirement for this project to be deemed a success was a demonstration of t
         Tree Quorum Protocol voting structure generator & \low & \hard \\
         Rafter integration & \high & \hard \\
         Memcached frontend & \high & \medium \\
-        Amazon \ECC benchmark set-up & \high & \medium \\
+        Amazon \ECC{} benchmark set-up & \high & \medium \\
         Benchmarking and analysis of the results & \high & \medium \\
         \bottomrule
     \end{tabularx}
@@ -470,7 +470,7 @@ All development took place using Git, a popular version control system.\footnote
         \texttt{memcached} & Memcached frontend \\
         \texttt{time-to-consensus} & Time-to-consensus logging \\
         \texttt{failure-command} & Follower failure simulation \\
-        \texttt{ec2-integration} & Amazon \ECC instance administration scripts \\
+        \texttt{ec2-integration} & Amazon \ECC{} instance administration scripts \\
         \bottomrule
     \end{tabularx}
     \caption{Feature branches used in the project repository}
@@ -506,10 +506,10 @@ The choice of Erlang and Rafter then determined my primary programming toolkit f
 
 In order to test and benchmark my code in a realistic environment, it needed to be run on a cluster of machines (as opposed to on a single computer) as this is how systems like Rafter are deployed in the real world. It was decided early on that I would run the project in the Amazon Elastic Compute Cloud (Amazon \textsc{ec2}). This allowed me to execute my benchmarks on up to twenty instances within the same data centre.
 
-Orchestrating a cluster of Amazon \ECC instances and running benchmarks required its own set of tools.
+Orchestrating a cluster of Amazon \ECC{} instances and running benchmarks required its own set of tools.
 
 \begin{description}
-    \item[Fabric] is a Python library and command-line tool for streamlining the use of \textsc{ssh} for application deployment or systems administration tasks. Administrative functions like starting an Erlang node on an instance or compiling Rafter were defined as \emph{tasks} within the Fabric framework, which could then be executed on arbitrary \ECC instances with the help of the \enquote{awsfabrictasks} plugin.
+    \item[Fabric] is a Python library and command-line tool for streamlining the use of \textsc{ssh} for application deployment or systems administration tasks. Administrative functions like starting an Erlang node on an instance or compiling Rafter were defined as \emph{tasks} within the Fabric framework, which could then be executed on arbitrary \ECC{} instances with the help of the \enquote{awsfabrictasks} plugin.
         \attrib{\url{http://fabfile.org}, \url{https://awsfabrictasks.readthedocs.org}}
     \item[Boto] is a Python interface to Amazon Web Services, which includes the Elastic Compute Cloud. Awsfabrictasks is built on top of Boto, but I occasionally needed to use Boto's lower-level functionality directly.
         \attrib{\url{http://docs.pythonboto.org}}
@@ -786,12 +786,13 @@ The actual implementation of the Memcached frontend consists of three parts: A s
 \end{description}
 
 \section{Failure simulation}
+\label{sc:failure-simulation}
 
 In order to evaluate and compare the different voting structures, I added failure simulation to Rafter's state machine. Apart from being in leader, follower or candidate state, nodes can now also be in the \textit{failed} state. Failed nodes do not process any incoming messages, nor do they send any messages to other nodes.
 
 According to Jeff Dean of Google, two of the most common failure modes in a modern data centre are individual machine failures (called \emph{repeated failures} in the following) and rack failures (correlated failures) \autocite[sl. 10]{distr}. During a preliminary theoretical analysis, I could find no evidence that structured voting schemes would be able to deal with rack failures better than unstructured protocols. Hence only repeated/individual failures were considered.
 
-% The failure simulation, like all the benchmarking code I wrote for this project, assumes that the leader is fixed and stays up. This leader can then instruct its followers to fail -- either once or repeatedly. It is, in turn, controlled by the \emph{benchmark runner}, which is the Amazon \ECC instance that runs the benchmarking scripts. For the \textbf{fail once} \label{fail-once} failure mode, the process is as follows:
+% The failure simulation, like all the benchmarking code I wrote for this project, assumes that the leader is fixed and stays up. This leader can then instruct its followers to fail -- either once or repeatedly. It is, in turn, controlled by the \emph{benchmark runner}, which is the Amazon \ECC{} instance that runs the benchmarking scripts. For the \textbf{fail once} \label{fail-once} failure mode, the process is as follows:
 
 % \begin{enumerate}
     % \item The benchmark runner sends a message to the leader with parameters \(\lambda\) and \(T\).
@@ -991,13 +992,13 @@ The \textit{benchmark} task uses these helper functions as follows: For each com
 
 Next, the leader is reconfigured using the \texttt{configure} task. Then \texttt{memaslap} is run, and its results as well as the time to consensus measurements are downloaded by the \texttt{collect\_results} task.
 
-\subsection[Amazon EC2 set-up]{Amazon \ECC set-up}
+\subsection[Amazon EC2 set-up]{Amazon \ECC{} set-up}
 
 The Amazon Elastic Compute Cloud was used as a testbed for the benchmarks. It provides a realistic environment for testing -- after all, consensus systems like Rafter would usually run in a data centre like Amazon's. The random packet delivery timing, network congestion and packet loss experienced in the Amazon cloud make for a good stress test of Rafter's ability to cope with such issues.
 
 New instances in the Amazon Elastic Compute Cloud are created from virtual appliances called \enquote{Amazon Machine Images} (\textsc{ami}s). Amazon's own default \textsc{ami} does not have the latest version of the Erlang platform in its package sources, so I based my custom \textsc{ami} on an Arch Linux image instead.\footnote{Project \enquote{Arch Linux on \ECC}: \url{https://www.uplinklabs.net/projects/arch-linux-on-ec2/}} I created an instance of the Arch \textsc{ami}, installed Erlang and a few standard tools and built libMemcached from source, as all distributions I checked had building \texttt{memaslap} disabled by default.
 
-Users of the Amazon Elastic Compute Cloud currently have the choice between many different instance types. Preliminary experiments using a cluster of (free) \enquote{micro} instances were useful for learning how to use the Amazon \ECC administration tools, but their performance turned out to be too low, and \textsc{ssh} connections were flaky. I therefore switched to \enquote{m1.xlarge} general-purpose instances for running the benchmarks (see \cref{tab:instance-types} for a comparison.)
+Users of the Amazon Elastic Compute Cloud currently have the choice between many different instance types. Preliminary experiments using a cluster of (free) \enquote{micro} instances were useful for learning how to use the Amazon \ECC{} administration tools, but their performance turned out to be too low, and \textsc{ssh} connections were flaky. I therefore switched to \enquote{m1.xlarge} general-purpose instances for running the benchmarks (see \cref{tab:instance-types} for a comparison.)
 
 The m1.xlarge instances provided enough compute power and much more network bandwidth than the micro instances. Connections to them were reliable once established.
 
@@ -1013,7 +1014,7 @@ The m1.xlarge instances provided enough compute power and much more network band
         m1.xlarge & 8 & 4 & 15 & 4 \(\times\) 420 & high \\
         \bottomrule
     \end{tabularx}
-    \caption[Comparison of Amazon \ECC instance types]{Comparison of the two Amazon \ECC instance types used. \textsc{ecu} stands for \enquote{Elastic Compute Unit}, roughly equivalent to one 1.0 \textsc{gh}z 2007 Opteron; a v\textsc{cpu} is a virtual \textsc{cpu}; \textsc{ebs} means \enquote{Amazon Elastic Block Storage}.}
+    \caption[Comparison of Amazon \ECC{} instance types]{Comparison of the two Amazon \ECC{} instance types used. \textsc{ecu} stands for \enquote{Elastic Compute Unit}, roughly equivalent to one 1.0 \textsc{gh}z 2007 Opteron; a v\textsc{cpu} is a virtual \textsc{cpu}; \textsc{ebs} means \enquote{Amazon Elastic Block Storage}.}
     \label{tab:instance-types}
 \end{table}
 
@@ -1021,7 +1022,7 @@ The m1.xlarge instances provided enough compute power and much more network band
 
 Due to time constraints, benchmarking every combination of parameters was impossible. I benchmarked all voting structures. The Grid Protocol was tested with the \enquote{favouring rows} option (explained in \cref{ssc:grid}); benchmarks were also run on binary and tertiary trees created by the Tree Quorum Protocol.
 
-As for cluster sizes, I tried to find configurations for which at least one protocol was optimal in some way. My Amazon \ECC account allowed me to run experiments with up to 19 nodes (plus one separate \enquote{runner} instance). This seems like a reasonably large range of cluster sizes -- the authors of the Zookeeper paper, for instance, give benchmarking results for up to 13 servers \autocite{zookeeper}.
+As for cluster sizes, I tried to find configurations for which at least one protocol was optimal in some way. My Amazon \ECC{} account allowed me to run experiments with up to 19 nodes (plus one separate \enquote{runner} instance). This seems like a reasonably large range of cluster sizes -- the authors of the Zookeeper paper, for instance, give benchmarking results for up to 13 servers \autocite{zookeeper}.
 
 \begin{description}
     \item[Majority Protocol] Any odd number of nodes is optimal.
@@ -1137,7 +1138,7 @@ Secondly, I have shown that structured voting schemes are nevertheless worth con
 \begin{figure}
     \centering
     \includegraphics[width=1\textwidth, keepaspectratio]{Images/ttc_maj-tree-grid-circled.pdf}
-    \caption{Time to consensus measurements for different voting schemes. This graph shows the main evidence that structured voting schemes can have practical advantages. Within the circled area, the (ternary) Tree Quorum Protocol found quorums significantly faster than the Majority Protocol. This graph is an annotated version of \cref{fig:maj-tree-grid-ttc}.}
+    \caption{Time to consensus measurements for different voting schemes. This graph shows the main empirical evidence that structured voting schemes can have practical advantages. Within the circled area, the (ternary) Tree Quorum Protocol found quorums significantly faster than the Majority Protocol. This graph is an annotated version of \cref{fig:maj-tree-grid-ttc}.}
     \label{fig:maj-tree-grid-ttc-circled}
 \end{figure}
 
