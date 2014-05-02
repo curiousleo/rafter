@@ -728,13 +728,13 @@ Note that this is the only truly recursive tree-shaped voting structure: Majorit
 \section{Integration with Rafter}
 \label{sc:rafter-integration}
 
-Having written and tested the structured voting code, I integrated it into Rafter. This process took place in rougly the following steps:
+Having written and tested the structured voting code, I integrated it into Rafter. This process took place in roughly the following steps:
 
 \begin{enumerate}
     \item Integrating my code with Rafter meant reading and understanding its source code first: 1,500 lines of code\footnote{As measured by \texttt{cloc} (\url{http://cloc.sourceforge.net}).} (see \cref{sc:fp-note} for a discussion of Erlang's code density), spread over 11 modules and undocumented except for a few comments, in a language I was still learning. Using module and function names as a guide, I found the relevant pieces of code that needed changing. Andrew Stone, the developer of Rafter, helped me understand the purpose of a few functions whose task I could not figure out myself.
     \item I renamed my modules and moved them into the appropriate directory to fit into the naming scheme and directory structure of Rafter. Also, the type specifications had to be pasted into the appropriate include file.
     \item In order to use my structured voting code, the node configuration had to be changed from a list of peers (which is all that is needed when only the Majority Protocol is used) to a voting structure (enabling Rafter to use other protocols as well). This required updating every line of code that made use of this field from the configuration record.
-    \item All the places in the code which implicitely assumed that the Majority Protocol was being used had to be rewritten. In most cases, this meant making them wrappers around my generalised structured voting code.
+    \item All the places in the code which implicitly assumed that the Majority Protocol was being used had to be rewritten. In most cases, this meant making them wrappers around my generalised structured voting code.
 \end{enumerate}
 
 Thanks to the modularity of both the original Rafter implementation and my own code, this part of the implementation process posed no major unforeseen difficulties.
@@ -868,7 +868,7 @@ Secondly, the \textsc{cvs} files are written to a folder in \texttt{/tmp}, which
 
 \section{Reporting issues and bugs}
 
-During the development of this project, I noticed several issues with the software I was using (see \cref{tab:issues} for a summary). In some cases, this was due to a misunderstanding on my part -- for example, I was having trouble setting up and using QuickCheck, so I contacted Thomas Arts of Quiviq who helped me sort things out. In some cases, I found mistakes in the documentation: when this happened, I forked the project, corrected the mistake, and created a pull request.\footnote{This is the development model used by most projects hosted on GitHub. \emph{Forking} copies the project to one's personal space. The contributor creates a new branch, attempts to fix the bug, and opens a \emph{pull request} for that branch. A pull request can then be reviewed, discussed and amended until it is either rejected or accepted and merged into the original project's \texttt{master} branch.} This caused me to create pull requests for Rafter, StatsBase.jl, a statistics package for the scientific programming language Julia that I used to analyse the benchmarking data, and awsfabrictasks.
+During the development of this project, I noticed several issues with the software I was using (see \cref{tab:issues} for a summary). In some cases, this was due to a misunderstanding on my part -- for example, I was having trouble setting up and using QuickCheck, so I contacted Thomas Arts of Quviq who helped me sort things out. In some cases, I found mistakes in the documentation: when this happened, I forked the project, corrected the mistake, and created a pull request.\footnote{This is the development model used by most projects hosted on GitHub. \emph{Forking} copies the project to one's personal space. The contributor creates a new branch, attempts to fix the bug, and opens a \emph{pull request} for that branch. A pull request can then be reviewed, discussed and amended until it is either rejected or accepted and merged into the original project's \texttt{master} branch.} This caused me to create pull requests for Rafter, StatsBase.jl, a statistics package for the scientific programming language Julia that I used to analyse the benchmarking data, and Awsfabrictasks.
 
 \ctable[
     caption = Issues with third-party software that were found and reported during the development of the project,
@@ -899,7 +899,7 @@ During the development of this project, I noticed several issues with the softwa
 
 Apart from these issues, I found two actual bugs in the software I was using. The first one concerned the performance of Rafter: I noticed that both read and write operations took more and more time the longer Rafter had been running for. I wrote a small test script, took some measurements and reported the problem to Andrew Stone, the original author of Rafter, who responded quickly and managed to fix the issue within a few days.
 
-The second larger issue I found was a problem with a very common use case that was not well addressed in awsfabrictasks's \textsc{api}. I reported this to the software's author, Espen Angell Kristiansen; eventually, this discussion turned into a proper bug report.
+The second larger issue I found was a problem with a very common use case that was not well addressed in Awsfabrictasks's \textsc{api}. I reported this to the software's author, Espen Angell Kristiansen; eventually, this discussion turned into a proper bug report.
 
 \section{Summary}
 
@@ -989,7 +989,7 @@ In order to compare the performance of my voting algorithms with those used in t
     \label{fig:benchmarking}
 \end{figure}
 
-The benchmarks are automated using Fabric and the awsfabrictasks plugin (see \cref{ssc:ec2-benchmarking} for a brief description of the two software packages). A task called \textit{benchmark} executes a sweep of the parameter space, starting nodes as appropriate and collecting the logged results -- see \cref{fig:benchmarking} for a visualisation of the complete benchmarking procedure. It makes use of a few helper functions:
+The benchmarks are automated using Fabric and the Awsfabrictasks plugin (see \cref{ssc:ec2-benchmarking} for a brief description of the two software packages). A task called \textit{benchmark} executes a sweep of the parameter space, starting nodes as appropriate and collecting the logged results -- see \cref{fig:benchmarking} for a visualisation of the complete benchmarking procedure. It makes use of a few helper functions:
 
 \begin{description}
     \item[deploy] Executes a series of Git commands on the remote instance to bring the project repository up to date and to a specific branch. It then runs \texttt{make} to build the project.
