@@ -18,7 +18,7 @@
    id="svg8010"
    version="1.1"
    inkscape:version="0.48.4 r9939"
-   sodipodi:docname="Grid4.svg">
+   sodipodi:docname="Grid4-state.svg">
   <metadata
      id="metadata8252">
     <rdf:RDF>
@@ -27,7 +27,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -50,13 +50,13 @@
      fit-margin-left="0"
      fit-margin-right="0"
      fit-margin-bottom="0"
-     inkscape:zoom="0.79390863"
-     inkscape:cx="126.31874"
-     inkscape:cy="327.54356"
+     inkscape:zoom="1.1227564"
+     inkscape:cx="241.76345"
+     inkscape:cy="401.91052"
      inkscape:window-x="0"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
-     inkscape:current-layer="g10506-4" />
+     inkscape:current-layer="svg8010" />
   <g
      transform="translate(-3.5,237.19458)"
      id="g8551-3">
@@ -213,7 +213,10 @@
        id="text8022-9"
        font-size="14.00"
        y="26.699997"
-       x="183">V</text>
+       x="183">V<tspan
+   style="font-size:8px;baseline-shift:sub"
+   id="tspan3310">1</tspan>
+</text>
     <polyline
        transform="translate(4,220)"
        style="fill:none;stroke:#000000"
@@ -235,7 +238,10 @@
        id="text8033-0"
        font-size="14.00"
        y="86.699997"
-       x="146">V</text>
+       x="146">V<tspan
+   style="font-size:8px;baseline-shift:sub"
+   id="tspan3306">2</tspan>
+</text>
     <polyline
        transform="translate(4,220)"
        style="fill:none;stroke:#000000"
@@ -267,7 +273,10 @@
        id="text8051-5"
        font-size="14.00"
        y="86.699997"
-       x="221">V</text>
+       x="221">V<tspan
+   style="font-size:8px;baseline-shift:sub"
+   id="tspan3308">3</tspan>
+</text>
     <polyline
        transform="translate(4,220)"
        style="fill:none;stroke:#000000"
@@ -299,7 +308,10 @@
        id="text8069-7"
        font-size="14.00"
        y="146.7"
-       x="59">V</text>
+       x="59">V<tspan
+   style="font-size:8px;baseline-shift:sub"
+   id="tspan3304">4</tspan>
+</text>
     <polyline
        transform="translate(4,220)"
        style="fill:none;stroke:#000000"
@@ -331,7 +343,10 @@
        id="text8087-3"
        font-size="14.00"
        y="146.7"
-       x="146">V</text>
+       x="146">V<tspan
+   style="font-size:8px;baseline-shift:sub"
+   id="tspan3302">5</tspan>
+</text>
     <polyline
        transform="translate(4,220)"
        style="fill:none;stroke:#000000"
@@ -479,7 +494,10 @@
        id="text8161-6"
        font-size="14.00"
        y="146.7"
-       x="221">V</text>
+       x="221">V<tspan
+   style="font-size:8px;baseline-shift:sub"
+   id="tspan3300">6</tspan>
+</text>
     <polyline
        transform="translate(4,220)"
        style="fill:none;stroke:#000000"
@@ -511,7 +529,10 @@
        id="text8179-8"
        font-size="14.00"
        y="146.7"
-       x="309">V</text>
+       x="309">V<tspan
+   style="font-size:8px;baseline-shift:sub"
+   id="tspan3298">7</tspan>
+</text>
     <polyline
        transform="translate(4,220)"
        style="fill:none;stroke:#000000"
@@ -806,7 +827,10 @@
        id="text8022-2"
        font-size="14.00"
        y="26.699997"
-       x="183">V</text>
+       x="183">V<tspan
+   style="font-size:8px;baseline-shift:sub"
+   id="tspan3324">1</tspan>
+</text>
     <polyline
        transform="translate(4,220)"
        style="fill:none;stroke:#000000"
@@ -828,7 +852,10 @@
        id="text8033-2"
        font-size="14.00"
        y="86.699997"
-       x="146">V</text>
+       x="146">V<tspan
+   style="font-size:8px;baseline-shift:sub"
+   id="tspan3320">2</tspan>
+</text>
     <polyline
        transform="translate(4,220)"
        style="fill:none;stroke:#000000"
@@ -860,7 +887,10 @@
        id="text8051-2"
        font-size="14.00"
        y="86.699997"
-       x="221">V</text>
+       x="221">V<tspan
+   style="font-size:8px;baseline-shift:sub"
+   id="tspan3322">3</tspan>
+</text>
     <polyline
        transform="translate(4,220)"
        style="fill:none;stroke:#000000"
@@ -892,7 +922,10 @@
        id="text8069-6"
        font-size="14.00"
        y="146.7"
-       x="59">V</text>
+       x="59">V<tspan
+   style="font-size:8px;baseline-shift:sub"
+   id="tspan3318">4</tspan>
+</text>
     <polyline
        transform="translate(4,220)"
        style="fill:none;stroke:#000000"
@@ -924,7 +957,10 @@
        id="text8087-5"
        font-size="14.00"
        y="146.7"
-       x="146">V</text>
+       x="146">V<tspan
+   style="font-size:8px;baseline-shift:sub"
+   id="tspan3316">5</tspan>
+</text>
     <polyline
        transform="translate(4,220)"
        style="fill:none;stroke:#000000"
@@ -1072,7 +1108,10 @@
        id="text8161-5"
        font-size="14.00"
        y="146.7"
-       x="221">V</text>
+       x="221">V<tspan
+   style="font-size:8px;baseline-shift:sub"
+   id="tspan3314">6</tspan>
+</text>
     <polyline
        transform="translate(4,220)"
        style="fill:none;stroke:#000000"
@@ -1104,7 +1143,10 @@
        id="text8179-2"
        font-size="14.00"
        y="146.7"
-       x="309">V</text>
+       x="309">V<tspan
+   style="font-size:8px;baseline-shift:sub"
+   id="tspan3312">7</tspan>
+</text>
     <polyline
        transform="translate(4,220)"
        style="fill:none;stroke:#000000"
@@ -1406,7 +1448,10 @@
                y="26.699997"
                font-size="14.00"
                id="text8022"
-               style="font-size:14px;text-anchor:middle;font-family:Kp">V</text>
+               style="font-size:14px;text-anchor:middle;font-family:Kp">V<tspan
+   style="font-size:8px;baseline-shift:sub"
+   id="tspan3284">1</tspan>
+</text>
             <polyline
                points="193,-179 193,-215 "
                id="polyline8024"
@@ -1428,7 +1473,10 @@
                y="86.699997"
                font-size="14.00"
                id="text8033"
-               style="font-size:14px;text-anchor:middle;font-family:Kp">V</text>
+               style="font-size:14px;text-anchor:middle;font-family:Kp">V<tspan
+   style="font-size:8px;baseline-shift:sub"
+   id="tspan3286">2</tspan>
+</text>
             <polyline
                points="156,-119 156,-155 "
                id="polyline8035"
@@ -1460,7 +1508,10 @@
                y="86.699997"
                font-size="14.00"
                id="text8051"
-               style="font-size:14px;text-anchor:middle;font-family:Kp">V</text>
+               style="font-size:14px;text-anchor:middle;font-family:Kp">V<tspan
+   style="font-size:8px;baseline-shift:sub"
+   id="tspan3288">3</tspan>
+</text>
             <polyline
                points="231,-119 231,-155 "
                id="polyline8053"
@@ -1492,7 +1543,10 @@
                y="146.7"
                font-size="14.00"
                id="text8069"
-               style="font-size:14px;text-anchor:middle;font-family:Kp">V</text>
+               style="font-size:14px;text-anchor:middle;font-family:Kp">V<tspan
+   style="font-size:8px;baseline-shift:sub"
+   id="tspan3290">4</tspan>
+</text>
             <polyline
                points="69,-59 69,-95 "
                id="polyline8071"
@@ -1524,7 +1578,10 @@
                y="146.7"
                font-size="14.00"
                id="text8087"
-               style="font-size:14px;text-anchor:middle;font-family:Kp">V</text>
+               style="font-size:14px;text-anchor:middle;font-family:Kp">V<tspan
+   style="font-size:8px;baseline-shift:sub"
+   id="tspan3292">5</tspan>
+</text>
             <polyline
                points="156,-59 156,-95 "
                id="polyline8089"
@@ -1672,7 +1729,10 @@
                y="146.7"
                font-size="14.00"
                id="text8161"
-               style="font-size:14px;text-anchor:middle;font-family:Kp">V</text>
+               style="font-size:14px;text-anchor:middle;font-family:Kp">V<tspan
+   style="font-size:8px;baseline-shift:sub"
+   id="tspan3294">6</tspan>
+</text>
             <polyline
                points="231,-59 231,-95 "
                id="polyline8163"
@@ -1704,7 +1764,10 @@
                y="146.7"
                font-size="14.00"
                id="text8179"
-               style="font-size:14px;text-anchor:middle;font-family:Kp">V</text>
+               style="font-size:14px;text-anchor:middle;font-family:Kp">V<tspan
+   style="font-size:8px;baseline-shift:sub"
+   id="tspan3296">7</tspan>
+</text>
             <polyline
                points="319,-59 319,-95 "
                id="polyline8181"
@@ -1845,7 +1908,7 @@
           </g>
           <path
              transform="matrix(0.8,0,0,0.8,-96.648111,-25.978462)"
-             d="m 167,78 a 5.5,5.5 0 1 1 -11,0 5.5,5.5 0 1 1 11,0 z"
+             d="m 167,78 c 0,3.037566 -2.46243,5.5 -5.5,5.5 -3.03757,0 -5.5,-2.462434 -5.5,-5.5 0,-3.037566 2.46243,-5.5 5.5,-5.5 3.03757,0 5.5,2.462434 5.5,5.5 z"
              sodipodi:ry="5.5"
              sodipodi:rx="5.5"
              sodipodi:cy="78"
