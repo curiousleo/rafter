@@ -156,7 +156,7 @@ My project aims to extend an implementation of the Raft consensus algorithm. One
 \textbf{Name and College} & Leonhard Markert, Emmanuel College \\
 \textbf{Project Title} & Extending Raft with structured voting \\
 \textbf{Examination} & Computer Science Tripos, Part \textsc{ii} (June 2014) \\
-\textbf{Word Count} & 10,320 words \\
+\textbf{Word Count} & 10,439 words \\
 \textbf{Project Originator} & Leonhard Markert \\
 \textbf{Project Supervisors} & Malte Schwarzkopf and Ionel Gog
 \end{tabularx}}
@@ -328,7 +328,7 @@ At its core, Raft uses a replicated state machine architecture, implemented usin
 \begin{figure}[h]
     \centering
     \includegraphics[width=0.5\textwidth, keepaspectratio]{Images/Replicated_state_machine.pdf}
-    \caption{Replicated state machine architecture.
+    \caption{Raft's replicated state machine architecture.
         \protect\attrib{\cite[2]{raft}}
     }
     \label{fig:replicated-state-machine}
@@ -484,7 +484,7 @@ All development took place using Git, a popular version control system.\footnote
         \texttt{ec2-integration} & Amazon \ECC{} instance administration scripts \\
         \bottomrule
     \end{tabularx}
-    \caption{Feature branches used in the project repository}
+    \caption{Feature branches used in the project repository.}
     \label{tab:branches}
 \end{table}
 
@@ -593,6 +593,8 @@ The core voting algorithm as illustrated in \cref{fig:grid4-state}, in combinati
 
 A vote is finished when it either succeeds or fails. It succeeds when the root node of the tree-shaped voting structure votes \yes; it fails when the root votes \no. The voting algorithm I implemented uses a small optimisation to fail early, that is, to vote \no{} as soon as a quorum for \yes{} cannot be reached. This works as follows: when a child node votes \no, its parent node checks whether the threshold is greater than the maximum number of \yes{} votes that can still be cast: \[ \text{threshold} \overset{?}{>} \text{possible \yes{} votes} = \text{number of children} - \text{\no{} votes received}\] If that is the case, then a quorum cannot be formed and the node votes \no.
 
+It follows from the description of the algorithm above that the computational complexity of updating the voting state with one more vote is in the worst case proportional to the height of the tree-shaped voting structure. The voting structure height as a function of the number of nodes is given in the individual voting structure generator subsections below.
+
 \section{Voting structure and voting state visualiser}
 \label{sc:visualiser}
 
@@ -646,7 +648,7 @@ The Majority Protocol (also know as Majority Consensus Voting\autocite{majority}
 \begin{figure}[h]
     \centering
     \includegraphics[scale=.75]{Images/Majority5.pdf}
-    \caption{Voting structure for the Majority Protocol with five processes.}
+    \caption{Voting structure for the Majority Protocol with five processes and a threshold of three.}
     \label{fig:majority5-struct}
 \end{figure}
 
@@ -860,7 +862,7 @@ In order to collect benchmarking data, I created a simple logging module. This m
         \multicolumn{4}{c}{\(\vdots\)} \\
         \bottomrule
     \end{tabular}
-    \caption[Example TTC log snippet]{Example \textsc{ttc} log snippet}
+    \caption[Example TTC log snippet]{Example \textsc{ttc} log snippet.}
     \label{tab:csv}
 \end{table}
 
@@ -875,7 +877,7 @@ Secondly, the \textsc{cvs} files are written to a folder in \texttt{/tmp}, which
 During the development of this project, I noticed several issues with the software I was using (see \cref{tab:issues} for a summary). In some cases, this was due to a misunderstanding on my part -- for example, I was having trouble setting up and using QuickCheck, so I contacted Thomas Arts of Quviq who helped me sort things out. In some cases, I found mistakes in the documentation: when this happened, I forked the project, corrected the mistake, and created a pull request.\footnote{This is the development model used by most projects hosted on GitHub. \emph{Forking} copies the project to one's personal space. The contributor creates a new branch, attempts to fix the bug, and opens a \emph{pull request} for that branch. A pull request can then be reviewed, discussed and amended until it is either rejected or accepted and merged into the original project's \texttt{master} branch.} This caused me to create pull requests for Rafter, StatsBase.jl, a statistics package for the scientific programming language Julia that I used to analyse the benchmarking data, and Awsfabrictasks.
 
 \ctable[
-    caption = Issues with third-party software that were found and reported during the development of the project,
+    caption = Issues with third-party software that were found and reported during the development of the project.,
     label = tab:issues,
     width = \textwidth,
     pos = t
@@ -953,7 +955,7 @@ I took an Arch Linux image specially made to run on Amazon \ECC{} instances, bui
 \begin{table}[bt]
     \centering
     \includegraphics[height=0.45\textheight, keepaspectratio]{Images/Coverage_summary.pdf}
-    \caption[Unit test coverage]{Unit test coverage of the structured voting code. Note in particular the high coverage of the last four modules, which were written as part of this project.}
+    \caption[Unit test coverage]{Unit test coverage of the structured voting code. This is a screenshot of the test coverage report for the project generated by the EUnit library -- see \cref{sc:testing} for further details. Note in particular the high coverage of the last four modules (\texttt{rafter\_voting*}), which were written as part of this project.}
     \label{tab:coverage}
 \end{table}
 
@@ -1013,7 +1015,7 @@ Next, the leader is reconfigured using the \texttt{configure} task. Then \texttt
 
 The Amazon Elastic Compute Cloud was used as a testbed for the benchmarks. It provides a realistic environment for testing -- after all, consensus systems like Rafter would usually run in a data centre like Amazon's. The random packet delivery timing, network congestion and packet loss experienced in the Amazon cloud make for a good stress test of Rafter's ability to cope with such issues.
 
-New instances in the Amazon Elastic Compute Cloud are created from virtual appliances called \enquote{Amazon Machine Images} (\textsc{ami}s). Amazon's own default \textsc{ami} does not have the latest version of the Erlang platform in its package sources, so I based my custom \textsc{ami} on an Arch Linux image instead.\footnote{Project \enquote{Arch Linux on \ECC}: \url{https://www.uplinklabs.net/projects/arch-linux-on-ec2/}} I created an instance of the Arch \textsc{ami}, installed Erlang and a few standard tools and built libMemcached from source, as all distributions I checked had building \texttt{memaslap} disabled by default.
+New instances in the Amazon Elastic Compute Cloud are created from virtual appliances called \enquote{Amazon Machine Images} (\textsc{ami}s). Amazon's own default \textsc{ami} does not have the latest version of the Erlang platform in its package sources, so I based my custom \textsc{ami} on an Arch Linux image instead.\footnote{Project \enquote{Arch Linux on \ECC}: \url{https://www.uplinklabs.net/projects/arch-linux-on-ec2/}} I created an instance of the Arch \textsc{ami}, installed Erlang and a few standard tools and built libMemcached from source, as all distributions I checked did not include the \texttt{memaslap} binary in their libMemcached package.
 
 Users of the Amazon Elastic Compute Cloud currently have the choice between many different instance types. Preliminary experiments using a cluster of (free) \enquote{micro} instances were useful for learning how to use the Amazon \ECC{} administration tools, but their performance turned out to be too low, and \textsc{ssh} connections were flaky. I therefore switched to \enquote{m1.xlarge} general-purpose instances for running the benchmarks (see \cref{tab:instance-types} for a comparison.)
 
@@ -1039,7 +1041,7 @@ The m1.xlarge instances provided enough compute power and much more network band
 
 Due to time constraints, benchmarking every combination of parameters was unfeasible. I benchmarked all voting structures. The Grid Protocol was tested with the \enquote{favouring rows} option (explained in \cref{ssc:grid}); benchmarks were also run on binary and tertiary trees created by the Tree Quorum Protocol.
 
-As for cluster sizes, I tried to find configurations for which at least one protocol was optimal in some way. My Amazon \ECC{} account allowed me to run experiments with up to 19 nodes (plus one separate \enquote{runner} instance). This seems like a reasonably large range of cluster sizes -- the authors of the Zookeeper paper, for instance, give benchmarking results for up to 13 servers \autocite{zookeeper}.
+As for cluster sizes, I tried to find configurations for which at least one protocol was optimal.\footnote{A configuration is \emph{optimal} when it allows for the largest cluster size such that its minimal quorum size equals some given number. With the Majority Protocol, for instance, clusters of size 4 and 5 both have a minimal quorum size of 3, so for the Majority Protocol with quorum size 3, a cluster size of 5 is optimal.} My Amazon \ECC{} account allowed me to run experiments with up to 19 nodes (plus one separate \enquote{runner} instance). This seems like a reasonably large range of cluster sizes -- the authors of the Zookeeper paper, for instance, give benchmarking results for up to 13 servers \autocite{zookeeper}.
 
 \begin{description}
     \item[Majority Protocol] Any odd number of nodes is optimal.
@@ -1084,7 +1086,7 @@ This was to be expected: the voting scheme which is implemented by original Raft
         \caption{\textsc{ttc} measurements for different structured voting schemes}
         \label{fig:maj-tree-grid-ttc}
     \end{subfigure}
-    \caption{Time to consensus measurements for the original Rafter implementation (\enquote{plain}), the Majority Protocol (\enquote{majority}), the Tree Quorum protocol (\enquote{tree2} and \enquote{tree3} with branching factors \(d = 2\) and \(d = 3\), respectively), and the Grid Protocol (\enquote{grid}). Each point in the graph represents 5000 data points; all the measurements were taken in a single run. The lines connect the median measurements and the error bars indicate the 25th and the 75th percentile.}
+    \caption{Time to consensus measurements for the original Rafter implementation (\enquote{plain}), the Majority Protocol (\enquote{majority}), the Tree Quorum protocol (\enquote{tree2} and \enquote{tree3} with branching factors \(d = 2\) and \(d = 3\), respectively), and the Grid Protocol (\enquote{grid}). Each point in the graph represents 5000 write operations, all executed in a single run. The lines connect the median measurements and the error bars indicate the 25th and the 75th percentile.}
     \label{fig:ttc}
 \end{figure}
 
@@ -1096,7 +1098,7 @@ The time to consensus versus cluster size graph for all four structured voting s
 
 Consider the graph of the Grid Protocol time to consensus (the \enquote{grid} dataset in \cref{fig:maj-tree-grid-ttc}). The \textsc{ttc} measurements increase by about \SI{3.5}{\milli\second} between 12 and 13 nodes but then stay within about \SI{1}{\milli\second} until the cluster size reaches 16; then there is a jump by \SI{7.5}{\milli\second} as the cluster size hits 17. Why the plateau between 13 and 16? By \cref{eq:grid-dims}, cluster sizes 13, 14, 15, and 16 all generate quadratic 4\,\(\times\)\,4 grids. Clusters with 12 nodes fit into a 4\,\(\times\)\,3 grid, and those with 17 nodes require a 5\,\(\times\)\,4 grid. Thus, it seems that the \textsc{ttc} times change mainly when the grid shape changes. See \cref{fig:ttc_card_grid} for a combined plot of \textsc{ttc} and minimum quorum cardinality for the Grid Protocol as a function of cluster size.
 
-This behaviour can be explained by looking at the number of nodes required to vote \yes, which depends on the shape of the grid: for a \(r \times c\) grid it is \(r + c - 1\).\footnote{A Grid Protocol quorum needs votes from each column  (\(c\) votes) and one entire column (\(r\) votes). Those two sets intersect in one process, and so the number of processes in a Grid Protocol quorum is \(r + c - 1\).} For cluster sizes 13, 14, 15 and 16, the grid has the same 4\,\(\times\)\,4 shape, so in each case, seven votes are required.
+This behaviour can be explained by looking at the number of nodes required to vote \yes, which depends on the shape of the grid: for a \(r \times c\) grid it is \(r + c - 1\).\footnote{A Grid Protocol quorum needs votes from each column  (\(c\) votes) and one entire column (\(r\) votes). Those two sets intersect in one process, and so the number of processes in a Grid Protocol quorum is \(r + c - 1\).} For cluster sizes 13, 14, 15 and 16, the grid has the same 4\,\(\times\)\,4 shape, so in each case, seven votes are required. See \cref{fig:min-cardinality} on \cpageref{fig:min-cardinality} for a plot of minimum quorum cardinalities for different voting schemes and cluster sizes.
 
 % It is important to note that seven \yes{} votes from arbitrary processes do \emph{not} suffice; rather, \ldots
 
@@ -1113,21 +1115,25 @@ The Tree Quorum Protocol graphs show a similar behaviour. A cluster of 15 nodes 
 
 \begin{figure}[p]
     \centering
-    \includegraphics[width=0.75\textwidth, keepaspectratio]{Images/ttc_7_plain-maj-tree-grid.pdf}
-    \caption{Cumulative density function of time to consensus measurements for a cluster with seven nodes, under original Rafter, the Majority Protocol, the Tree Quorum Protocol and the Grid Protocol (legend as for \cref{fig:ttc}).}
-    \label{fig:plain-maj-tree-grid-ttc}
-\end{figure}
-
-\begin{figure}[p]
-    \centering
-    \includegraphics[width=0.75\textwidth, keepaspectratio]{Images/throughput.pdf}
-    \caption{Throughput (50\% \texttt{set} and 50\% \texttt{get} combined) for original Rafter and different structured voting schemes (legend as for \cref{fig:ttc}). The dashed lines indicate the second order polynomial best fit.}
-    \label{fig:throughput}
+    \begin{subfigure}{1\textwidth}
+        \centering
+        \includegraphics[width=0.75\textwidth, keepaspectratio]{Images/ttc_7_plain-maj-tree-grid.pdf}
+        \caption{Cumulative density function of time to consensus measurements for a cluster with seven nodes. Each lines in the graph represents 5000 write operations.}
+        \label{fig:plain-maj-tree-grid-ttc}
+    \end{subfigure}
+    \quad
+    \begin{subfigure}{1\textwidth}
+        \centering
+        \includegraphics[width=0.75\textwidth, keepaspectratio]{Images/throughput.pdf}
+        \caption{Throughput (\texttt{set} and \texttt{get} combined). Each point in the graph represents the average throughput over 5000 read and 5000 write operations. The dashed lines indicate the second order polynomial best fit.}
+        \label{fig:throughput}
+    \end{subfigure}
+    \caption{\textsc{ttc} cumulative density and throughput plots for the original Rafter implementation (\enquote{plain}), the Majority Protocol (\enquote{majority}), the Tree Quorum protocol (\enquote{tree2} and \enquote{tree3} with branching factors \(d = 2\) and \(d = 3\), respectively), and the Grid Protocol (\enquote{grid}). All measurements were taken in a single run.}
 \end{figure}
 
 Cumulative density functions allow us to easily compare the shapes of the latency distributions of different voting schemes. All cumulative density functions (\cref{fig:plain-maj-tree-grid-ttc} shows the one for a cluster of size 7) of the time to consensus measurements I took exhibit one or more \enquote{dents} between the 75th and the 100th percentile. These show up as large upper error bars in \cref{fig:ttc} as well. Where do they come from?
 
-Preliminary experiments showed that the time to consensus increases by orders of magnitude as message queues build up when the load on the system is high. The system load is primarily a function of the frequency at which the client -- \texttt{memaslap} for the purposes of the benchmarks -- sends requests. By carefully reducing this throughput by varying the \texttt{--tps=X} command line parameter, I made sure to operate the system in a regime just below overloading for most of the requests. This is the part of the curves below the dents, roughly the region below the 75th percentile.
+Preliminary experiments showed that the time to consensus increases by orders of magnitude as message queues build up when the load on the system is high. The system load is primarily a function of the frequency at which the client -- \texttt{memaslap} for the purposes of the benchmarks -- sends requests. By carefully reducing this throughput by varying the \texttt{--tps=X} command line parameter, I made sure to operate the system in a regime just below overloading for most of the requests (see \cref{lst:memaslap-args} for a specification of the command line parameters used in the benchmarks). This is the part of the curves below the dents, roughly the region below the 75th percentile.
 
 \minisec{Throughput}
 
@@ -1150,10 +1156,11 @@ The remainder of the chapter was devoted to a discussion of the benchmarking mea
 
 Secondly, I have shown that structured voting schemes are nevertheless worth considering in a practical setting. \Cref{fig:maj-tree-grid-ttc-circled} shows that given the right cluster size, structured voting schemes can be faster than unstructured voting schemes in finding quorums, as evidenced by the circled region of the graph. Here, the (ternary) Tree Quorum Protocol, a structured voting scheme, beats the Majority Protocol, the default unstructured voting scheme, in the time to consensus measurements.
 
-\begin{figure}
+\begin{figure}[p]
     \centering
     \includegraphics[width=1\textwidth, keepaspectratio]{Images/ttc_maj-tree-grid-circled.pdf}
-    \caption{Time to consensus measurements for different voting schemes. This graph shows the main empirical evidence that structured voting schemes can have practical advantages. Within the circled area, the (ternary) Tree Quorum Protocol found quorums significantly faster than the Majority Protocol. This graph is an annotated version of \cref{fig:maj-tree-grid-ttc}.}
+    \caption{Time to consensus measurements for the original Rafter implementation (\enquote{plain}), the Majority Protocol (\enquote{majority}), the Tree Quorum protocol (\enquote{tree2} and \enquote{tree3} with branching factors \(d = 2\) and \(d = 3\), respectively), and the Grid Protocol (\enquote{grid}).
+        This graph shows the main empirical evidence that structured voting schemes can have practical advantages. Within the circled area, the (ternary) Tree Quorum Protocol found quorums faster than the Majority Protocol. This graph is an annotated version of \cref{fig:maj-tree-grid-ttc}. Each point in the graph represents 5000 write operations, all executed in a single run. The lines connect the median measurements and the error bars indicate the 25th and the 75th percentile.}
     \label{fig:maj-tree-grid-ttc-circled}
 \end{figure}
 
