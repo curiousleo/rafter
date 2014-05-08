@@ -1397,7 +1397,7 @@ cmd
     \begin{figure}[h]
         \centering
         \includegraphics[scale=.75]{Images/failure.pdf}
-        \caption{Cumulative density functions for different voting schemes and uptimes. The red lines represent the Grid Protocol and the blue lines correspond to the Majority Protocol. Solid means \(\texttt{Uptime} = 100\%\), dashed \(\texttt{Uptime} = 70\%\), dotted \(\texttt{Uptime} = 40\%\). In contrast to all other graphs in this dissertation, the measurements for this graph were taken on a single machine. See \cref{sc:failure-simulation} for an explanation of the failure simulation used to produce these plots.}
+        \caption{Cumulative density functions for different voting schemes and uptimes. The red lines represent the Grid Protocol and the blue lines correspond to the Majority Protocol. Solid means \(\texttt{Uptime} = 100\%\), dashed \(\texttt{Uptime} = 70\%\), dotted \(\texttt{Uptime} = 40\%\). Each line represents 1000 write operations executed in a single run. In contrast to all other graphs in this dissertation, the measurements for this graph were taken on a single machine. See \cref{sc:failure-simulation} for an explanation of the failure simulation used to produce these plots.}
         \label{fig:failure-ttc}
     \end{figure}
     % \end{subfigure}
@@ -1406,7 +1406,7 @@ cmd
     \begin{figure}[h]
         \centering
         \includegraphics[scale=.75]{Images/ttc_card_grid.pdf}
-        \caption{Time to consensus and minimum quorum cardinality (plus signs) for the Grid Protocol with up to 20 processes. The line connects the median \textsc{ttc} measurements and the error bars indicate the 25th and the 75th percentile.}
+        \caption{Time to consensus and minimum quorum cardinality (plus signs) for the Grid Protocol with up to 20 processes. Each dot represents 5000 write operations executed in a single run. The line connects the median \textsc{ttc} measurements and the error bars indicate the 25th and the 75th percentile.}
         \label{fig:ttc_card_grid}
     \end{figure}
     % \end{subfigure}
