@@ -31,7 +31,7 @@
 \usepackage[autocite=footnote,citestyle=authoryear-comp,bibstyle=authoryear,
             dashed=false,isbn=false,doi=false,backend=biber]{biblatex}
 \usepackage[bookmarks,hidelinks]{hyperref}
-\usepackage[noabbrev]{cleveref}
+\usepackage[noabbrev,capitalise]{cleveref}
 
 % TODO: list of figures, algorithms, tables?
 % TODO: custom cover page?
@@ -156,7 +156,7 @@ My project aims to extend an implementation of the Raft consensus algorithm. One
 \textbf{Name and College} & Leonhard Markert, Emmanuel College \\
 \textbf{Project Title} & Extending Raft with structured voting \\
 \textbf{Examination} & Computer Science Tripos, Part \textsc{ii} (June 2014) \\
-\textbf{Word Count} & 10,497 words \\
+\textbf{Word Count} & 10,529 words \\
 \textbf{Project Originator} & Leonhard Markert \\
 \textbf{Project Supervisors} & Malte Schwarzkopf and Ionel Gog
 \end{tabularx}}
@@ -391,7 +391,7 @@ By taking into account the identity of nodes (as opposed to just counting them),
 
 A quorum system is defined as a tuple of a read and a write quorum set whose \emph{elements} are called read quorums and write quorums, respectively. These are constructed such that every write quorum intersects with every other write quorum and with every read quorum. Read quorums need not intersect pairwise \autocite[For a formal definition of \emph{quorum}, \emph{quorum set} and \emph{quorum system}, see][section 2.3]{voting}.
 
-The key realisation that lead to this project was that write quorums have precisely the property required for Raft's leader election, namely that any two write quorums intersect. From this point on, \emph{quorum} will mean \emph{write quorum} unless specifically noted otherwise.
+The key realisation that led to this project was that write quorums have precisely the property required for Raft's Election Safety, namely that any two write quorums intersect. Write quorums were also used to decide whether a write operation is allowed to proceed (since that is what they were originally designed for). From this point on, \emph{quorum} will mean \emph{write quorum} unless specifically noted otherwise.
 
 \minisec{Structured voting by example}
 \label{voting-example}
@@ -401,7 +401,7 @@ Structured voting schemes impose a logical structure on the set of processes and
 \begin{figure}[h]
     \centering
     \includegraphics[scale=1]{Images/Grid_table.pdf}
-    \caption[Grid Protocol quorum table]{A Grid Protocol quorum: The entire second column (\texttt{B}, \texttt{F}, \texttt{J}, \texttt{N}) and one process from each other column (\texttt{I}, \texttt{G}, \texttt{P}) are included}
+    \caption[Grid Protocol quorum table]{A Grid Protocol quorum: The entire second column (\texttt{B}, \texttt{F}, \texttt{J}, \texttt{N}) and one process from each other column (\texttt{I}, \texttt{G}, \texttt{P}) are included.}
     \label{fig:grid-quorum}
 \end{figure}
 
@@ -708,7 +708,7 @@ Note that this implies \(r \geq c\); we are said to be \enquote{favouring rows}.
 
 The slots in the grid that are not taken up by a process are then considered to be populated by dead placeholder processes. As a little optimisation, we can remove the \textsc{cc}-covers for the columns that contain a placeholder since those columns can never be complete.
 
-An derivation of the probability of finding a Grid Protocol quorum given \(k\) \yes{} votes in a cluster of \(n\) processes is given in \cref{ch:grid-p}.
+A derivation of the probability of finding a Grid Protocol quorum given \(k\) \yes{} votes in a cluster of \(n\) processes is given in \cref{ch:grid-p}.
 
 \subsection{Tree Quorum Protocol}
 \label{ssc:tree}
@@ -833,7 +833,7 @@ The actual failure simulation then proceeds as follows:
     \item Followers repeat steps (3.) and (4.) until they receive a \enquote{stop} message from the leader.
 \end{enumerate}
 
-Unfortunately, I was unable to simulate failures in this way on Amazon \ECC, so only local failure simulation measurements could be obtained (see \cref{fig:failure-ttc}).
+Unfortunately, I was unable to simulate failures in this way on Amazon \ECC, so the failure simulation could only be run locally (that is, on my laptop -- see \cref{fig:failure-ttc} for the results).
 
 \section{Logging}
 \label{sc:logging}
@@ -870,7 +870,7 @@ Rafter puts information related to a specific request in a record of type \textt
 
 I conducted a short series of tests to see if turning on logging decreased the performance of Rafter. No statistically significant effect on the throughput could be found. There are two main reasons for this: firstly, as mentioned above, the logger runs in its own process and receives messages from other components of the system. This means that when a process wants to add an entry to the log, it sends a message to the logger. The program flow is not interrupted: the message is simply queued in the logger's message inbox and the process that sent the message continues execution. The logger acts upon the message at some later point when the Erlang scheduler decides to switch to its message handling procedure. Hence the logger automatically benefits from Erlang's scheduling and parallelism features, decreasing the time penalty.
 
-Secondly, the \textsc{cvs} files are written to a folder in \texttt{/tmp}, which is mounted as a \texttt{tempfs} file system. Under normal operating conditions, this complete file system lives in main memory and is never written to disk. This makes write operations very cheap, again keeping the time penalty for logging at a minimum.
+Secondly, the \textsc{csv} files are written to a folder in \texttt{/tmp}, which is mounted as a \texttt{tempfs} file system. Under normal operating conditions, this complete file system lives in main memory and is never written to disk. This makes write operations very cheap, again keeping the time penalty for logging at a minimum.
 
 \section{Reporting issues and bugs}
 
