@@ -125,7 +125,6 @@ def rename():
     instancewrapper = Ec2InstanceWrapper.get_from_host_string()
     new_name = raw_input(
             'Rename instance {}: '.format(instancewrapper.prettyname()))
-    new_name = new_name if new_name != '' else name
     instancewrapper.instance.add_tag('Name', new_name)
 
 @task
@@ -196,10 +195,10 @@ def configure(leader, followers, protocol, failure_mode):
     :param failure_mode: The failure mode to run the experiment with.
     '''
     command = configure_command(leader, followers, protocol, failure_mode)
-    local('sleep 5; {command}; sleep 5'.format(**locals()))
+    local('sleep 20; {command}; sleep 20'.format(**locals()))
 
 @task
-def memaslap(leader_address, runtime=120):
+def memaslap(leader_address, runtime=600):
     '''
     Run memaslap on the local host, targeting the leader.
 
@@ -211,9 +210,11 @@ def memaslap(leader_address, runtime=120):
     run('memaslap \
             --servers={leader_address}:11211 --binary \
             --stat_freq={runtime}s --time={runtime}s \
-            --execute_number=10000 \
+            --execute_number=5000 \
             --verify=1.0 --exp_verify=1.0 \
             --cfg_cmd={conf} \
+            --tps=0.05k \
+            --concurrency=1 \
             | tee /tmp/rafter_memcached.log'
             .format(**locals()))
 
@@ -248,8 +249,8 @@ def stop_erlang_node():
     with cd(awsfab_settings.RAFTER_DIR):
         with settings(warn_only=True):
             run('killall beam; killall beam.smp')
-        run('rm -rf data')
-        run('mkdir data')
+        run('rm -rf {data}'.format(data=awsfab_settings.DATA_DIR))
+        run('mkdir -p {data}'.format(data=awsfab_settings.DATA_DIR))
 
 @task
 @parallel
@@ -269,8 +270,8 @@ def start_erlang_node(name):
         # kill it first
         with settings(warn_only=True):
             run('killall beam; killall beam.smp')
-        run('rm -rf data')
-        run('mkdir data')
+        run('rm -rf {data}'.format(data=awsfab_settings.DATA_DIR))
+        run('mkdir -p {data}'.format(data=awsfab_settings.DATA_DIR))
         run('sh bin/start-ec2-node {name}; sleep 1'.format(**locals()))
 
 def configure_command(leader, followers, protocol, failure_mode):
