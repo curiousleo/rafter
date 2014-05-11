@@ -1,0 +1,38 @@
+This is an overview of the changes I made as part of my Part II project.
+
+$ git diff --stat upstream/master
+ .gitignore                          |   2 +-
+ README.md                           |   9 +-
+ analysis.py                         | 110 ++++++++++++
+ analysis2.py                        |  31 ++++
+ analysis3.py                        |  85 ++++++++++
+ analysis4.py                        | 168 ++++++++++++++++++
+ bin/start-ec2-node                  |   3 +
+ fabfile.py                          | 329 ++++++++++++++++++++++++++++++++++++
+ include/rafter.hrl                  |  43 ++++-
+ include/rafter_consensus_fsm.hrl    |   9 +
+ memaslap.conf                       |   9 +
+ src/rafter.erl                      |   2 +-
+ src/rafter_backend_memcached.erl    | 161 ++++++++++++++++++
+ src/rafter_config.erl               | 148 ++++++++--------
+ src/rafter_consensus_fsm.erl        | 181 +++++++++++++++++---
+ src/rafter_consensus_sup.erl        |  10 +-
+ src/rafter_log.erl                  |   3 +-
+ src/rafter_memcached_sock.erl       | 131 ++++++++++++++
+ src/rafter_memcached_sup.erl        |  55 ++++++
+ src/rafter_remote_config.erl        |  17 ++
+ src/rafter_ttc_log.erl              |  43 +++++
+ src/rafter_voting.erl               | 166 ++++++++++++++++++
+ src/rafter_voting_grid.erl          |  80 +++++++++
+ src/rafter_voting_majority.erl      |  14 ++
+ src/rafter_voting_tree.erl          |  35 ++++
+ src/rafter_vstruct_dot.erl          |  67 ++++++++
+ test/rafter_config_eqc.erl          | 124 +++++++-------
+ test/rafter_config_majority.erl     |  49 ++++++
+ test/rafter_gen.erl                 |  47 +++---
+ test/rafter_leader_election_eqc.erl |  22 ++-
+ test/rafter_system_test_eqc.erl     | 116 +++++++------
+ test/rafter_voting_majority_eqc.erl |  30 ++++
+ test/rafter_vstruct_check_eqc.erl   |  45 +++++
+ test/rafter_vstruct_dot.erl         |  60 +++++++
+ 34 files changed, 2149 insertions(+), 255 deletions(-)
