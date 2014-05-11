@@ -14,10 +14,9 @@ $ git diff --stat upstream/master
  memaslap.conf                       |   9 +
  src/rafter.erl                      |   2 +-
  src/rafter_backend_memcached.erl    | 161 ++++++++++++++++++
- src/rafter_config.erl               | 148 ++++++++--------
+ src/rafter_config.erl               | 147 ++++++++--------
  src/rafter_consensus_fsm.erl        | 181 +++++++++++++++++---
  src/rafter_consensus_sup.erl        |  10 +-
- src/rafter_log.erl                  |   3 +-
  src/rafter_memcached_sock.erl       | 131 ++++++++++++++
  src/rafter_memcached_sup.erl        |  55 ++++++
  src/rafter_remote_config.erl        |  17 ++
@@ -35,4 +34,4 @@ $ git diff --stat upstream/master
  test/rafter_voting_majority_eqc.erl |  30 ++++
  test/rafter_vstruct_check_eqc.erl   |  45 +++++
  test/rafter_vstruct_dot.erl         |  60 +++++++
- 34 files changed, 2149 insertions(+), 255 deletions(-)
+ 34 files changed, 2185 insertions(+), 253 deletions(-)
