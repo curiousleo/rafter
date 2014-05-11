@@ -56,10 +56,9 @@ quorum(Me, #config{state=transitional, oldvstruct=Old, newvstruct=New}, Response
 %% server is a member of the consensus group. Add 1 to TrueResponses in
 %% this case.
 quorum(Me, Struct, Responses) ->
-    Servers = rafter_voting:to_list(Struct),
     Votes = dict:filter(
               fun(Peer, R) -> R =:= true andalso
-                              lists:member(Peer, Servers) end,
+                              rafter_voting:member(Peer, Struct) end,
               dict:store(Me, true, Responses)),
     rafter_voting:quorum(Struct, Votes).
 
